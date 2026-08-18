@@ -1,0 +1,31 @@
+name: Fetch PC28 Data
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'   # 每10分钟运行一次
+  workflow_dispatch:         # 允许手动触发
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Fetch data from pc28.help
+        run: |
+          curl -s https://pc28.help/api/kj.json -o data.json
+          echo "--- data.json size ---"
+          wc -c data.json
+          echo "--- first 200 chars ---"
+          head -c 200 data.json
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git diff --staged --quiet || git commit -m "Auto update data"
+          git push
