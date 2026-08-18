@@ -24,10 +24,11 @@ jobs:
           echo "=== data.json ==="
           cat data.json
 
-      - name: Install jq
-        run: sudo apt-get install -y jq
+      - name: Install Python dependencies
+        run: |
+          pip install pillow
 
-      - name: Parse and push to Telegram
+      - name: Parse data, generate card and push to Telegram
         id: push_telegram
         run: |
           # ============================================================
@@ -38,17 +39,13 @@ jobs:
           GROUP_ID="-1003480986680"
 
           # ============================================================
-          # 提取最新数据
+          # 提取最新数据（使用 jq）
           # ============================================================
           PERIOD=$(jq -r '.data[0].nbr' data.json)
           NUMBER=$(jq -r '.data[0].number' data.json)
           COMBINATION=$(jq -r '.data[0].combination' data.json)
           DATE=$(jq -r '.data[0].date' data.json)
           TIME=$(jq -r '.data[0].time' data.json)
-
-          echo "最新期号: $PERIOD"
-          echo "号码: $NUMBER"
-          echo "组合: $COMBINATION"
 
           if [ "$PERIOD" == "null" ] || [ -z "$PERIOD" ]; then
             echo "❌ 数据无效，跳过推送"
@@ -60,15 +57,10 @@ jobs:
           # ============================================================
           if [ -f last_period.txt ]; then
             LAST_PERIOD=$(cat last_period.txt)
-            echo "上次推送期号: $LAST_PERIOD"
           else
             LAST_PERIOD=""
-            echo "首次运行，无历史期号"
           fi
 
-          # ============================================================
-          # 判断是否为新期号
-          # ============================================================
           if [ "$PERIOD" == "$LAST_PERIOD" ]; then
             echo "⏭️ 期号未变化 ($PERIOD)，跳过推送"
             exit 0
@@ -97,45 +89,119 @@ jobs:
           fi
 
           # ============================================================
-          # 构建消息
+          # 生成图片卡片（Python + Pillow）
           # ============================================================
-          CHANNEL_MSG="<b>第${PERIOD}期</b>
-        ${BALL1} + ${BALL2} + ${BALL3} = ${SUM}
-        <b>${COMBO}</b> · 形态：${SHAPE}
-        开奖时间：${DATE} ${TIME}"
+          python3 << 'PYEOF'
+          import json
+          from PIL import Image, ImageDraw, ImageFont
+          import os
 
+          # 数据
+          period = os.environ['PERIOD']
+          ball1 = os.environ['BALL1']
+          ball2 = os.environ['BALL2']
+          ball3 = os.environ['BALL3']
+          sum_val = os.environ['SUM']
+          combo = os.environ['COMBO']
+          shape = os.environ['SHAPE']
+          date = os.environ['DATE']
+          time = os.environ['TIME']
+
+          # 画布
+          width, height = 800, 420
+          img = Image.new('RGB', (width, height), color=(15, 31, 47))
+          draw = ImageDraw.Draw(img)
+
+          # 边框
+          draw.rectangle((10, 10, width-10, height-10), outline=(60, 80, 100), width=2)
+
+          # 字体（使用系统字体）
+          try:
+              font_title = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf", 18)
+              font_big = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf", 40)
+              font_medium = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf", 28)
+              font_small = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf", 16)
+          except:
+              font_title = ImageFont.load_default()
+              font_big = ImageFont.load_default()
+              font_medium = ImageFont.load_default()
+              font_small = ImageFont.load_default()
+
+          # 标题 "PC28 开奖结果"
+          draw.text((30, 30), "PC28 开奖结果", fill=(200, 200, 200), font=font_title)
+
+          # 期号（右上）
+          draw.text((width-30, 30), f"第 {period} 期", fill=(255, 255, 255), font=font_title, anchor="rt")
+
+          # 三个大球
+          circle_y = 160
+          radius = 52
+          spacing = 140
+          start_x = (width - 2*spacing) // 2 - 10
+          balls = [ball1, ball2, ball3]
+          colors = [(100, 200, 255), (100, 200, 255), (100, 200, 255)]
+          for i, num in enumerate(balls):
+              x = start_x + i * spacing
+              # 圆
+              draw.ellipse((x-radius, circle_y-radius, x+radius, circle_y+radius),
+                           fill=(20, 80, 140), outline=(100, 200, 255), width=2)
+              # 数字
+              draw.text((x, circle_y), num, fill=(255, 255, 255), font=font_big, anchor="mm")
+              # 加号
+              if i < 2:
+                  draw.text((x + spacing//2, circle_y), "+", fill=(100, 150, 200), font=font_big, anchor="mm")
+
+          # 和值
+          draw.text((width//2, circle_y + radius + 15), f"= {sum_val}", fill=(255, 213, 79), font=font_medium, anchor="ma")
+
+          # 组合
+          draw.text((width//2, circle_y + radius + 60), combo, fill=(255, 255, 255), font=font_medium, anchor="ma")
+
+          # 形态
+          draw.text((width//2, circle_y + radius + 100), f"形态：{shape}", fill=(180, 180, 180), font=font_small, anchor="ma")
+
+          # 开奖时间（右下）
+          draw.text((width-30, height-20), f"开奖时间 {date} {time}", fill=(120, 140, 160), font=font_small, anchor="rb")
+
+          # 保存
+          img.save("result.png")
+          print("✅ 图片生成成功")
+          PYEOF
+
+          # ============================================================
+          # 构建 caption
+          # ============================================================
+          CAPTION="<b>第${PERIOD}期</b> ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO}"
+
+          # ============================================================
+          # 发送图片到频道
+          # ============================================================
+          echo "📤 发送频道图片..."
+          curl -s -X POST \
+            -F "chat_id=$CHANNEL_ID" \
+            -F "photo=@result.png" \
+            -F "caption=$CAPTION" \
+            -F "parse_mode=HTML" \
+            "https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto" \
+            -o /tmp/channel_response.json
+
+          if grep -q '"ok":true' /tmp/channel_response.json; then
+            echo "✅ 频道图片发送成功"
+          else
+            echo "❌ 频道图片发送失败:"
+            cat /tmp/channel_response.json
+          fi
+
+          # ============================================================
+          # 发送文字到群组
+          # ============================================================
           GROUP_MSG="📢 最新开奖信息
         📅 最新期号: ${PERIOD}
         🔢 开奖结果: ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO}
         🎉 号码形式: ${SHAPE}|中
         ⏰ 开奖时间: ${DATE} ${TIME}"
 
-          echo "=== 频道消息 ==="
-          echo "$CHANNEL_MSG"
-          echo "=== 群组消息 ==="
-          echo "$GROUP_MSG"
-
-          # ============================================================
-          # 发送到频道
-          # ============================================================
-          echo "📤 发送频道消息..."
-          curl -s -X POST \
-            -H "Content-Type: application/json" \
-            -d "{\"chat_id\":\"$CHANNEL_ID\",\"text\":\"$CHANNEL_MSG\",\"parse_mode\":\"HTML\",\"disable_web_page_preview\":true}" \
-            "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
-            -o /tmp/channel_response.json
-
-          if grep -q '"ok":true' /tmp/channel_response.json; then
-            echo "✅ 频道推送成功"
-          else
-            echo "❌ 频道推送失败:"
-            cat /tmp/channel_response.json
-          fi
-
-          # ============================================================
-          # 发送到群组
-          # ============================================================
-          echo "📤 发送群组消息..."
+          echo "📤 发送群组文字..."
           curl -s -X POST \
             -H "Content-Type: application/json" \
             -d "{\"chat_id\":\"$GROUP_ID\",\"text\":\"$GROUP_MSG\",\"parse_mode\":\"HTML\",\"disable_web_page_preview\":true}" \
@@ -143,9 +209,9 @@ jobs:
             -o /tmp/group_response.json
 
           if grep -q '"ok":true' /tmp/group_response.json; then
-            echo "✅ 群组推送成功"
+            echo "✅ 群组文字发送成功"
           else
-            echo "❌ 群组推送失败:"
+            echo "❌ 群组文字发送失败:"
             cat /tmp/group_response.json
           fi
 
