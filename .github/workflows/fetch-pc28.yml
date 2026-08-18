@@ -8,9 +8,13 @@ on:
 jobs:
   fetch-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install dependencies
         run: |
@@ -19,9 +23,12 @@ jobs:
           pip install pillow
 
       - name: Fetch data
+        id: fetch
         run: |
+          set -e
           curl -sL -A "Mozilla/5.0" "https://pc28.help/api/kj.json" -o data.json
           if [ ! -s data.json ] || ! grep -q '"data"' data.json; then
+            echo "主源失败，尝试备用源..."
             curl -sL -A "Mozilla/5.0" "https://yu28.top/api/kj.json" -o data.json
           fi
           echo "=== data.json ==="
@@ -29,24 +36,42 @@ jobs:
 
           PERIOD=$(jq -r '.data[0].nbr' data.json 2>/dev/null || echo "")
           if [ -z "$PERIOD" ] || [ "$PERIOD" == "null" ]; then
-            echo "❌ 数据无效"
+            echo "数据无效"
             exit 1
           fi
-          echo "PERIOD=$PERIOD" >> $GITHUB_ENV
+          echo "period=$PERIOD" >> $GITHUB_OUTPUT
 
-      - name: Generate card and push to Telegram
+      - name: Check and push
+        if: success()
         env:
-          TG_TOKEN: 8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo
-          CHANNEL_ID: @pc28jndkj
-          GROUP_ID: -1003480986680
+          TG_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          CHANNEL_ID: ${{ secrets.TG_CHANNEL_ID }}
+          GROUP_ID: ${{ secrets.TG_GROUP_ID }}
         run: |
+          set -e
+
           PERIOD=$(jq -r '.data[0].nbr' data.json)
           NUMBER=$(jq -r '.data[0].number' data.json)
           COMBINATION=$(jq -r '.data[0].combination' data.json)
           DATE=$(jq -r '.data[0].date' data.json)
           TIME=$(jq -r '.data[0].time' data.json)
 
-          echo "🔄 期号: $PERIOD"
+          echo "期号: $PERIOD"
+          echo "号码: $NUMBER"
+          echo "组合: $COMBINATION"
+
+          if [ -f last_period.txt ]; then
+            LAST_PERIOD=$(cat last_period.txt)
+          else
+            LAST_PERIOD=""
+          fi
+
+          if [ "$PERIOD" == "$LAST_PERIOD" ]; then
+            echo "期号未变化 ($PERIOD)，跳过推送"
+            exit 0
+          fi
+
+          echo "新期号: $PERIOD"
 
           BALL1=$(echo "$NUMBER" | cut -d'+' -f1)
           BALL2=$(echo "$NUMBER" | cut -d'+' -f2)
@@ -65,6 +90,7 @@ jobs:
           fi
 
           export PERIOD BALL1 BALL2 BALL3 SUM COMBO SHAPE DATE TIME
+
           python3 << 'PYEOF'
           from PIL import Image, ImageDraw, ImageFont
           import os
@@ -82,7 +108,6 @@ jobs:
           width, height = 800, 420
           img = Image.new('RGB', (width, height), color=(15, 31, 47))
           draw = ImageDraw.Draw(img)
-
           draw.rectangle((10, 10, width-10, height-10), outline=(60, 80, 100), width=2)
 
           try:
@@ -90,7 +115,7 @@ jobs:
               font_big = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf", 40)
               font_medium = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf", 28)
               font_small = ImageFont.truetype("/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf", 16)
-          except:
+          except Exception:
               font_title = ImageFont.load_default()
               font_big = ImageFont.load_default()
               font_medium = ImageFont.load_default()
@@ -118,39 +143,57 @@ jobs:
           draw.text((width-30, height-20), f"开奖时间 {date} {time}", fill=(120, 140, 160), font=font_small, anchor="rb")
 
           img.save("result.png")
-          print("✅ 图片生成成功")
+          print("图片生成成功")
           PYEOF
 
           CAPTION="<b>第${PERIOD}期</b> ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO}"
 
-          echo "📤 发送频道图片..."
+          echo "发送频道图片..."
           curl -s -X POST \
-            -F "chat_id=$CHANNEL_ID" \
+            -F "chat_id=${CHANNEL_ID}" \
             -F "photo=@result.png" \
-            -F "caption=$CAPTION" \
+            -F "caption=${CAPTION}" \
             -F "parse_mode=HTML" \
             "https://api.telegram.org/bot${TG_TOKEN}/sendPhoto" \
             -o /tmp/channel_resp.json
 
           if grep -q '"ok":true' /tmp/channel_resp.json; then
-            echo "✅ 频道图片发送成功"
+            echo "频道图片发送成功"
           else
-            echo "❌ 频道图片发送失败:"
+            echo "频道图片发送失败:"
             cat /tmp/channel_resp.json
           fi
 
-          GROUP_MSG="📢 最新开奖信息\n📅 最新期号: ${PERIOD}\n🔢 开奖结果: ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO}\n🎉 号码形式: ${SHAPE}|中\n⏰ 开奖时间: ${DATE} ${TIME}"
+          GROUP_MSG="PC28 最新开奖 | 期号: ${PERIOD} | 结果: ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO} | 形态: ${SHAPE} | 时间: ${DATE} ${TIME}"
 
-          echo "📤 发送群组文字..."
+          echo "发送群组文字..."
+          PAYLOAD=$(python3 -c "import json,os; print(json.dumps({'chat_id':os.environ['GROUP_ID'],'text':os.environ['GROUP_MSG'],'parse_mode':'HTML','disable_web_page_preview':True}))")
+
           curl -s -X POST \
             -H "Content-Type: application/json" \
-            -d "{\"chat_id\":\"$GROUP_ID\",\"text\":\"$GROUP_MSG\",\"parse_mode\":\"HTML\",\"disable_web_page_preview\":true}" \
+            -d "$PAYLOAD" \
             "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
             -o /tmp/group_resp.json
 
           if grep -q '"ok":true' /tmp/group_resp.json; then
-            echo "✅ 群组文字发送成功"
+            echo "群组文字发送成功"
           else
-            echo "❌ 群组文字发送失败:"
+            echo "群组文字发送失败:"
             cat /tmp/group_resp.json
+          fi
+
+          echo "$PERIOD" > last_period.txt
+
+      - name: Commit and push
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json last_period.txt
+          if git diff --staged --quiet; then
+            echo "无变化，跳过提交"
+          else
+            git pull origin main --rebase --autostash || true
+            git commit -m "Auto update data ($(date -u +%Y-%m-%dT%H:%M:%SZ))" || true
+            git push origin main || true
           fi
