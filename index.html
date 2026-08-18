@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PC28未来数据站</title>
     <style>
-        /* ===== 全局重置 & 背景 ===== */
+        /* ===== 全局重置 ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #0a0e1a;
+            background: #080c18;
             font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
             padding: 20px;
-            overflow-x: hidden;
             position: relative;
+            overflow-x: hidden;
         }
 
-        /* 动态星空 */
-        #stars-canvas {
+        /* 动态粒子背景 */
+        #particles-canvas {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
@@ -28,31 +28,34 @@
             pointer-events: none;
         }
 
+        /* 主容器 - 高级玻璃效果 */
         .glass-container {
-            max-width: 1000px;
+            max-width: 960px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(20px) saturate(200%);
-            -webkit-backdrop-filter: blur(20px) saturate(200%);
-            border-radius: 60px;
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
-            padding: 30px 32px 36px;
-            color: #f0f6fe;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-radius: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 
+                0 40px 120px rgba(0, 0, 0, 0.8),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05),
+                0 0 80px rgba(80, 160, 255, 0.03);
+            padding: 32px 36px 40px;
+            color: #eef4fc;
             position: relative;
             z-index: 1;
             overflow: hidden;
-            transition: 0.3s;
         }
         .glass-container::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(80, 180, 255, 0.06), transparent, rgba(200, 130, 255, 0.06), transparent);
-            animation: rotateGlow 30s linear infinite;
+            top: -60%;
+            left: -60%;
+            width: 220%;
+            height: 220%;
+            background: conic-gradient(from 0deg, transparent, rgba(80, 180, 255, 0.04), transparent, rgba(200, 130, 255, 0.04), transparent);
+            animation: rotateGlow 40s linear infinite;
             pointer-events: none;
             z-index: 0;
         }
@@ -63,294 +66,298 @@
         .glass-container > * { position: relative; z-index: 1; }
 
         /* ----- 头部 ----- */
-        .brand {
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
-        .brand h1 {
-            font-size: 32px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #8fcbff, #d4b0ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 2px;
-            text-shadow: 0 0 40px rgba(140, 200, 255, 0.15);
-        }
-        .brand .sub {
-            font-size: 14px;
-            color: rgba(255,255,255,0.35);
-            border-left: 2px solid rgba(120,200,255,0.25);
-            padding-left: 16px;
-            letter-spacing: 0.5px;
-        }
-
-        /* ----- 状态栏 ----- */
-        .top-bar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            background: rgba(255,255,255,0.02);
-            border-radius: 60px;
-            padding: 10px 20px;
-            border: 1px solid rgba(255,255,255,0.03);
-            margin: 16px 0 22px;
-        }
-        .status-area {
+        .header-left {
             display: flex;
             align-items: center;
             gap: 14px;
-            flex-wrap: wrap;
         }
-        .status-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            color: #7ecf9c;
+        .logo-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 0 20px rgba(100, 200, 255, 0.15));
         }
-        .status-badge .dot {
-            width: 10px;
-            height: 10px;
-            background: #4cdb7b;
-            border-radius: 50%;
-            animation: pulse 1.2s infinite;
-            box-shadow: 0 0 12px rgba(76,219,123,0.4);
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8fcbff, #c8a8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
         }
-        @keyframes pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.85); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        .status-badge.paused .dot {
-            background: #f5a623;
-            animation: none;
-            box-shadow: 0 0 12px rgba(245,166,35,0.3);
-        }
-        .update-time { font-size: 14px; color: rgba(255,255,255,0.5); }
-        .source-indicator {
-            font-size: 12px;
-            background: rgba(255,255,255,0.04);
+        .header .badge {
+            font-size: 11px;
+            background: rgba(100, 200, 255, 0.1);
+            border: 1px solid rgba(100, 200, 255, 0.15);
             padding: 4px 14px;
             border-radius: 30px;
-            color: rgba(255,255,255,0.5);
-            border: 1px solid rgba(255,255,255,0.03);
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.5px;
         }
-        .error-msg {
-            background: rgba(255,80,80,0.1);
-            color: #ff7a7a;
-            padding: 4px 14px;
-            border-radius: 40px;
-            font-weight: 500;
-            display: none;
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4cdb7b;
+            display: inline-block;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+            box-shadow: 0 0 16px rgba(76, 219, 123, 0.3);
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+        .status-dot.paused { background: #f5a623; animation: none; box-shadow: 0 0 16px rgba(245, 166, 35, 0.2); }
+
+        /* ----- 状态栏 ----- */
+        .status-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .status-info {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
             font-size: 13px;
-            border: 1px solid rgba(255,80,80,0.08);
+            color: rgba(255, 255, 255, 0.45);
         }
+        .status-info .label { color: rgba(255, 255, 255, 0.25); }
+        .status-info .value { color: rgba(255, 255, 255, 0.7); font-weight: 500; }
         .btn-group { display: flex; gap: 8px; }
         .btn {
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            border: 1px solid rgba(255,255,255,0.06);
-            padding: 8px 22px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 500;
             cursor: pointer;
-            transition: 0.2s;
-            backdrop-filter: blur(4px);
+            transition: 0.25s;
         }
         .btn:hover {
-            background: rgba(255,255,255,0.12);
-            border-color: rgba(255,255,255,0.1);
-            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.12);
+            color: #fff;
         }
-        .btn:active { transform: scale(0.96); }
-        .btn-outline {
-            background: transparent;
-            border-color: rgba(255,255,255,0.08);
+        .btn:active { transform: scale(0.95); }
+        .btn-primary {
+            background: rgba(100, 200, 255, 0.08);
+            border-color: rgba(100, 200, 255, 0.15);
+            color: rgba(100, 200, 255, 0.8);
         }
-        .btn-outline:hover { background: rgba(255,255,255,0.04); }
+        .btn-primary:hover {
+            background: rgba(100, 200, 255, 0.15);
+            border-color: rgba(100, 200, 255, 0.25);
+        }
+        .error-msg {
+            background: rgba(255, 80, 80, 0.08);
+            color: #ff7a7a;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            display: none;
+            border: 1px solid rgba(255, 80, 80, 0.06);
+        }
 
-        /* ----- 倒计时 + 环形进度 ----- */
+        /* ----- 倒计时卡片（强化） ----- */
         .countdown-card {
             display: flex;
             align-items: center;
-            gap: 24px;
-            background: rgba(255,255,255,0.015);
-            border-radius: 40px;
-            padding: 14px 28px;
-            margin-bottom: 26px;
-            border: 1px solid rgba(255,255,255,0.03);
+            justify-content: space-between;
+            padding: 18px 28px;
+            margin: 18px 0 22px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
             flex-wrap: wrap;
+            gap: 12px;
         }
-        .countdown-label {
-            font-size: 16px;
-            color: rgba(255,255,255,0.4);
+        .countdown-left {
             display: flex;
             align-items: center;
-            gap: 10px;
-            flex: 1;
+            gap: 14px;
         }
-        .countdown-label span { font-size: 22px; }
-        .countdown-ring {
+        .countdown-left .icon { font-size: 24px; }
+        .countdown-left .label {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.3px;
+        }
+        .countdown-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .countdown-ring-wrap {
             position: relative;
-            width: 72px;
-            height: 72px;
-            flex-shrink: 0;
+            width: 64px;
+            height: 64px;
         }
-        .countdown-ring svg {
+        .countdown-ring-wrap svg {
             transform: rotate(-90deg);
-            width: 72px;
-            height: 72px;
+            width: 64px;
+            height: 64px;
         }
-        .countdown-ring .bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 6; }
-        .countdown-ring .progress {
+        .countdown-ring-wrap .bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.04);
+            stroke-width: 5;
+        }
+        .countdown-ring-wrap .progress {
             fill: none;
             stroke: #8fcbff;
-            stroke-width: 6;
+            stroke-width: 5;
             stroke-linecap: round;
-            transition: stroke-dashoffset 0.3s;
+            transition: stroke-dashoffset 0.3s ease;
         }
-        .countdown-ring .progress.warning { stroke: #ff7a7a; }
-        .countdown-time {
+        .countdown-ring-wrap .progress.warning { stroke: #ff7a7a; }
+        .countdown-ring-wrap .time-text {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
-            color: #f0f6fe;
             letter-spacing: 1px;
+            color: #f0f6fe;
         }
+        .countdown-ring-wrap .time-text.warning { color: #ff7a7a; }
 
-        /* ----- 20个号码（兼容显示） ----- */
-        .balls {
-            background: rgba(255,255,255,0.01);
-            border-radius: 28px;
-            padding: 18px 16px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(255,255,255,0.02);
-        }
-        .balls-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: rgba(255,255,255,0.3);
-            margin-bottom: 14px;
-            letter-spacing: 0.5px;
-        }
-        .balls-grid {
+        /* ----- 三球展示（大号霓虹） ----- */
+        .balls-display {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px 8px;
-        }
-        .ball {
-            display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.05);
-            font-weight: 700;
-            font-size: 15px;
-            color: #dce6f0;
-            transition: 0.2s;
-            cursor: default;
+            gap: 20px;
+            padding: 24px 0 16px;
+            margin-bottom: 16px;
         }
-        .ball:hover { transform: scale(1.08); background: rgba(255,255,255,0.06); }
-        .ball.highlight {
-            border-color: rgba(120,200,255,0.3);
-            background: rgba(120,200,255,0.06);
-            box-shadow: 0 0 20px rgba(120,200,255,0.03);
-            color: #b0d4ff;
-        }
-
-        /* ----- 三球+特码（发光） ----- */
-        .result-row {
+        .ball-glow {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             align-items: center;
-            gap: 20px 35px;
-            background: rgba(255,255,255,0.01);
-            border-radius: 28px;
-            padding: 20px 28px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(255,255,255,0.02);
+            gap: 4px;
         }
-        .result-item {
+        .ball-glow .num {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
             display: flex;
-            align-items: baseline;
-            gap: 8px;
-        }
-        .result-item .tag {
-            font-size: 14px;
-            font-weight: 500;
-            color: rgba(255,255,255,0.3);
-        }
-        .result-item .num {
+            align-items: center;
+            justify-content: center;
             font-size: 34px;
             font-weight: 800;
+            background: radial-gradient(circle at 30% 30%, rgba(100, 200, 255, 0.15), rgba(20, 60, 120, 0.2));
+            border: 1px solid rgba(100, 200, 255, 0.15);
+            box-shadow: 0 0 40px rgba(100, 200, 255, 0.05);
             color: #eef4fc;
-            min-width: 40px;
-            text-align: center;
-            text-shadow: 0 0 30px rgba(255,255,255,0.05);
+            transition: 0.3s;
         }
-        .result-item .num.special {
+        .ball-glow .num.special-num {
+            background: radial-gradient(circle at 30% 30%, rgba(255, 180, 100, 0.15), rgba(180, 80, 30, 0.15));
+            border-color: rgba(255, 180, 100, 0.2);
+            box-shadow: 0 0 50px rgba(255, 180, 100, 0.08);
             color: #ffba7a;
-            font-size: 42px;
-            text-shadow: 0 0 40px rgba(255,186,122,0.2);
-            animation: glowPulse 2s ease-in-out infinite;
+            font-size: 38px;
         }
-        @keyframes glowPulse {
-            0% { text-shadow: 0 0 30px rgba(255,186,122,0.1); }
-            50% { text-shadow: 0 0 60px rgba(255,186,122,0.3); }
-            100% { text-shadow: 0 0 30px rgba(255,186,122,0.1); }
+        .ball-glow .label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.5px;
         }
-        .divider {
-            width: 1px;
-            height: 44px;
-            background: rgba(255,255,255,0.04);
+        .ball-glow .label.highlight { color: rgba(255, 180, 100, 0.4); }
+        .balls-display .operator {
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.1);
+            font-weight: 300;
+        }
+        .balls-display .equals {
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.2);
+            font-weight: 300;
+        }
+        .balls-display .result-sum {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffd54f;
+            text-shadow: 0 0 40px rgba(255, 213, 79, 0.1);
+            min-width: 50px;
+            text-align: center;
         }
 
-        /* ----- 术语（卡片式） ----- */
-        .terms {
+        /* ----- 组合标签 ----- */
+        .combination-tag {
+            text-align: center;
+            margin-bottom: 22px;
+            padding: 8px 0;
+        }
+        .combination-tag .tag {
+            display: inline-block;
+            padding: 6px 28px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            background: rgba(100, 200, 255, 0.04);
+            border: 1px solid rgba(100, 200, 255, 0.06);
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .combination-tag .tag .highlight {
+            color: #ffd54f;
+        }
+
+        /* ----- 术语网格 ----- */
+        .terms-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 8px 16px;
-            background: rgba(255,255,255,0.01);
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px 12px;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.01);
             border-radius: 24px;
-            padding: 14px 20px;
-            border: 1px solid rgba(255,255,255,0.02);
-            margin-bottom: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            margin-bottom: 20px;
         }
         .term-item {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.02);
-            font-size: 15px;
+            padding: 4px 0;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
         }
         .term-item:last-child { border-bottom: none; }
-        .term-key { color: rgba(255,255,255,0.3); font-weight: 500; }
-        .term-value { font-weight: 600; color: #d4e0f0; }
+        .term-item .key { color: rgba(255, 255, 255, 0.25); font-weight: 400; }
+        .term-item .val { color: rgba(255, 255, 255, 0.75); font-weight: 500; }
 
         /* ----- 历史记录 ----- */
         .history-section {
-            margin-top: 18px;
-            background: rgba(255,255,255,0.01);
+            padding: 16px 18px;
+            background: rgba(255, 255, 255, 0.01);
             border-radius: 24px;
-            padding: 14px 16px;
-            border: 1px solid rgba(255,255,255,0.02);
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            margin-top: 16px;
         }
         .history-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: rgba(255,255,255,0.3);
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.2);
             margin-bottom: 12px;
             letter-spacing: 0.5px;
         }
@@ -361,150 +368,196 @@
         }
         .history-table th {
             text-align: left;
-            color: rgba(255,255,255,0.2);
-            font-weight: 500;
-            padding: 6px 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            color: rgba(255, 255, 255, 0.15);
+            font-weight: 400;
+            padding: 4px 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
         }
         .history-table td {
-            padding: 6px 8px;
-            border-bottom: 1px solid rgba(255,255,255,0.02);
-            color: rgba(255,255,255,0.7);
+            padding: 4px 8px;
+            color: rgba(255, 255, 255, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.015);
         }
-        .history-table tr:last-child td { border-bottom: none; }
-        .history-table .highlight-row td { color: #fff; }
+        .history-table .latest td { color: rgba(255, 255, 255, 0.8); }
 
         /* ----- 底部 ----- */
-        .api-info {
-            background: rgba(255,255,255,0.01);
-            border-radius: 16px;
-            padding: 14px 18px;
-            margin-top: 18px;
-            font-size: 13px;
-            color: rgba(255,255,255,0.3);
-            border: 1px solid rgba(255,255,255,0.02);
-            line-height: 1.8;
+        .footer {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.12);
+            letter-spacing: 0.3px;
         }
-        .api-info code {
-            background: rgba(255,255,255,0.04);
+        .footer code {
+            background: rgba(255, 255, 255, 0.03);
             padding: 2px 10px;
             border-radius: 12px;
-            font-size: 12px;
-            color: #b0cce0;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.2);
         }
-        .footnote {
+
+        /* 20个号码（旧格式兼容） */
+        .old-balls {
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            margin-bottom: 16px;
+            display: none;
+        }
+        .old-balls.show { display: block; }
+        .old-balls .title {
             font-size: 12px;
-            color: rgba(255,255,255,0.15);
-            margin-top: 16px;
-            border-top: 1px solid rgba(255,255,255,0.02);
-            padding-top: 14px;
-            text-align: center;
-            letter-spacing: 0.3px;
+            color: rgba(255, 255, 255, 0.15);
+            margin-bottom: 10px;
+        }
+        .old-balls .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .old-balls .grid .b {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .old-balls .grid .b.hl {
+            border-color: rgba(100, 200, 255, 0.15);
+            color: rgba(100, 200, 255, 0.5);
         }
 
         /* 响应式 */
-        @media (max-width: 600px) {
-            .glass-container { padding: 18px 14px; border-radius: 32px; }
-            .result-row { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .divider { display: none; }
-            .ball { width: 36px; height: 36px; font-size: 13px; }
-            .terms { grid-template-columns: 1fr 1fr; }
-            .top-bar { flex-direction: column; align-items: stretch; }
+        @media (max-width: 640px) {
+            .glass-container { padding: 20px 16px; border-radius: 32px; }
+            .header h1 { font-size: 22px; }
+            .balls-display { gap: 12px; flex-wrap: wrap; }
+            .ball-glow .num { width: 56px; height: 56px; font-size: 26px; }
+            .ball-glow .num.special-num { font-size: 30px; }
+            .countdown-card { padding: 14px 18px; }
+            .countdown-ring-wrap { width: 52px; height: 52px; }
+            .countdown-ring-wrap .time-text { font-size: 18px; }
+            .terms-grid { grid-template-columns: 1fr 1fr; padding: 12px 14px; }
+            .status-bar { flex-direction: column; align-items: stretch; gap: 8px; }
+            .status-info { justify-content: center; }
             .btn-group { justify-content: center; }
-            .countdown-card { flex-direction: column; align-items: stretch; }
-            .countdown-ring { align-self: center; }
-            .brand h1 { font-size: 26px; }
         }
     </style>
 </head>
 <body>
 
-<!-- 星空背景 -->
-<canvas id="stars-canvas"></canvas>
+<canvas id="particles-canvas"></canvas>
 
 <div class="glass-container">
-    <!-- 品牌 -->
-    <div class="brand">
-        <h1>📡 PC28未来数据站</h1>
-        <span class="sub">实时 · 精准 · 自动推送</span>
+    <!-- 头部 -->
+    <div class="header">
+        <div class="header-left">
+            <span class="logo-icon">📡</span>
+            <h1>PC28未来数据站</h1>
+            <span class="badge">LIVE</span>
+        </div>
+        <div class="header-right">
+            <span class="status-dot" id="statusDot"></span>
+            <span style="font-size:13px;color:rgba(255,255,255,0.3);" id="statusLabel">实时</span>
+        </div>
     </div>
 
     <!-- 状态栏 -->
-    <div class="top-bar">
-        <div class="status-area">
-            <span class="status-badge" id="statusBadge">
-                <span class="dot"></span> 实时更新中
-            </span>
-            <span class="update-time" id="updateTime">最后更新: --</span>
-            <span class="source-indicator" id="sourceIndicator">数据源: 本地 data.json</span>
+    <div class="status-bar">
+        <div class="status-info">
+            <span><span class="label">最后更新</span> <span class="value" id="updateTime">--</span></span>
+            <span><span class="label">数据源</span> <span class="value" id="sourceIndicator">data.json</span></span>
             <span class="error-msg" id="errorMsg">⚠️ 加载失败</span>
         </div>
         <div class="btn-group">
-            <button class="btn" id="refreshBtn">🔄 刷新</button>
-            <button class="btn btn-outline" id="toggleBtn">⏸️ 暂停</button>
+            <button class="btn btn-primary" id="refreshBtn">🔄 刷新</button>
+            <button class="btn" id="toggleBtn">⏸️ 暂停</button>
         </div>
     </div>
 
-    <!-- 倒计时（环形进度） -->
+    <!-- 倒计时 -->
     <div class="countdown-card">
-        <div class="countdown-label"><span>⏳</span> 距下期开奖</div>
-        <div class="countdown-ring">
-            <svg viewBox="0 0 72 72">
-                <circle class="bg" cx="36" cy="36" r="30" />
-                <circle class="progress" id="countdownCircle" cx="36" cy="36" r="30"
-                    stroke-dasharray="188.5" stroke-dashoffset="0" />
-            </svg>
-            <div class="countdown-time" id="countdownDisplay">--:--</div>
+        <div class="countdown-left">
+            <span class="icon">⏳</span>
+            <span class="label">距下期开奖</span>
+        </div>
+        <div class="countdown-right">
+            <div class="countdown-ring-wrap">
+                <svg viewBox="0 0 64 64">
+                    <circle class="bg" cx="32" cy="32" r="27" />
+                    <circle class="progress" id="countdownCircle" cx="32" cy="32" r="27"
+                        stroke-dasharray="169.65" stroke-dashoffset="0" />
+                </svg>
+                <div class="time-text" id="countdownDisplay">--:--</div>
+            </div>
         </div>
     </div>
 
-    <!-- 20个号码（如果旧格式有则显示） -->
-    <div class="balls" id="ballsSection">
-        <div class="balls-title">📋 20个开奖号码（已排序）</div>
-        <div class="balls-grid" id="ballsContainer"></div>
+    <!-- 三球展示 -->
+    <div class="balls-display" id="ballsDisplay">
+        <div class="ball-glow">
+            <div class="num" id="displayBall1">-</div>
+            <span class="label">第1球</span>
+        </div>
+        <span class="operator">+</span>
+        <div class="ball-glow">
+            <div class="num" id="displayBall2">-</div>
+            <span class="label">第2球</span>
+        </div>
+        <span class="operator">+</span>
+        <div class="ball-glow">
+            <div class="num" id="displayBall3">-</div>
+            <span class="label">第3球</span>
+        </div>
+        <span class="equals">=</span>
+        <div class="ball-glow">
+            <div class="num special-num" id="displaySpecial">-</div>
+            <span class="label highlight">特码</span>
+        </div>
     </div>
 
-    <!-- 三球+特码 -->
-    <div class="result-row">
-        <div class="result-item"><span class="tag">第1球</span><span class="num" id="ball1">-</span></div>
-        <div class="result-item"><span class="tag">第2球</span><span class="num" id="ball2">-</span></div>
-        <div class="result-item"><span class="tag">第3球</span><span class="num" id="ball3">-</span></div>
-        <div class="divider"></div>
-        <div class="result-item"><span class="tag">特码</span><span class="num special" id="special">--</span></div>
+    <!-- 组合标签 -->
+    <div class="combination-tag">
+        <span class="tag" id="combinationTag">—</span>
+    </div>
+
+    <!-- 20个号码（旧格式兼容） -->
+    <div class="old-balls" id="oldBallsSection">
+        <div class="title">📋 20个开奖号码</div>
+        <div class="grid" id="oldBallsGrid"></div>
     </div>
 
     <!-- 术语 -->
-    <div class="terms">
-        <div class="term-item"><span class="term-key">单/双</span><span class="term-value" id="termOddEven">-</span></div>
-        <div class="term-item"><span class="term-key">大/小</span><span class="term-value" id="termBigSmall">-</span></div>
-        <div class="term-item"><span class="term-key">组合</span><span class="term-value" id="termCombination">-</span></div>
-        <div class="term-item"><span class="term-key">极值</span><span class="term-value" id="termExtreme">-</span></div>
-        <div class="term-item"><span class="term-key">顺子</span><span class="term-value" id="termStraight">-</span></div>
-        <div class="term-item"><span class="term-key">对子</span><span class="term-value" id="termPair">-</span></div>
-        <div class="term-item"><span class="term-key">豹子</span><span class="term-value" id="termTriple">-</span></div>
-        <div class="term-item"><span class="term-key">单点</span><span class="term-value" id="termPoint">-</span></div>
+    <div class="terms-grid" id="termsGrid">
+        <div class="term-item"><span class="key">单/双</span><span class="val" id="termOddEven">-</span></div>
+        <div class="term-item"><span class="key">大/小</span><span class="val" id="termBigSmall">-</span></div>
+        <div class="term-item"><span class="key">组合</span><span class="val" id="termCombination">-</span></div>
+        <div class="term-item"><span class="key">极值</span><span class="val" id="termExtreme">-</span></div>
+        <div class="term-item"><span class="key">顺子</span><span class="val" id="termStraight">-</span></div>
+        <div class="term-item"><span class="key">对子</span><span class="val" id="termPair">-</span></div>
+        <div class="term-item"><span class="key">豹子</span><span class="val" id="termTriple">-</span></div>
+        <div class="term-item"><span class="key">形态</span><span class="val" id="termShape">-</span></div>
     </div>
 
-    <!-- 历史记录 -->
+    <!-- 历史 -->
     <div class="history-section">
-        <div class="history-title">📊 最近开奖记录</div>
-        <div id="historyContainer">
-            <table class="history-table">
-                <thead><tr><th>期号</th><th>开奖结果</th><th>和值</th><th>组合</th></tr></thead>
-                <tbody id="historyBody"></tbody>
-            </table>
-        </div>
+        <div class="history-title">📊 最近开奖</div>
+        <table class="history-table">
+            <thead><tr><th>期号</th><th>开奖</th><th>和值</th><th>组合</th></tr></thead>
+            <tbody id="historyBody"></tbody>
+        </table>
     </div>
 
-    <!-- API 说明 -->
-    <div class="api-info">
-        <strong>🔌 对外接口</strong><br />
-        • 读取最新数据：<code>window.PC28_DATA</code><br />
-        • 监听更新事件：<code>window.addEventListener('pc28-data-updated', e => console.log(e.detail))</code><br />
-        • Telegram 推送：频道发图片，群组发文字（配置见代码顶部）
-    </div>
-    <div class="footnote">
-        ⚡ 数据由 GitHub Actions 每3分钟拉取 · 前端每3分30秒刷新 · 历史记录保存在本地
+    <div class="footer">
+        ⚡ 数据每3分钟自动更新 · 前端每3分30秒刷新 · <code>window.PC28_DATA</code> 对外接口
     </div>
 </div>
 
@@ -513,7 +566,7 @@
         'use strict';
 
         // ============================================================
-        // Telegram 推送配置（修改为您的实际值）
+        // Telegram 配置（已填入您的信息）
         // ============================================================
         const TG_CONFIG = {
             botToken: '8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo',
@@ -523,17 +576,17 @@
         };
 
         // ============================================================
-        // 通用配置
+        // 配置
         // ============================================================
-        const REFRESH_INTERVAL = 210000;   // 3分30秒
-        const ROUND_INTERVAL = 210;        // 3.5分钟（秒）
+        const REFRESH_INTERVAL = 210000;
+        const ROUND_INTERVAL = 210;
         const MAX_HISTORY = 50;
 
         // ============================================================
-        // 星空背景（不变）
+        // 粒子背景
         // ============================================================
-        (function initStars() {
-            const canvas = document.getElementById('stars-canvas');
+        (function initParticles() {
+            const canvas = document.getElementById('particles-canvas');
             const ctx = canvas.getContext('2d');
             let w, h;
             function resize() {
@@ -543,24 +596,42 @@
             window.addEventListener('resize', resize);
             resize();
 
-            const stars = Array.from({ length: 120 }, () => ({
+            const particles = Array.from({ length: 60 }, () => ({
                 x: Math.random() * w,
                 y: Math.random() * h,
-                r: Math.random() * 1.5 + 0.5,
-                a: Math.random() * 0.8 + 0.2,
-                speed: Math.random() * 0.005 + 0.002
+                r: Math.random() * 1.2 + 0.3,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                a: Math.random() * 0.5 + 0.1
             }));
 
             function draw() {
                 ctx.clearRect(0, 0, w, h);
-                stars.forEach(s => {
-                    s.a += s.speed * 0.02;
-                    const alpha = 0.3 + 0.7 * Math.abs(Math.sin(s.a));
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > w) p.vx *= -1;
+                    if (p.y < 0 || p.y > h) p.vy *= -1;
                     ctx.beginPath();
-                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255,255,255,${alpha * 0.6})`;
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255,255,255,${p.a * 0.3})`;
                     ctx.fill();
                 });
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(255,255,255,${0.04 * (1 - dist/120)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                }
                 requestAnimationFrame(draw);
             }
             draw();
@@ -569,43 +640,26 @@
         // ============================================================
         // DOM 引用
         // ============================================================
-        const ballsContainer = document.getElementById('ballsContainer');
-        const ball1El = document.getElementById('ball1');
-        const ball2El = document.getElementById('ball2');
-        const ball3El = document.getElementById('ball3');
-        const specialEl = document.getElementById('special');
+        const displayBall1 = document.getElementById('displayBall1');
+        const displayBall2 = document.getElementById('displayBall2');
+        const displayBall3 = document.getElementById('displayBall3');
+        const displaySpecial = document.getElementById('displaySpecial');
+        const combinationTag = document.getElementById('combinationTag');
         const updateTimeEl = document.getElementById('updateTime');
-        const errorMsgEl = document.getElementById('errorMsg');
-        const statusBadge = document.getElementById('statusBadge');
-        const toggleBtn = document.getElementById('toggleBtn');
         const sourceIndicator = document.getElementById('sourceIndicator');
+        const errorMsgEl = document.getElementById('errorMsg');
+        const statusDot = document.getElementById('statusDot');
+        const statusLabel = document.getElementById('statusLabel');
+        const toggleBtn = document.getElementById('toggleBtn');
         const countdownDisplay = document.getElementById('countdownDisplay');
         const countdownCircle = document.getElementById('countdownCircle');
         const historyBody = document.getElementById('historyBody');
-        const ballsSection = document.getElementById('ballsSection');
+        const oldBallsSection = document.getElementById('oldBallsSection');
+        const oldBallsGrid = document.getElementById('oldBallsGrid');
 
         // ============================================================
-        // 工具函数
+        // 工具
         // ============================================================
-        // 旧的 computeBalls 函数（用于旧格式）
-        function computeBalls(balls) {
-            if (!Array.isArray(balls) || balls.length !== 20) {
-                console.warn('号码数组无效，返回默认值');
-                return { ball1: 0, ball2: 0, ball3: 0, special: 0 };
-            }
-            const idx1 = [1,4,7,10,13,16];
-            const sum1 = idx1.reduce((a,i) => a + (balls[i] || 0), 0);
-            const ball1 = sum1 % 10;
-            const idx2 = [2,5,8,11,14,17];
-            const sum2 = idx2.reduce((a,i) => a + (balls[i] || 0), 0);
-            const ball2 = sum2 % 10;
-            const idx3 = [3,6,9,12,15,18];
-            const sum3 = idx3.reduce((a,i) => a + (balls[i] || 0), 0);
-            const ball3 = sum3 % 10;
-            const special = (ball1 + ball2 + ball3) % 10;
-            return { ball1, ball2, ball3, special };
-        }
-
         function analyzeTerms(b1, b2, b3, special) {
             const oddEven = special % 2 === 0 ? '双' : '单';
             const bigSmall = special <= 13 ? '小' : '大';
@@ -623,16 +677,15 @@
             if (isConsecutive && sorted[0]>=1 && sorted[2]<=9) straight = '是';
             const pair = (b1===b2 || b2===b3 || b1===b3) ? '是' : '否';
             const triple = (b1===b2 && b2===b3) ? '是' : '否';
-            const point = String(special);
             let shape = '杂六';
             if (triple === '是') shape = '豹子';
             else if (pair === '是') shape = '对子';
             else if (straight === '是') shape = '顺子';
-            return { oddEven, bigSmall, combination, extreme, straight, pair, triple, point, shape };
+            return { oddEven, bigSmall, combination, extreme, straight, pair, triple, shape };
         }
 
         // ============================================================
-        // 核心：读取 data.json （兼容新旧格式）
+        // 读取 data.json（兼容新旧格式）
         // ============================================================
         async function fetchRealData() {
             try {
@@ -644,69 +697,52 @@
                 }
                 const item = json.data[0];
 
-                // 期号
                 const period = item.nbr || item.id || '未知期号';
-
-                // 解析三个球和特码
                 let ball1, ball2, ball3, special;
-                let nbrs = [];
 
-                // ---------- 检查是否为新格式（有 number 字段） ----------
+                // 新格式：有 number 字段 (如 "5+1+1")
                 if (item.number && typeof item.number === 'string' && item.number.includes('+')) {
                     const parts = item.number.split('+').map(s => parseInt(s.trim(), 10));
                     if (parts.length === 3) {
                         [ball1, ball2, ball3] = parts;
                         special = (ball1 + ball2 + ball3) % 10;
-                        // 如果有 num 字段，可以作为校验，但以计算为准
                     } else {
                         throw new Error('number 字段解析错误');
                     }
-                } 
-                // ---------- 旧格式（有 nbrs 字段） ----------
+                }
+                // 旧格式：有 nbrs 字段
                 else if (item.nbrs) {
-                    let nbrsRaw = item.nbrs;
-                    if (typeof nbrsRaw === 'string') {
-                        nbrs = nbrsRaw.split(/[,;\s|]+/).map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
-                    } else if (Array.isArray(nbrsRaw)) {
-                        nbrs = nbrsRaw.map(n => parseInt(n, 10)).filter(n => !isNaN(n));
+                    let nbrs = [];
+                    if (typeof item.nbrs === 'string') {
+                        nbrs = item.nbrs.split(/[,;\s|]+/).map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+                    } else if (Array.isArray(item.nbrs)) {
+                        nbrs = item.nbrs.map(n => parseInt(n, 10)).filter(n => !isNaN(n));
                     }
                     if (nbrs.length !== 20) {
                         throw new Error(`号码数量不正确，期望20，实际${nbrs.length}`);
                     }
                     nbrs.sort((a, b) => a - b);
-                    const result = computeBalls(nbrs);
-                    ball1 = result.ball1;
-                    ball2 = result.ball2;
-                    ball3 = result.ball3;
-                    special = result.special;
+                    const idx1 = [1,4,7,10,13,16];
+                    const sum1 = idx1.reduce((a,i) => a + (nbrs[i] || 0), 0);
+                    ball1 = sum1 % 10;
+                    const idx2 = [2,5,8,11,14,17];
+                    const sum2 = idx2.reduce((a,i) => a + (nbrs[i] || 0), 0);
+                    ball2 = sum2 % 10;
+                    const idx3 = [3,6,9,12,15,18];
+                    const sum3 = idx3.reduce((a,i) => a + (nbrs[i] || 0), 0);
+                    ball3 = sum3 % 10;
+                    special = (ball1 + ball2 + ball3) % 10;
+                    window._lastNbrs = nbrs;
                 } else {
                     throw new Error('既没有 number 也没有 nbrs 字段');
                 }
 
-                // 获取时间
                 const date = item.date || '';
                 const time = item.time || '';
-
-                // 如果接口直接提供了 combination，我们可以使用，但为了统一，我们用计算值
-                // 但计算值可能和接口的 combination 不一致（因为接口可能用的是 num 字段）
-                // 为了确保一致，如果接口提供了 combination，我们可以用接口的
-                // 但为了保留我们自己的分析逻辑，我们仍然使用 analyzeTerms 计算
-                // 并在显示时覆盖 combination 字段（如果有）
                 const combinationFromApi = item.combination || '';
 
                 return {
-                    data: {
-                        period,
-                        ball1,
-                        ball2,
-                        ball3,
-                        special,
-                        bonus: special,
-                        date,
-                        time,
-                        nbrs: nbrs, // 可能为空
-                        combinationFromApi // 接口给的组合
-                    },
+                    data: { period, ball1, ball2, ball3, special, date, time, combinationFromApi },
                     sourceName: 'GitHub Actions (本地 data.json)'
                 };
             } catch (err) {
@@ -715,82 +751,50 @@
         }
 
         // ============================================================
-        // 历史记录管理
+        // 历史记录
         // ============================================================
         function getHistory() {
-            try {
-                const raw = localStorage.getItem('pc28_history');
-                return raw ? JSON.parse(raw) : [];
-            } catch { return []; }
+            try { return JSON.parse(localStorage.getItem('pc28_history') || '[]'); } catch { return []; }
         }
-
         function saveHistory(entry) {
-            let history = getHistory();
-            history = history.filter(h => h.period !== entry.period);
-            history.unshift(entry);
-            if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
-            localStorage.setItem('pc28_history', JSON.stringify(history));
+            let h = getHistory().filter(x => x.period !== entry.period);
+            h.unshift(entry);
+            if (h.length > MAX_HISTORY) h = h.slice(0, MAX_HISTORY);
+            localStorage.setItem('pc28_history', JSON.stringify(h));
         }
-
         function renderHistory(history) {
             historyBody.innerHTML = '';
-            const show = history.slice(0, 10);
-            show.forEach((h, idx) => {
+            history.slice(0, 10).forEach((h, i) => {
                 const tr = document.createElement('tr');
-                if (idx === 0) tr.className = 'highlight-row';
-                tr.innerHTML = `
-                    <td>${h.period}</td>
-                    <td>${h.ball1}+${h.ball2}+${h.ball3}</td>
-                    <td>${h.sum}</td>
-                    <td>${h.combination}</td>
-                `;
+                if (i === 0) tr.className = 'latest';
+                tr.innerHTML = `<td>${h.period}</td><td>${h.ball1}+${h.ball2}+${h.ball3}</td><td>${h.sum}</td><td>${h.combination}</td>`;
                 historyBody.appendChild(tr);
             });
         }
 
         // ============================================================
-        // 倒计时（基于真实开奖时间）
+        // 倒计时
         // ============================================================
         let lastOpenTime = null;
-
-        function updateCountdownFromData(openTime) {
-            if (!openTime) {
-                countdownDisplay.textContent = '--:--';
-                countdownCircle.style.strokeDashoffset = '188.5';
-                return;
-            }
-            const now = new Date();
-            const elapsed = (now - openTime) / 1000;
+        function updateCountdown(openTime) {
+            if (!openTime) { countdownDisplay.textContent = '--:--'; countdownCircle.style.strokeDashoffset = '169.65'; return; }
+            const now = Date.now();
+            const elapsed = (now - openTime.getTime()) / 1000;
             const rounds = Math.floor(elapsed / ROUND_INTERVAL);
             const nextTime = new Date(openTime.getTime() + (rounds + 1) * ROUND_INTERVAL * 1000);
             const remaining = (nextTime - now) / 1000;
-            if (remaining < 0) {
-                countdownDisplay.textContent = '00:00';
-                countdownCircle.style.strokeDashoffset = '0';
-                return;
-            }
+            if (remaining < 0) { countdownDisplay.textContent = '00:00'; countdownCircle.style.strokeDashoffset = '0'; return; }
             const mins = Math.floor(remaining / 60);
             const secs = Math.floor(remaining % 60);
-            const str = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-            countdownDisplay.textContent = str;
-
+            countdownDisplay.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
             const progress = 1 - (remaining / ROUND_INTERVAL);
-            const offset = 188.5 * progress;
-            countdownCircle.style.strokeDashoffset = offset;
-
-            if (remaining < 30) {
-                countdownCircle.classList.add('warning');
-            } else {
-                countdownCircle.classList.remove('warning');
-            }
+            countdownCircle.style.strokeDashoffset = 169.65 * progress;
+            countdownCircle.classList.toggle('warning', remaining < 30);
         }
-
-        setInterval(() => {
-            if (lastOpenTime) updateCountdownFromData(lastOpenTime);
-        }, 1000);
+        setInterval(() => { if (lastOpenTime) updateCountdown(lastOpenTime); }, 1000);
 
         // ============================================================
-        // Telegram 推送（保持不变）
+        // Telegram 推送
         // ============================================================
         function generateCardImage(data) {
             const { period, ball1, ball2, ball3, terms, date, time } = data;
@@ -808,7 +812,6 @@
             grad.addColorStop(0, '#0f1f2f');
             grad.addColorStop(0.7, '#1a2a4a');
             ctx.fillStyle = grad; ctx.fillRect(0,0,width,height);
-
             ctx.strokeStyle = 'rgba(255,255,255,0.06)';
             ctx.lineWidth = 2; ctx.strokeRect(10,10,width-20,height-20);
 
@@ -816,7 +819,6 @@
             ctx.fillStyle = 'rgba(255,255,255,0.25)';
             ctx.font = '16px "Segoe UI", sans-serif';
             ctx.fillText('PC28 开奖结果', 30, 50);
-
             ctx.fillStyle = '#ffffff';
             ctx.font = 'bold 22px "Segoe UI", sans-serif';
             ctx.textAlign = 'right';
@@ -874,114 +876,68 @@
         async function sendPhotoToChannel(chatId, photoBlob, caption) {
             if (!TG_CONFIG.enabled || !TG_CONFIG.botToken) return;
             const url = `https://api.telegram.org/bot${TG_CONFIG.botToken}/sendPhoto`;
-            const formData = new FormData();
-            formData.append('chat_id', chatId);
-            formData.append('photo', photoBlob, 'result.png');
-            if (caption) formData.append('caption', caption);
-            formData.append('parse_mode', 'HTML');
+            const fd = new FormData();
+            fd.append('chat_id', chatId);
+            fd.append('photo', photoBlob, 'result.png');
+            if (caption) fd.append('caption', caption);
+            fd.append('parse_mode', 'HTML');
             try {
-                const resp = await fetch(url, { method: 'POST', body: formData });
-                const result = await resp.json();
-                if (!result.ok) console.error('发送图片失败:', result);
-                else console.log('图片发送成功 (chatId:', chatId, ')');
-            } catch (e) { console.error('发送图片异常:', e); }
+                const r = await fetch(url, { method: 'POST', body: fd });
+                const j = await r.json();
+                if (!j.ok) console.error('图片发送失败:', j);
+                else console.log('图片发送成功');
+            } catch (e) { console.error('图片发送异常:', e); }
         }
 
         async function sendTextToGroup(chatId, text) {
             if (!TG_CONFIG.enabled || !TG_CONFIG.botToken) return;
             const url = `https://api.telegram.org/bot${TG_CONFIG.botToken}/sendMessage`;
             try {
-                const resp = await fetch(url, {
+                const r = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: chatId,
-                        text: text,
-                        parse_mode: 'HTML',
-                        disable_web_page_preview: true
-                    })
+                    body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML', disable_web_page_preview: true })
                 });
-                const result = await resp.json();
-                if (!result.ok) console.error('发送文字失败:', result);
-                else console.log('文字发送成功 (chatId:', chatId, ')');
-            } catch (e) { console.error('发送文字异常:', e); }
+                const j = await r.json();
+                if (!j.ok) console.error('文字发送失败:', j);
+                else console.log('文字发送成功');
+            } catch (e) { console.error('文字发送异常:', e); }
         }
 
         function buildGroupMessage(data) {
             const { period, ball1, ball2, ball3, terms, date, time } = data;
             const sum = ball1 + ball2 + ball3;
-            const combination = terms.combination;
-            const shape = terms.shape;
             const dateStr = date && time ? `${date} ${time}` : '未知时间';
-            return `📢 最新开奖信息\n` +
-                   `📅 最新期号: ${period}\n` +
-                   `🔢 开奖结果: ${ball1}+${ball2}+${ball3}=${sum} ${combination}\n` +
-                   `🎉 号码形式: ${shape}|中\n` +
-                   `⏰ 开奖时间: ${dateStr}`;
+            return `📢 最新开奖信息\n📅 最新期号: ${period}\n🔢 开奖结果: ${ball1}+${ball2}+${ball3}=${sum} ${terms.combination}\n🎉 号码形式: ${terms.shape}|中\n⏰ 开奖时间: ${dateStr}`;
         }
 
         // ============================================================
-        // 对外数据
+        // 对外接口
         // ============================================================
         let latestData = null;
         let lastPushDigest = '';
         window.PC28_DATA = null;
 
-        function emitUpdate(data) {
-            window.dispatchEvent(new CustomEvent('pc28-data-updated', { detail: data }));
-        }
-
         // ============================================================
-        // 主渲染与推送
+        // 主渲染
         // ============================================================
         async function fetchAndRender() {
             errorMsgEl.style.display = 'none';
             try {
                 const result = await fetchRealData();
-                const { period, ball1, ball2, ball3, special, nbrs, date, time, combinationFromApi } = result.data;
-                // 计算术语（如果接口提供了 combination，我们可以覆盖，但这里先用计算值）
+                const { period, ball1, ball2, ball3, special, date, time, combinationFromApi } = result.data;
                 const terms = analyzeTerms(ball1, ball2, ball3, special);
-                // 如果接口提供了 combination 且与计算值不同，我们可以选择使用接口的
-                // 但为了数据一致性，我们优先使用接口的 combination（如果有）
-                if (combinationFromApi) {
-                    // 但是 combinationFromApi 是字符串如 "小单"，我们可以保留，但 terms 里已经有 combination
-                    // 我们可以覆盖 terms.combination
-                    terms.combination = combinationFromApi;
-                }
-                const timestamp = new Date().toISOString();
+                if (combinationFromApi) terms.combination = combinationFromApi;
 
-                const dataObj = {
-                    period,
-                    ball1, ball2, ball3, special,
-                    terms,
-                    date, time,
-                    nbrs: nbrs || [],
-                    sourceName: result.sourceName,
-                    timestamp
-                };
+                const dataObj = { period, ball1, ball2, ball3, special, terms, date, time, sourceName: result.sourceName };
                 latestData = dataObj;
                 window.PC28_DATA = dataObj;
 
-                // 更新界面
-                // 显示20个号码（如果有）
-                ballsContainer.innerHTML = '';
-                if (nbrs && nbrs.length === 20) {
-                    ballsSection.style.display = 'block';
-                    const highlightIndices = new Set([1,4,7,10,13,16]);
-                    nbrs.forEach((num, idx) => {
-                        const ball = document.createElement('span');
-                        ball.className = 'ball' + (highlightIndices.has(idx) ? ' highlight' : '');
-                        ball.textContent = String(num).padStart(2, '0');
-                        ballsContainer.appendChild(ball);
-                    });
-                } else {
-                    ballsSection.style.display = 'none';
-                }
-
-                ball1El.textContent = ball1;
-                ball2El.textContent = ball2;
-                ball3El.textContent = ball3;
-                specialEl.textContent = special;
+                displayBall1.textContent = ball1;
+                displayBall2.textContent = ball2;
+                displayBall3.textContent = ball3;
+                displaySpecial.textContent = special;
+                combinationTag.innerHTML = `<span class="highlight">${terms.combination}</span> · ${terms.shape}`;
 
                 document.getElementById('termOddEven').textContent = terms.oddEven;
                 document.getElementById('termBigSmall').textContent = terms.bigSmall;
@@ -990,48 +946,48 @@
                 document.getElementById('termStraight').textContent = terms.straight;
                 document.getElementById('termPair').textContent = terms.pair;
                 document.getElementById('termTriple').textContent = terms.triple;
-                document.getElementById('termPoint').textContent = terms.point;
+                document.getElementById('termShape').textContent = terms.shape;
 
-                const now = new Date();
-                updateTimeEl.textContent = '最后更新: ' + now.toLocaleString('zh-CN', { hour12: false });
-                sourceIndicator.textContent = '数据源: ' + result.sourceName;
-
-                emitUpdate(dataObj);
-                console.log('[PC28] 数据已更新:', dataObj);
-
-                // ----- 倒计时 -----
-                if (date && time) {
-                    const openTime = new Date(`${date} ${time}`);
-                    if (!isNaN(openTime)) {
-                        lastOpenTime = openTime;
-                        updateCountdownFromData(openTime);
-                    }
+                if (window._lastNbrs && window._lastNbrs.length === 20) {
+                    oldBallsSection.classList.add('show');
+                    oldBallsGrid.innerHTML = '';
+                    const hl = new Set([1,4,7,10,13,16]);
+                    window._lastNbrs.forEach((n, i) => {
+                        const span = document.createElement('span');
+                        span.className = 'b' + (hl.has(i) ? ' hl' : '');
+                        span.textContent = String(n).padStart(2, '0');
+                        oldBallsGrid.appendChild(span);
+                    });
+                } else {
+                    oldBallsSection.classList.remove('show');
                 }
 
-                // ----- 历史记录 -----
-                const historyEntry = {
-                    period,
-                    ball1, ball2, ball3,
-                    sum: ball1+ball2+ball3,
-                    combination: terms.combination
-                };
-                saveHistory(historyEntry);
+                const now = new Date();
+                updateTimeEl.textContent = now.toLocaleString('zh-CN', { hour12: false });
+                sourceIndicator.textContent = 'data.json';
+
+                if (date && time) {
+                    const ot = new Date(`${date} ${time}`);
+                    if (!isNaN(ot)) { lastOpenTime = ot; updateCountdown(ot); }
+                }
+
+                saveHistory({ period, ball1, ball2, ball3, sum: ball1+ball2+ball3, combination: terms.combination });
                 renderHistory(getHistory());
 
-                // ----- 推送（新数据） -----
                 const digest = `${period}|${ball1}|${ball2}|${ball3}`;
                 if (digest !== lastPushDigest && TG_CONFIG.enabled) {
                     lastPushDigest = digest;
                     if (TG_CONFIG.channelId) {
                         const caption = `<b>第${period}期</b> ${ball1}+${ball2}+${ball3}=${ball1+ball2+ball3} ${terms.combination}`;
-                        const imgBlob = await generateCardImage(dataObj);
-                        await sendPhotoToChannel(TG_CONFIG.channelId, imgBlob, caption);
+                        const img = await generateCardImage(dataObj);
+                        await sendPhotoToChannel(TG_CONFIG.channelId, img, caption);
                     }
                     if (TG_CONFIG.groupId) {
-                        const msg = buildGroupMessage(dataObj);
-                        await sendTextToGroup(TG_CONFIG.groupId, msg);
+                        await sendTextToGroup(TG_CONFIG.groupId, buildGroupMessage(dataObj));
                     }
                 }
+
+                console.log('[PC28] 数据更新:', dataObj);
 
             } catch (err) {
                 console.error('[PC28] 加载失败:', err);
@@ -1041,7 +997,7 @@
         }
 
         // ============================================================
-        // 自动刷新控制
+        // 自动刷新
         // ============================================================
         let timer = null;
         let isRunning = true;
@@ -1050,16 +1006,16 @@
             if (timer) clearInterval(timer);
             timer = setInterval(fetchAndRender, REFRESH_INTERVAL);
             isRunning = true;
-            statusBadge.className = 'status-badge';
-            statusBadge.innerHTML = '<span class="dot"></span> 实时更新中';
+            statusDot.className = 'status-dot';
+            statusLabel.textContent = '实时';
             toggleBtn.textContent = '⏸️ 暂停';
         }
 
         function stopAuto() {
             if (timer) { clearInterval(timer); timer = null; }
             isRunning = false;
-            statusBadge.className = 'status-badge paused';
-            statusBadge.innerHTML = '<span class="dot" style="background:#f5a623;"></span> 已暂停';
+            statusDot.className = 'status-dot paused';
+            statusLabel.textContent = '暂停';
             toggleBtn.textContent = '▶️ 继续';
         }
 
@@ -1071,11 +1027,12 @@
         document.getElementById('refreshBtn').addEventListener('click', fetchAndRender);
         toggleBtn.addEventListener('click', toggleAuto);
 
-        // 启动
-        fetchAndRender().then(() => startAuto()).catch(() => startAuto());
+        fetchAndRender().then(startAuto).catch(startAuto);
         window.addEventListener('beforeunload', () => { if (timer) clearInterval(timer); });
 
-        console.log('[PC28] 未来数据站已启动，Telegram推送' + (TG_CONFIG.enabled ? '已启用' : '已禁用'));
+        console.log('[PC28] 未来数据站已启动，Telegram推送已启用');
+        console.log('  频道ID:', TG_CONFIG.channelId);
+        console.log('  群组ID:', TG_CONFIG.groupId);
     })();
 </script>
 </body>
