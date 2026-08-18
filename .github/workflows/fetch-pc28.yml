@@ -8,11 +8,12 @@ on:
 jobs:
   fetch-and-push:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: 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
           fetch-depth: 0
 
       - name: Install dependencies
@@ -22,6 +23,7 @@ jobs:
           pip install pillow
 
       - name: Fetch data
+        id: fetch
         run: |
           curl -sL -A "Mozilla/5.0" "https://pc28.help/api/kj.json" -o data.json
           if [ ! -s data.json ] || ! grep -q '"data"' data.json; then
@@ -35,20 +37,23 @@ jobs:
             echo "❌ 数据无效"
             exit 1
           fi
-          echo "PERIOD=$PERIOD" >> $GITHUB_ENV
+          echo "period=$PERIOD" >> $GITHUB_OUTPUT
 
-      - name: Generate card and push to Telegram
+      - name: Check and push
+        if: success()
         env:
-          TG_TOKEN: 8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo
-          CHANNEL_ID: @pc28jndkj
-          GROUP_ID: -1003480986680
+          TG_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          CHANNEL_ID: ${{ secrets.TG_CHANNEL_ID }}
+          GROUP_ID: ${{ secrets.TG_GROUP_ID }}
         run: |
+          # 读取期号
           PERIOD=$(jq -r '.data[0].nbr' data.json)
           NUMBER=$(jq -r '.data[0].number' data.json)
           COMBINATION=$(jq -r '.data[0].combination' data.json)
           DATE=$(jq -r '.data[0].date' data.json)
           TIME=$(jq -r '.data[0].time' data.json)
 
+          # 读取上次推送的期号
           if [ -f last_period.txt ]; then
             LAST_PERIOD=$(cat last_period.txt)
           else
@@ -62,12 +67,14 @@ jobs:
 
           echo "🔄 新期号: $PERIOD"
 
+          # 解析三个球
           BALL1=$(echo "$NUMBER" | cut -d'+' -f1)
           BALL2=$(echo "$NUMBER" | cut -d'+' -f2)
           BALL3=$(echo "$NUMBER" | cut -d'+' -f3)
           SUM=$((BALL1 + BALL2 + BALL3))
           COMBO="$COMBINATION"
 
+          # 判断形态
           if [ "$BALL1" == "$BALL2" ] && [ "$BALL2" == "$BALL3" ]; then
             SHAPE="豹子"
           elif [ "$BALL1" == "$BALL2" ] || [ "$BALL2" == "$BALL3" ] || [ "$BALL1" == "$BALL3" ]; then
@@ -78,6 +85,9 @@ jobs:
             SHAPE="杂六"
           fi
 
+          # ==========================================
+          # 生成图片卡片
+          # ==========================================
           export PERIOD BALL1 BALL2 BALL3 SUM COMBO SHAPE DATE TIME
           python3 << 'PYEOF'
           from PIL import Image, ImageDraw, ImageFont
@@ -135,6 +145,9 @@ jobs:
           print("✅ 图片生成成功")
           PYEOF
 
+          # ==========================================
+          # 发送图片到频道
+          # ==========================================
           CAPTION="<b>第${PERIOD}期</b> ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO}"
 
           echo "📤 发送频道图片..."
@@ -153,13 +166,16 @@ jobs:
             cat /tmp/channel_resp.json
           fi
 
+          # ==========================================
+          # 发送文字到群组
+          # ==========================================
           GROUP_MSG="📢 最新开奖信息\n📅 最新期号: ${PERIOD}\n🔢 开奖结果: ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO}\n🎉 号码形式: ${SHAPE}|中\n⏰ 开奖时间: ${DATE} ${TIME}"
 
           echo "📤 发送群组文字..."
           curl -s -X POST \
             -H "Content-Type: application/json" \
             -d "{\"chat_id\":\"$GROUP_ID\",\"text\":\"$GROUP_MSG\",\"parse_mode\":\"HTML\",\"disable_web_page_preview\":true}" \
-            "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+            "https://api.telemetry.org/bot${TG_TOKEN}/sendMessage" \
             -o /tmp/group_resp.json
 
           if grep -q '"ok":true' /tmp/group_resp.json; then
@@ -169,12 +185,19 @@ jobs:
             cat /tmp/group_resp.json
           fi
 
+          # 记录本次期号
           echo "$PERIOD" > last_period.txt
 
-      - name: Push changes
+      - name: Commit and push
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json last_period.txt
-          git commit -m "Auto update data ($(date -u +%Y-%m-%dT%H:%M:%SZ))" || echo "无变化"
-          git push --force origin main
+          if git diff --staged --quiet; then
+            echo "无变化，跳过提交"
+          else
+            git pull origin main --rebase --autostash || true
+            git commit -m "Auto update data ($(date -u +%Y-%m-%dT%H:%M:%SZ))" || true
+            git push origin main || true
+          fi
