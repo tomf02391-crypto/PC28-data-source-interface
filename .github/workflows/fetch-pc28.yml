@@ -2,7 +2,7 @@ name: Fetch PC28 Data
 
 on:
   schedule:
-    - cron: '*/10 * * * *'   # 每10分钟运行一次
+    - cron: '*/3 * * * *'   # 每3分钟运行一次
   workflow_dispatch:         # 允许手动触发
 
 jobs:
