@@ -19,19 +19,38 @@ jobs:
           fetch-depth: 0
 
       - name: Fetch data from pc28.help
+        id: fetch_data
         run: |
+          echo "开始获取数据..."
           curl -sL \
             -H "User-Agent: Mozilla/5.0" \
             "https://pc28.help/api/kj.json" -o data.json
-          echo "=== data.json ==="
+          echo "数据获取完成，文件大小："
+          wc -c data.json
+          echo "=== data.json 内容 ==="
           cat data.json
+          # 检查是否包含有效数据
+          if ! grep -q '"data"' data.json; then
+            echo "❌ data.json 中没有 data 字段，尝试备用源..."
+            curl -sL -H "User-Agent: Mozilla/5.0" \
+              "https://yu28.top/api/kj.json" -o data.json
+            cat data.json
+          fi
+          # 提取期号检查
+          PERIOD=$(jq -r '.data[0].nbr' data.json 2>/dev/null || echo "")
+          if [ -z "$PERIOD" ] || [ "$PERIOD" == "null" ]; then
+            echo "❌ 无法解析期号，数据无效"
+            exit 1
+          fi
+          echo "✅ 数据有效，期号：$PERIOD"
 
       - name: Install Python dependencies
+        if: success()
         run: |
           pip install pillow
 
-      - name: Parse data, generate card and push to Telegram
-        id: push_telegram
+      - name: Generate card and push to Telegram
+        if: success()
         run: |
           # ============================================================
           # Telegram 配置
@@ -41,13 +60,17 @@ jobs:
           GROUP_ID="-1003480986680"
 
           # ============================================================
-          # 提取最新数据（使用 jq）
+          # 提取最新数据
           # ============================================================
           PERIOD=$(jq -r '.data[0].nbr' data.json)
           NUMBER=$(jq -r '.data[0].number' data.json)
           COMBINATION=$(jq -r '.data[0].combination' data.json)
           DATE=$(jq -r '.data[0].date' data.json)
           TIME=$(jq -r '.data[0].time' data.json)
+
+          echo "最新期号: $PERIOD"
+          echo "号码: $NUMBER"
+          echo "组合: $COMBINATION"
 
           if [ "$PERIOD" == "null" ] || [ -z "$PERIOD" ]; then
             echo "❌ 数据无效，跳过推送"
@@ -192,7 +215,11 @@ jobs:
           # ============================================================
           # 发送文字到群组
           # ============================================================
-          GROUP_MSG="📢 最新开奖信息\n📅 最新期号: ${PERIOD}\n🔢 开奖结果: ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO}\n🎉 号码形式: ${SHAPE}|中\n⏰ 开奖时间: ${DATE} ${TIME}"
+          GROUP_MSG="📢 最新开奖信息
+        📅 最新期号: ${PERIOD}
+        🔢 开奖结果: ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO}
+        🎉 号码形式: ${SHAPE}|中
+        ⏰ 开奖时间: ${DATE} ${TIME}"
 
           echo "📤 发送群组文字..."
           curl -s -X POST \
@@ -214,6 +241,7 @@ jobs:
           echo "$PERIOD" > last_period.txt
 
       - name: Commit changes (data.json + last_period.txt)
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
