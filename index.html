@@ -3,32 +3,46 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>加拿大PC28 · 液态玻璃 + 图片推送</title>
+    <title>PC28未来数据站</title>
     <style>
-        /* ========== 样式（液态玻璃，同上） ========== */
+        /* ===== 全局重置 & 背景 ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at 20% 30%, #1a2a3a, #0b1a2b);
+            background: #0a0e1a;
             font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
             padding: 20px;
-        }
-        .glass-container {
-            max-width: 900px;
-            width: 100%;
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border-radius: 48px;
-            border: 1px solid rgba(255,255,255,0.15);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03) inset;
-            padding: 30px 32px 36px;
-            color: #f0f4fa;
+            overflow-x: hidden;
             position: relative;
+        }
+
+        /* 动态星空 */
+        #stars-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .glass-container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px) saturate(200%);
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+            padding: 30px 32px 36px;
+            color: #f0f6fe;
+            position: relative;
+            z-index: 1;
             overflow: hidden;
+            transition: 0.3s;
         }
         .glass-container::before {
             content: '';
@@ -37,8 +51,8 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(120,200,255,0.05), transparent, rgba(200,120,255,0.05), transparent);
-            animation: rotateGlow 20s linear infinite;
+            background: conic-gradient(from 0deg, transparent, rgba(80, 180, 255, 0.06), transparent, rgba(200, 130, 255, 0.06), transparent);
+            animation: rotateGlow 30s linear infinite;
             pointer-events: none;
             z-index: 0;
         }
@@ -47,43 +61,50 @@
             100% { transform: rotate(360deg); }
         }
         .glass-container > * { position: relative; z-index: 1; }
-        h1 {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #b0d4ff, #e0c4ff);
+
+        /* ----- 头部 ----- */
+        .brand {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .brand h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8fcbff, #d4b0ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            letter-spacing: 2px;
+            text-shadow: 0 0 40px rgba(140, 200, 255, 0.15);
         }
-        .subhead {
+        .brand .sub {
             font-size: 14px;
-            color: rgba(255,255,255,0.6);
-            border-left: 3px solid rgba(120,200,255,0.4);
+            color: rgba(255,255,255,0.35);
+            border-left: 2px solid rgba(120,200,255,0.25);
             padding-left: 16px;
-            margin-bottom: 22px;
-            line-height: 1.6;
+            letter-spacing: 0.5px;
         }
+
+        /* ----- 状态栏 ----- */
         .top-bar {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             gap: 12px;
-            background: rgba(255,255,255,0.04);
+            background: rgba(255,255,255,0.02);
             border-radius: 60px;
-            padding: 12px 20px;
-            border: 1px solid rgba(255,255,255,0.06);
-            margin-bottom: 24px;
+            padding: 10px 20px;
+            border: 1px solid rgba(255,255,255,0.03);
+            margin: 16px 0 22px;
         }
         .status-area {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
             flex-wrap: wrap;
         }
         .status-badge {
@@ -98,7 +119,6 @@
             height: 10px;
             background: #4cdb7b;
             border-radius: 50%;
-            display: inline-block;
             animation: pulse 1.2s infinite;
             box-shadow: 0 0 12px rgba(76,219,123,0.4);
         }
@@ -112,99 +132,113 @@
             animation: none;
             box-shadow: 0 0 12px rgba(245,166,35,0.3);
         }
-        .update-time { font-size: 14px; color: rgba(255,255,255,0.65); }
+        .update-time { font-size: 14px; color: rgba(255,255,255,0.5); }
         .source-indicator {
             font-size: 12px;
-            background: rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.04);
             padding: 4px 14px;
             border-radius: 30px;
-            color: rgba(255,255,255,0.7);
-            border: 1px solid rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.03);
         }
         .error-msg {
-            background: rgba(255,80,80,0.15);
+            background: rgba(255,80,80,0.1);
             color: #ff7a7a;
             padding: 4px 14px;
             border-radius: 40px;
             font-weight: 500;
             display: none;
             font-size: 13px;
-            border: 1px solid rgba(255,80,80,0.15);
+            border: 1px solid rgba(255,80,80,0.08);
         }
         .btn-group { display: flex; gap: 8px; }
         .btn {
-            background: rgba(255,255,255,0.07);
+            background: rgba(255,255,255,0.05);
             color: #fff;
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 20px;
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 8px 22px;
             border-radius: 40px;
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
             transition: 0.2s;
             backdrop-filter: blur(4px);
-            background: rgba(255,255,255,0.04);
         }
         .btn:hover {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.1);
             transform: scale(1.02);
         }
         .btn:active { transform: scale(0.96); }
         .btn-outline {
             background: transparent;
-            border-color: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.08);
         }
-        .btn-outline:hover { background: rgba(255,255,255,0.08); }
+        .btn-outline:hover { background: rgba(255,255,255,0.04); }
 
+        /* ----- 倒计时 + 环形进度 ----- */
         .countdown-card {
-            background: rgba(255,255,255,0.04);
-            border-radius: 32px;
-            padding: 14px 24px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(255,255,255,0.05);
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 24px;
+            background: rgba(255,255,255,0.015);
+            border-radius: 40px;
+            padding: 14px 28px;
+            margin-bottom: 26px;
+            border: 1px solid rgba(255,255,255,0.03);
             flex-wrap: wrap;
         }
         .countdown-label {
-            font-size: 15px;
-            color: rgba(255,255,255,0.6);
+            font-size: 16px;
+            color: rgba(255,255,255,0.4);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            flex: 1;
         }
+        .countdown-label span { font-size: 22px; }
+        .countdown-ring {
+            position: relative;
+            width: 72px;
+            height: 72px;
+            flex-shrink: 0;
+        }
+        .countdown-ring svg {
+            transform: rotate(-90deg);
+            width: 72px;
+            height: 72px;
+        }
+        .countdown-ring .bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 6; }
+        .countdown-ring .progress {
+            fill: none;
+            stroke: #8fcbff;
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.3s;
+        }
+        .countdown-ring .progress.warning { stroke: #ff7a7a; }
         .countdown-time {
-            font-size: 28px;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
             font-weight: 700;
-            font-variant-numeric: tabular-nums;
-            background: linear-gradient(135deg, #8fcbff, #d4b0ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 2px;
-            min-width: 100px;
-            text-align: right;
-        }
-        .countdown-time.warning {
-            background: linear-gradient(135deg, #ffb07a, #ff7a7a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #f0f6fe;
+            letter-spacing: 1px;
         }
 
+        /* ----- 20个号码 ----- */
         .balls {
-            background: rgba(255,255,255,0.03);
-            border-radius: 24px;
+            background: rgba(255,255,255,0.01);
+            border-radius: 28px;
             padding: 18px 16px;
             margin-bottom: 24px;
-            border: 1px solid rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.02);
         }
         .balls-title {
             font-size: 14px;
             font-weight: 600;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.3);
             margin-bottom: 14px;
             letter-spacing: 0.5px;
         }
@@ -220,92 +254,139 @@
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
             font-weight: 700;
-            font-size: 16px;
-            color: #e8edf5;
+            font-size: 15px;
+            color: #dce6f0;
             transition: 0.2s;
+            cursor: default;
         }
+        .ball:hover { transform: scale(1.08); background: rgba(255,255,255,0.06); }
         .ball.highlight {
-            border-color: rgba(120,200,255,0.5);
-            background: rgba(120,200,255,0.08);
-            box-shadow: 0 0 20px rgba(120,200,255,0.05);
+            border-color: rgba(120,200,255,0.3);
+            background: rgba(120,200,255,0.06);
+            box-shadow: 0 0 20px rgba(120,200,255,0.03);
             color: #b0d4ff;
         }
 
+        /* ----- 三球+特码（发光） ----- */
         .result-row {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 18px 30px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 24px;
-            padding: 16px 24px;
+            gap: 20px 35px;
+            background: rgba(255,255,255,0.01);
+            border-radius: 28px;
+            padding: 20px 28px;
             margin-bottom: 24px;
-            border: 1px solid rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.02);
         }
         .result-item {
             display: flex;
             align-items: baseline;
-            gap: 6px;
+            gap: 8px;
         }
         .result-item .tag {
             font-size: 14px;
             font-weight: 500;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255,255,255,0.3);
         }
         .result-item .num {
-            font-size: 30px;
+            font-size: 34px;
             font-weight: 800;
-            color: #e8edf5;
-            min-width: 30px;
+            color: #eef4fc;
+            min-width: 40px;
             text-align: center;
+            text-shadow: 0 0 30px rgba(255,255,255,0.05);
         }
         .result-item .num.special {
             color: #ffba7a;
-            font-size: 36px;
-            text-shadow: 0 0 20px rgba(255,186,122,0.2);
+            font-size: 42px;
+            text-shadow: 0 0 40px rgba(255,186,122,0.2);
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+            0% { text-shadow: 0 0 30px rgba(255,186,122,0.1); }
+            50% { text-shadow: 0 0 60px rgba(255,186,122,0.3); }
+            100% { text-shadow: 0 0 30px rgba(255,186,122,0.1); }
         }
         .divider {
             width: 1px;
-            height: 36px;
-            background: rgba(255,255,255,0.06);
+            height: 44px;
+            background: rgba(255,255,255,0.04);
         }
 
+        /* ----- 术语（卡片式） ----- */
         .terms {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px 16px;
-            background: rgba(255,255,255,0.02);
-            border-radius: 20px;
-            padding: 16px 20px;
-            border: 1px solid rgba(255,255,255,0.03);
+            gap: 8px 16px;
+            background: rgba(255,255,255,0.01);
+            border-radius: 24px;
+            padding: 14px 20px;
+            border: 1px solid rgba(255,255,255,0.02);
             margin-bottom: 18px;
         }
         .term-item {
             display: flex;
             justify-content: space-between;
             padding: 5px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.02);
             font-size: 15px;
         }
         .term-item:last-child { border-bottom: none; }
-        .term-key { color: rgba(255,255,255,0.4); font-weight: 500; }
+        .term-key { color: rgba(255,255,255,0.3); font-weight: 500; }
         .term-value { font-weight: 600; color: #d4e0f0; }
 
+        /* ----- 历史记录 ----- */
+        .history-section {
+            margin-top: 18px;
+            background: rgba(255,255,255,0.01);
+            border-radius: 24px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+        .history-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .history-table th {
+            text-align: left;
+            color: rgba(255,255,255,0.2);
+            font-weight: 500;
+            padding: 6px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .history-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+            color: rgba(255,255,255,0.7);
+        }
+        .history-table tr:last-child td { border-bottom: none; }
+        .history-table .highlight-row td { color: #fff; }
+
+        /* ----- 底部 ----- */
         .api-info {
-            background: rgba(255,255,255,0.03);
+            background: rgba(255,255,255,0.01);
             border-radius: 16px;
             padding: 14px 18px;
-            margin-top: 14px;
+            margin-top: 18px;
             font-size: 13px;
-            color: rgba(255,255,255,0.5);
-            border: 1px solid rgba(255,255,255,0.03);
+            color: rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.02);
             line-height: 1.8;
         }
         .api-info code {
-            background: rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.04);
             padding: 2px 10px;
             border-radius: 12px;
             font-size: 12px;
@@ -313,37 +394,42 @@
         }
         .footnote {
             font-size: 12px;
-            color: rgba(255,255,255,0.25);
+            color: rgba(255,255,255,0.15);
             margin-top: 16px;
-            border-top: 1px solid rgba(255,255,255,0.03);
+            border-top: 1px solid rgba(255,255,255,0.02);
             padding-top: 14px;
             text-align: center;
             letter-spacing: 0.3px;
         }
 
+        /* 响应式 */
         @media (max-width: 600px) {
-            .glass-container { padding: 20px 16px; border-radius: 32px; }
+            .glass-container { padding: 18px 14px; border-radius: 32px; }
             .result-row { flex-direction: column; align-items: flex-start; gap: 8px; }
             .divider { display: none; }
-            .ball { width: 38px; height: 38px; font-size: 14px; }
+            .ball { width: 36px; height: 36px; font-size: 13px; }
             .terms { grid-template-columns: 1fr 1fr; }
             .top-bar { flex-direction: column; align-items: stretch; }
             .btn-group { justify-content: center; }
-            .countdown-card { flex-direction: column; align-items: stretch; gap: 6px; }
-            .countdown-time { text-align: left; }
-            .status-area { justify-content: center; }
+            .countdown-card { flex-direction: column; align-items: stretch; }
+            .countdown-ring { align-self: center; }
+            .brand h1 { font-size: 26px; }
         }
     </style>
 </head>
 <body>
 
-<div class="glass-container" id="app">
-    <h1>🎲 加拿大PC28 · 液态玻璃面板</h1>
-    <div class="subhead">
-        数据源：GitHub Actions 实时同步 · 开奖周期 3.5 分钟 · Telegram 图片/文字推送
+<!-- 星空背景 -->
+<canvas id="stars-canvas"></canvas>
+
+<div class="glass-container">
+    <!-- 品牌 -->
+    <div class="brand">
+        <h1>📡 PC28未来数据站</h1>
+        <span class="sub">实时 · 精准 · 自动推送</span>
     </div>
 
-    <!-- 顶部状态栏（同前） -->
+    <!-- 状态栏 -->
     <div class="top-bar">
         <div class="status-area">
             <span class="status-badge" id="statusBadge">
@@ -359,10 +445,17 @@
         </div>
     </div>
 
-    <!-- 倒计时卡片 -->
+    <!-- 倒计时（环形进度） -->
     <div class="countdown-card">
-        <div class="countdown-label"><span>⏳</span> 距下次开奖</div>
-        <div class="countdown-time" id="countdownDisplay">--:--</div>
+        <div class="countdown-label"><span>⏳</span> 距下期开奖</div>
+        <div class="countdown-ring">
+            <svg viewBox="0 0 72 72">
+                <circle class="bg" cx="36" cy="36" r="30" />
+                <circle class="progress" id="countdownCircle" cx="36" cy="36" r="30"
+                    stroke-dasharray="188.5" stroke-dashoffset="0" />
+            </svg>
+            <div class="countdown-time" id="countdownDisplay">--:--</div>
+        </div>
     </div>
 
     <!-- 20个号码 -->
@@ -371,7 +464,7 @@
         <div class="balls-grid" id="ballsContainer"></div>
     </div>
 
-    <!-- 三球 + 特码 -->
+    <!-- 三球+特码 -->
     <div class="result-row">
         <div class="result-item"><span class="tag">第1球</span><span class="num" id="ball1">-</span></div>
         <div class="result-item"><span class="tag">第2球</span><span class="num" id="ball2">-</span></div>
@@ -392,6 +485,17 @@
         <div class="term-item"><span class="term-key">单点</span><span class="term-value" id="termPoint">-</span></div>
     </div>
 
+    <!-- 历史记录 -->
+    <div class="history-section">
+        <div class="history-title">📊 最近开奖记录</div>
+        <div id="historyContainer">
+            <table class="history-table">
+                <thead><tr><th>期号</th><th>开奖结果</th><th>和值</th><th>组合</th></tr></thead>
+                <tbody id="historyBody"></tbody>
+            </table>
+        </div>
+    </div>
+
     <!-- API 说明 -->
     <div class="api-info">
         <strong>🔌 对外接口</strong><br />
@@ -399,9 +503,8 @@
         • 监听更新事件：<code>window.addEventListener('pc28-data-updated', e => console.log(e.detail))</code><br />
         • Telegram 推送：频道发图片，群组发文字（配置见代码顶部）
     </div>
-
     <div class="footnote">
-        ⚡ 数据由 GitHub Actions 每3分钟拉取 · 前端每3分30秒刷新 · 倒计时基于固定周期估算
+        ⚡ 数据由 GitHub Actions 每3分钟拉取 · 前端每3分30秒刷新 · 历史记录保存在本地
     </div>
 </div>
 
@@ -410,20 +513,58 @@
         'use strict';
 
         // ============================================================
-        // Telegram 推送配置
+        // Telegram 推送配置（修改为您的实际值）
         // ============================================================
         const TG_CONFIG = {
-            botToken: '8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo',          // 例如 123456:ABC-DEF
-            channelId: '@pc28jndkj',          // 频道用户名（带@）或数字ID
-            groupId: '-1003480986680',           // 群组ID（负数）
-            enabled: true,                       // 是否启用推送
+            botToken: '8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo',
+            channelId: '@pc28jndkj',
+            groupId: '-1003480986680',
+            enabled: true,
         };
 
         // ============================================================
         // 通用配置
         // ============================================================
         const REFRESH_INTERVAL = 210000;   // 3分30秒
-        const ROUND_INTERVAL = 210;        // 3.5分钟 = 210秒
+        const ROUND_INTERVAL = 210;        // 3.5分钟（秒）
+        const MAX_HISTORY = 50;
+
+        // ============================================================
+        // 星空背景
+        // ============================================================
+        (function initStars() {
+            const canvas = document.getElementById('stars-canvas');
+            const ctx = canvas.getContext('2d');
+            let w, h;
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            const stars = Array.from({ length: 120 }, () => ({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: Math.random() * 1.5 + 0.5,
+                a: Math.random() * 0.8 + 0.2,
+                speed: Math.random() * 0.005 + 0.002
+            }));
+
+            function draw() {
+                ctx.clearRect(0, 0, w, h);
+                stars.forEach(s => {
+                    s.a += s.speed * 0.02;
+                    const alpha = 0.3 + 0.7 * Math.abs(Math.sin(s.a));
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255,255,255,${alpha * 0.6})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
 
         // ============================================================
         // DOM 引用
@@ -439,36 +580,25 @@
         const toggleBtn = document.getElementById('toggleBtn');
         const sourceIndicator = document.getElementById('sourceIndicator');
         const countdownDisplay = document.getElementById('countdownDisplay');
-
-        // ============================================================
-        // 倒计时
-        // ============================================================
-        function updateCountdown() {
-            const now = Math.floor(Date.now() / 1000);
-            const elapsed = now % ROUND_INTERVAL;
-            const remaining = ROUND_INTERVAL - elapsed;
-            const mins = Math.floor(remaining / 60);
-            const secs = remaining % 60;
-            const str = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-            countdownDisplay.textContent = str;
-            if (remaining < 30) countdownDisplay.classList.add('warning');
-            else countdownDisplay.classList.remove('warning');
-        }
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
+        const countdownCircle = document.getElementById('countdownCircle');
+        const historyBody = document.getElementById('historyBody');
 
         // ============================================================
         // 工具函数
         // ============================================================
         function computeBalls(balls) {
+            if (!Array.isArray(balls) || balls.length !== 20) {
+                console.warn('号码数组无效，返回默认值');
+                return { ball1: 0, ball2: 0, ball3: 0, special: 0 };
+            }
             const idx1 = [1,4,7,10,13,16];
-            const sum1 = idx1.reduce((a,i) => a + balls[i], 0);
+            const sum1 = idx1.reduce((a,i) => a + (balls[i] || 0), 0);
             const ball1 = sum1 % 10;
             const idx2 = [2,5,8,11,14,17];
-            const sum2 = idx2.reduce((a,i) => a + balls[i], 0);
+            const sum2 = idx2.reduce((a,i) => a + (balls[i] || 0), 0);
             const ball2 = sum2 % 10;
             const idx3 = [3,6,9,12,15,18];
-            const sum3 = idx3.reduce((a,i) => a + balls[i], 0);
+            const sum3 = idx3.reduce((a,i) => a + (balls[i] || 0), 0);
             const ball3 = sum3 % 10;
             const special = (ball1 + ball2 + ball3) % 10;
             return { ball1, ball2, ball3, special };
@@ -492,7 +622,6 @@
             const pair = (b1===b2 || b2===b3 || b1===b3) ? '是' : '否';
             const triple = (b1===b2 && b2===b3) ? '是' : '否';
             const point = String(special);
-            // 组合形态（杂六、对子、顺子、豹子等）
             let shape = '杂六';
             if (triple === '是') shape = '豹子';
             else if (pair === '是') shape = '对子';
@@ -501,20 +630,31 @@
         }
 
         // ============================================================
-        // 读取本地 data.json（含期号）
+        // 读取本地 data.json（健壮解析）
         // ============================================================
         async function fetchRealData() {
             try {
                 const resp = await fetch('data.json');
                 if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
                 const json = await resp.json();
-                if (json.message !== 'success' || !json.data || !json.data[0]) throw new Error('数据格式错误');
+                if (json.message !== 'success' || !json.data || !json.data[0]) {
+                    throw new Error('数据格式错误');
+                }
                 const item = json.data[0];
+                const period = item.nbr || item.id || '未知期号';
+                let nbrsStr = item.nbrs || '';
+                if (typeof nbrsStr !== 'string') nbrsStr = String(nbrsStr);
+                const nbrs = nbrsStr.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+                if (nbrs.length !== 20) {
+                    throw new Error(`号码数量不正确，期望20，实际${nbrs.length}`);
+                }
+                nbrs.sort((a,b) => a-b);
+                const bonus = item.bonus !== undefined ? parseInt(item.bonus, 10) : 0;
                 return {
                     data: {
-                        period: item.nbr || '未知期号',
-                        nbrs: item.nbrs.split(',').map(Number).sort((a, b) => a - b),
-                        bonus: parseInt(item.bonus, 10),
+                        period,
+                        nbrs,
+                        bonus: isNaN(bonus) ? 0 : bonus,
                         date: item.date || '',
                         time: item.time || ''
                     },
@@ -526,10 +666,88 @@
         }
 
         // ============================================================
-        // Canvas 生成卡片图片
+        // 历史记录管理
+        // ============================================================
+        function getHistory() {
+            try {
+                const raw = localStorage.getItem('pc28_history');
+                return raw ? JSON.parse(raw) : [];
+            } catch { return []; }
+        }
+
+        function saveHistory(entry) {
+            let history = getHistory();
+            // 去重（按期号）
+            history = history.filter(h => h.period !== entry.period);
+            history.unshift(entry);
+            if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
+            localStorage.setItem('pc28_history', JSON.stringify(history));
+        }
+
+        function renderHistory(history) {
+            historyBody.innerHTML = '';
+            const show = history.slice(0, 10);
+            show.forEach((h, idx) => {
+                const tr = document.createElement('tr');
+                if (idx === 0) tr.className = 'highlight-row';
+                tr.innerHTML = `
+                    <td>${h.period}</td>
+                    <td>${h.ball1}+${h.ball2}+${h.ball3}</td>
+                    <td>${h.sum}</td>
+                    <td>${h.combination}</td>
+                `;
+                historyBody.appendChild(tr);
+            });
+        }
+
+        // ============================================================
+        // 倒计时（基于真实开奖时间）
+        // ============================================================
+        let lastOpenTime = null;
+
+        function updateCountdownFromData(openTime) {
+            if (!openTime) {
+                countdownDisplay.textContent = '--:--';
+                countdownCircle.style.strokeDashoffset = '188.5';
+                return;
+            }
+            const now = new Date();
+            const elapsed = (now - openTime) / 1000;
+            const rounds = Math.floor(elapsed / ROUND_INTERVAL);
+            const nextTime = new Date(openTime.getTime() + (rounds + 1) * ROUND_INTERVAL * 1000);
+            const remaining = (nextTime - now) / 1000;
+            if (remaining < 0) {
+                countdownDisplay.textContent = '00:00';
+                countdownCircle.style.strokeDashoffset = '0';
+                return;
+            }
+            const mins = Math.floor(remaining / 60);
+            const secs = Math.floor(remaining % 60);
+            const str = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            countdownDisplay.textContent = str;
+
+            // 环形进度 (总周长 2*PI*30 ≈ 188.5)
+            const progress = 1 - (remaining / ROUND_INTERVAL);
+            const offset = 188.5 * progress;
+            countdownCircle.style.strokeDashoffset = offset;
+
+            if (remaining < 30) {
+                countdownCircle.classList.add('warning');
+            } else {
+                countdownCircle.classList.remove('warning');
+            }
+        }
+
+        // 每秒更新
+        setInterval(() => {
+            if (lastOpenTime) updateCountdownFromData(lastOpenTime);
+        }, 1000);
+
+        // ============================================================
+        // Telegram 推送（图片 + 文字）
         // ============================================================
         function generateCardImage(data) {
-            const { period, ball1, ball2, ball3, special, terms, date, time } = data;
+            const { period, ball1, ball2, ball3, terms, date, time } = data;
             const sum = ball1 + ball2 + ball3;
             const combination = terms.combination;
             const shape = terms.shape;
@@ -537,114 +755,76 @@
 
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            const width = 800;
-            const height = 420;
-            canvas.width = width;
-            canvas.height = height;
+            const width = 800, height = 420;
+            canvas.width = width; canvas.height = height;
 
-            // 背景渐变
-            const grad = ctx.createLinearGradient(0, 0, width, height);
+            const grad = ctx.createLinearGradient(0,0,width,height);
             grad.addColorStop(0, '#0f1f2f');
             grad.addColorStop(0.7, '#1a2a4a');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = grad; ctx.fillRect(0,0,width,height);
 
-            // 边框光效
-            ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(10, 10, width-20, height-20);
+            ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+            ctx.lineWidth = 2; ctx.strokeRect(10,10,width-20,height-20);
 
-            // 顶部标题
             ctx.textAlign = 'left';
-            ctx.fillStyle = 'rgba(255,255,255,0.3)';
-            ctx.font = '16px "Segoe UI", "PingFang SC", sans-serif';
+            ctx.fillStyle = 'rgba(255,255,255,0.25)';
+            ctx.font = '16px "Segoe UI", sans-serif';
             ctx.fillText('PC28 开奖结果', 30, 50);
 
-            // 期号
             ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 22px "Segoe UI", "PingFang SC", sans-serif';
+            ctx.font = 'bold 22px "Segoe UI", sans-serif';
             ctx.textAlign = 'right';
             ctx.fillText(`第 ${period} 期`, width-30, 50);
 
-            // 三个大球
-            const circleY = 150;
-            const radius = 50;
-            const spacing = 130;
-            const startX = (width - 2*spacing) / 2 - 10;
-
+            const circleY = 150, radius = 50, spacing = 130;
+            const startX = (width - 2*spacing)/2 - 10;
             const balls = [ball1, ball2, ball3];
-            const colors = ['#4fc3f7', '#4fc3f7', '#4fc3f7'];
             balls.forEach((num, i) => {
                 const x = startX + i * spacing;
-                // 圆
                 const gradCirc = ctx.createRadialGradient(x-15, circleY-15, 10, x, circleY, radius);
                 gradCirc.addColorStop(0, '#6ad4ff');
                 gradCirc.addColorStop(1, '#1a7ab5');
                 ctx.shadowColor = 'rgba(79,195,247,0.3)';
                 ctx.shadowBlur = 20;
-                ctx.beginPath();
-                ctx.arc(x, circleY, radius, 0, Math.PI*2);
-                ctx.fillStyle = gradCirc;
-                ctx.fill();
+                ctx.beginPath(); ctx.arc(x, circleY, radius, 0, Math.PI*2);
+                ctx.fillStyle = gradCirc; ctx.fill();
                 ctx.shadowBlur = 0;
-                ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-
-                // 数字
+                ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+                ctx.lineWidth = 2; ctx.stroke();
                 ctx.fillStyle = '#ffffff';
                 ctx.font = 'bold 44px "Segoe UI", sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
                 ctx.shadowColor = 'rgba(0,0,0,0.5)';
                 ctx.shadowBlur = 8;
                 ctx.fillText(num, x, circleY+2);
                 ctx.shadowBlur = 0;
-
-                // 加号
                 if (i < 2) {
-                    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                    ctx.fillStyle = 'rgba(255,255,255,0.25)';
                     ctx.font = '32px "Segoe UI", sans-serif';
                     ctx.fillText('+', x + spacing/2, circleY+2);
                 }
             });
 
-            // 和值及组合
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'top';
-            ctx.shadowBlur = 0;
-
-            // 和值
+            ctx.textAlign = 'center'; ctx.textBaseline = 'top';
             ctx.fillStyle = '#ffd54f';
             ctx.font = 'bold 36px "Segoe UI", sans-serif';
             ctx.fillText(`= ${sum}`, width/2, circleY + radius + 20);
-
-            // 组合（大双/小单等）
             ctx.fillStyle = '#ffffff';
             ctx.font = 'bold 28px "Segoe UI", sans-serif';
             ctx.fillText(combination, width/2, circleY + radius + 70);
-
-            // 形态（对子/顺子等）
-            ctx.fillStyle = 'rgba(255,255,255,0.5)';
+            ctx.fillStyle = 'rgba(255,255,255,0.4)';
             ctx.font = '22px "Segoe UI", sans-serif';
             ctx.fillText(`形态：${shape}`, width/2, circleY + radius + 115);
-
-            // 底部时间
-            ctx.textAlign = 'right';
-            ctx.textBaseline = 'bottom';
-            ctx.fillStyle = 'rgba(255,255,255,0.25)';
+            ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+            ctx.fillStyle = 'rgba(255,255,255,0.2)';
             ctx.font = '16px "Segoe UI", sans-serif';
             ctx.fillText(`开奖时间 ${dateStr}`, width-30, height-20);
 
-            // 返回 Blob
             return new Promise(resolve => {
                 canvas.toBlob(blob => resolve(blob), 'image/png');
             });
         }
 
-        // ============================================================
-        // Telegram 发送图片到频道
-        // ============================================================
         async function sendPhotoToChannel(chatId, photoBlob, caption) {
             if (!TG_CONFIG.enabled || !TG_CONFIG.botToken) return;
             const url = `https://api.telegram.org/bot${TG_CONFIG.botToken}/sendPhoto`;
@@ -653,23 +833,14 @@
             formData.append('photo', photoBlob, 'result.png');
             if (caption) formData.append('caption', caption);
             formData.append('parse_mode', 'HTML');
-
             try {
-                const resp = await fetch(url, {
-                    method: 'POST',
-                    body: formData
-                });
+                const resp = await fetch(url, { method: 'POST', body: formData });
                 const result = await resp.json();
                 if (!result.ok) console.error('发送图片失败:', result);
                 else console.log('图片发送成功 (chatId:', chatId, ')');
-            } catch (e) {
-                console.error('发送图片异常:', e);
-            }
+            } catch (e) { console.error('发送图片异常:', e); }
         }
 
-        // ============================================================
-        // 发送文字消息到群组
-        // ============================================================
         async function sendTextToGroup(chatId, text) {
             if (!TG_CONFIG.enabled || !TG_CONFIG.botToken) return;
             const url = `https://api.telegram.org/bot${TG_CONFIG.botToken}/sendMessage`;
@@ -687,14 +858,9 @@
                 const result = await resp.json();
                 if (!result.ok) console.error('发送文字失败:', result);
                 else console.log('文字发送成功 (chatId:', chatId, ')');
-            } catch (e) {
-                console.error('发送文字异常:', e);
-            }
+            } catch (e) { console.error('发送文字异常:', e); }
         }
 
-        // ============================================================
-        // 构建群组消息（带表情符号）
-        // ============================================================
         function buildGroupMessage(data) {
             const { period, ball1, ball2, ball3, terms, date, time } = data;
             const sum = ball1 + ball2 + ball3;
@@ -709,24 +875,20 @@
         }
 
         // ============================================================
-        // 对外数据 & 事件
+        // 对外数据
         // ============================================================
         let latestData = null;
         let lastPushDigest = '';
         window.PC28_DATA = null;
-
         function emitUpdate(data) {
-            const event = new CustomEvent('pc28-data-updated', { detail: data });
-            window.dispatchEvent(event);
+            window.dispatchEvent(new CustomEvent('pc28-data-updated', { detail: data }));
         }
 
         // ============================================================
-        // 主更新流程
+        // 主渲染与推送
         // ============================================================
         async function fetchAndRender() {
             errorMsgEl.style.display = 'none';
-            sourceIndicator.textContent = '';
-
             try {
                 const result = await fetchRealData();
                 const { period, nbrs, bonus, date, time } = result.data;
@@ -735,24 +897,16 @@
                 const timestamp = new Date().toISOString();
 
                 const dataObj = {
-                    period,
-                    nbrs: nbrs.slice(),
-                    bonus,
+                    period, nbrs: nbrs.slice(), bonus,
                     ball1, ball2, ball3, special,
-                    terms,
-                    date,
-                    time,
+                    terms, date, time,
                     sourceName: result.sourceName,
                     timestamp
                 };
-
-                const digest = `${period}|${ball1}|${ball2}|${ball3}`;
-                const isNew = (digest !== lastPushDigest);
-
                 latestData = dataObj;
                 window.PC28_DATA = dataObj;
 
-                // 渲染界面（省略，与之前相同）
+                // 更新界面
                 ballsContainer.innerHTML = '';
                 const highlightIndices = new Set([1,4,7,10,13,16]);
                 nbrs.forEach((num, idx) => {
@@ -777,21 +931,38 @@
                 const now = new Date();
                 updateTimeEl.textContent = '最后更新: ' + now.toLocaleString('zh-CN', { hour12: false });
                 sourceIndicator.textContent = '数据源: ' + result.sourceName;
+
                 emitUpdate(dataObj);
                 console.log('[PC28] 数据已更新:', dataObj);
 
-                // ===== 推送（仅当新数据且启用） =====
-                if (isNew && TG_CONFIG.enabled) {
-                    lastPushDigest = digest;
+                // ----- 倒计时 -----
+                if (date && time) {
+                    const openTime = new Date(`${date} ${time}`);
+                    if (!isNaN(openTime)) {
+                        lastOpenTime = openTime;
+                        updateCountdownFromData(openTime);
+                    }
+                }
 
-                    // 1. 频道：发送图片
+                // ----- 历史记录 -----
+                const historyEntry = {
+                    period,
+                    ball1, ball2, ball3,
+                    sum: ball1+ball2+ball3,
+                    combination: terms.combination
+                };
+                saveHistory(historyEntry);
+                renderHistory(getHistory());
+
+                // ----- 推送（新数据） -----
+                const digest = `${period}|${ball1}|${ball2}|${ball3}`;
+                if (digest !== lastPushDigest && TG_CONFIG.enabled) {
+                    lastPushDigest = digest;
                     if (TG_CONFIG.channelId) {
                         const caption = `<b>第${period}期</b> ${ball1}+${ball2}+${ball3}=${ball1+ball2+ball3} ${terms.combination}`;
                         const imgBlob = await generateCardImage(dataObj);
                         await sendPhotoToChannel(TG_CONFIG.channelId, imgBlob, caption);
                     }
-
-                    // 2. 群组：发送文字
                     if (TG_CONFIG.groupId) {
                         const msg = buildGroupMessage(dataObj);
                         await sendTextToGroup(TG_CONFIG.groupId, msg);
@@ -836,13 +1007,11 @@
         document.getElementById('refreshBtn').addEventListener('click', fetchAndRender);
         toggleBtn.addEventListener('click', toggleAuto);
 
+        // 启动
         fetchAndRender().then(() => startAuto()).catch(() => startAuto());
+        window.addEventListener('beforeunload', () => { if (timer) clearInterval(timer); });
 
-        window.addEventListener('beforeunload', function() {
-            if (timer) clearInterval(timer);
-        });
-
-        console.log('[PC28] 面板已加载，Telegram推送' + (TG_CONFIG.enabled ? '已启用' : '已禁用'));
+        console.log('[PC28] 未来数据站已启动，Telegram推送' + (TG_CONFIG.enabled ? '已启用' : '已禁用'));
     })();
 </script>
 </body>
