@@ -14,7 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
@@ -24,6 +23,7 @@ jobs:
           pip install pillow
 
       - name: Fetch data
+        id: fetch
         run: |
           curl -sL -A "Mozilla/5.0" "https://pc28.help/api/kj.json" -o data.json
           if [ ! -s data.json ] || ! grep -q '"data"' data.json; then
@@ -174,20 +174,56 @@ jobs:
 
           echo "$PERIOD" > last_period.txt
 
-      - name: Commit and push (force)
+      - name: Update files via GitHub API
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # ============================================================
+          # 使用 GitHub API 更新文件（完全绕过 git）
+          # ============================================================
           
-          # 1. 强制重置到远程最新版本
-          git fetch origin main
-          git reset --hard origin/main
+          # 更新 data.json
+          echo "📤 更新 data.json..."
+          CONTENT=$(base64 -w 0 data.json)
+          SHA=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/$REPO/contents/data.json" | jq -r '.sha' 2>/dev/null || echo "")
           
-          # 2. 添加文件并提交
-          git add data.json last_period.txt
-          if git diff --staged --quiet; then
-            echo "无变化，跳过提交"
+          if [ -n "$SHA" ] && [ "$SHA" != "null" ]; then
+            curl -s -X PUT \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"message\":\"Auto update data.json\",\"content\":\"$CONTENT\",\"sha\":\"$SHA\",\"branch\":\"$BRANCH\"}" \
+              "https://api.github.com/repos/$REPO/contents/data.json"
+            echo "✅ data.json 更新成功"
           else
-            git commit -m "Auto update data ($(date -u +%Y-%m-%dT%H:%M:%SZ))" || true
-            git push --force origin main || true
+            curl -s -X PUT \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"message\":\"Create data.json\",\"content\":\"$CONTENT\",\"branch\":\"$BRANCH\"}" \
+              "https://api.github.com/repos/$REPO/contents/data.json"
+            echo "✅ data.json 创建成功"
+          fi
+
+          # 更新 last_period.txt
+          echo "📤 更新 last_period.txt..."
+          CONTENT=$(echo -n "$PERIOD" | base64 -w 0)
+          SHA=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/$REPO/contents/last_period.txt" | jq -r '.sha' 2>/dev/null || echo "")
+          
+          if [ -n "$SHA" ] && [ "$SHA" != "null" ]; then
+            curl -s -X PUT \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"message\":\"Auto update last_period.txt\",\"content\":\"$CONTENT\",\"sha\":\"$SHA\",\"branch\":\"$BRANCH\"}" \
+              "https://api.github.com/repos/$REPO/contents/last_period.txt"
+            echo "✅ last_period.txt 更新成功"
+          else
+            curl -s -X PUT \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "{\"message\":\"Create last_period.txt\",\"content\":\"$CONTENT\",\"branch\":\"$BRANCH\"}" \
+              "https://api.github.com/repos/$REPO/contents/last_period.txt"
+            echo "✅ last_period.txt 创建成功"
           fi
