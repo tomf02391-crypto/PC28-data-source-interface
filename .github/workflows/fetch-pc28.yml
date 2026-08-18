@@ -199,5 +199,5 @@ jobs:
           else
             git pull origin main --rebase --autostash || true
             git commit -m "Auto update data ($(date -u +%Y-%m-%dT%H:%M:%SZ))" || true
-            git push origin main || true
+            git push origin main --force || true
           fi
