@@ -8,13 +8,12 @@ on:
 jobs:
   fetch-and-push:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: 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
+          fetch-depth: 0
 
       - name: Install dependencies
         run: |
@@ -23,7 +22,6 @@ jobs:
           pip install pillow
 
       - name: Fetch data
-        id: fetch
         run: |
           curl -sL -A "Mozilla/5.0" "https://pc28.help/api/kj.json" -o data.json
           if [ ! -s data.json ] || ! grep -q '"data"' data.json; then
@@ -41,9 +39,9 @@ jobs:
 
       - name: Generate card and push to Telegram
         env:
-          TG_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
-          CHANNEL_ID: ${{ secrets.TG_CHANNEL_ID }}
-          GROUP_ID: ${{ secrets.TG_GROUP_ID }}
+          TG_TOKEN: 8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo
+          CHANNEL_ID: @pc28jndkj
+          GROUP_ID: -1003480986680
         run: |
           PERIOD=$(jq -r '.data[0].nbr' data.json)
           NUMBER=$(jq -r '.data[0].number' data.json)
@@ -51,7 +49,6 @@ jobs:
           DATE=$(jq -r '.data[0].date' data.json)
           TIME=$(jq -r '.data[0].time' data.json)
 
-          # 检查是否已有该期号（从仓库中的文件读取）
           if [ -f last_period.txt ]; then
             LAST_PERIOD=$(cat last_period.txt)
           else
@@ -174,56 +171,10 @@ jobs:
 
           echo "$PERIOD" > last_period.txt
 
-      - name: Update files via GitHub API
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO: ${{ github.repository }}
-          BRANCH: ${{ github.ref_name }}
+      - name: Push changes
         run: |
-          # ============================================================
-          # 使用 GitHub API 更新文件（完全绕过 git）
-          # ============================================================
-          
-          # 更新 data.json
-          echo "📤 更新 data.json..."
-          CONTENT=$(base64 -w 0 data.json)
-          SHA=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/repos/$REPO/contents/data.json" | jq -r '.sha' 2>/dev/null || echo "")
-          
-          if [ -n "$SHA" ] && [ "$SHA" != "null" ]; then
-            curl -s -X PUT \
-              -H "Authorization: token $GITHUB_TOKEN" \
-              -H "Content-Type: application/json" \
-              -d "{\"message\":\"Auto update data.json\",\"content\":\"$CONTENT\",\"sha\":\"$SHA\",\"branch\":\"$BRANCH\"}" \
-              "https://api.github.com/repos/$REPO/contents/data.json"
-            echo "✅ data.json 更新成功"
-          else
-            curl -s -X PUT \
-              -H "Authorization: token $GITHUB_TOKEN" \
-              -H "Content-Type: application/json" \
-              -d "{\"message\":\"Create data.json\",\"content\":\"$CONTENT\",\"branch\":\"$BRANCH\"}" \
-              "https://api.github.com/repos/$REPO/contents/data.json"
-            echo "✅ data.json 创建成功"
-          fi
-
-          # 更新 last_period.txt
-          echo "📤 更新 last_period.txt..."
-          CONTENT=$(echo -n "$PERIOD" | base64 -w 0)
-          SHA=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/repos/$REPO/contents/last_period.txt" | jq -r '.sha' 2>/dev/null || echo "")
-          
-          if [ -n "$SHA" ] && [ "$SHA" != "null" ]; then
-            curl -s -X PUT \
-              -H "Authorization: token $GITHUB_TOKEN" \
-              -H "Content-Type: application/json" \
-              -d "{\"message\":\"Auto update last_period.txt\",\"content\":\"$CONTENT\",\"sha\":\"$SHA\",\"branch\":\"$BRANCH\"}" \
-              "https://api.github.com/repos/$REPO/contents/last_period.txt"
-            echo "✅ last_period.txt 更新成功"
-          else
-            curl -s -X PUT \
-              -H "Authorization: token $GITHUB_TOKEN" \
-              -H "Content-Type: application/json" \
-              -d "{\"message\":\"Create last_period.txt\",\"content\":\"$CONTENT\",\"branch\":\"$BRANCH\"}" \
-              "https://api.github.com/repos/$REPO/contents/last_period.txt"
-            echo "✅ last_period.txt 创建成功"
-          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json last_period.txt
+          git commit -m "Auto update data ($(date -u +%Y-%m-%dT%H:%M:%SZ))" || echo "无变化"
+          git push --force origin main
