@@ -16,11 +16,31 @@ jobs:
 
       - name: Fetch data from pc28.help
         run: |
-          curl -s https://pc28.help/api/kj.json -o data.json
+          # -L 跟随重定向, -H 模拟浏览器UA避免被拦截
+          curl -sL \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
+            -H "Accept: application/json" \
+            -H "Referer: https://pc28.help/" \
+            https://pc28.help/api/kj.json -o data.json
+
           echo "--- data.json size ---"
           wc -c data.json
-          echo "--- first 200 chars ---"
-          head -c 200 data.json
+
+          echo "--- first 300 chars ---"
+          head -c 300 data.json
+          echo ""
+
+          echo "--- validate JSON ---"
+          python3 -c "
+          import json,sys
+          try:
+              d=json.load(open('data.json'))
+              print('JSON OK, keys:', list(d.keys())[:5])
+              if 'data' in d: print('data count:', len(d['data']))
+          except Exception as e:
+              print('JSON INVALID:', e)
+              sys.exit(1)
+          "
 
       - name: Commit and push if changed
         run: |
