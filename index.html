@@ -3,264 +3,251 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>加拿大PC28 · 真实数据（对外接口极简版）</title>
+    <title>PC28 数据接口 · 本地JSON</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
-            background: #f0f4f8;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #1a1a3e, #24243e);
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            align-items: flex-start;
+            padding: 24px 16px;
+            color: #e0e0e0;
         }
         .container {
-            max-width: 880px;
+            max-width: 900px;
             width: 100%;
-            background: #ffffff;
-            border-radius: 28px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.10);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
             padding: 28px 26px 36px;
+            backdrop-filter: blur(12px);
         }
         h1 {
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 700;
-            color: #0b2b4a;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 4px;
+            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
         }
         .subhead {
-            color: #4a6a85;
-            font-size: 14px;
-            border-left: 4px solid #2a7de1;
-            padding-left: 14px;
+            font-size: 13px;
+            color: #999;
             margin-bottom: 20px;
-            background: #f7faff;
-            border-radius: 0 12px 12px 0;
-            line-height: 1.6;
         }
         .top-bar {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
+            gap: 10px;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 22px;
-            background: #f8fafd;
-            padding: 12px 18px;
-            border-radius: 40px;
-            border: 1px solid #e4ebf5;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 14px;
         }
         .status-area {
             display: flex;
-            align-items: center;
-            gap: 14px;
             flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            font-size: 13px;
         }
         .status-badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 600;
-            color: #1a7a3a;
-        }
-        .status-badge .dot {
-            width: 10px;
-            height: 10px;
-            background: #2ecc71;
-            border-radius: 50%;
-            display: inline-block;
-            animation: pulse 1.2s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        .status-badge.paused .dot { background: #f39c12; animation: none; }
-        .update-time { color: #4a6a85; font-size: 14px; }
-        .source-indicator {
-            font-size: 12px;
-            color: #6d8aaa;
-            background: #eef3fa;
-            padding: 2px 12px;
-            border-radius: 30px;
-        }
-        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
-        .btn {
-            background: #1a5fb4;
-            color: #fff;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 4px 10px rgba(26,95,180,0.2);
-        }
-        .btn:hover { background: #0e4a91; }
-        .btn:active { transform: scale(0.96); }
-        .btn-outline {
-            background: transparent;
-            color: #1a5fb4;
-            border: 2px solid #1a5fb4;
-            box-shadow: none;
-        }
-        .btn-outline:hover { background: #e2edfc; }
-
-        .error-msg {
-            background: #ffe6e6;
-            color: #b33;
-            padding: 4px 14px;
-            border-radius: 40px;
-            font-weight: 500;
-            display: none;
-            font-size: 13px;
-        }
-
-        .balls {
-            background: #f8fafd;
-            border-radius: 20px;
-            padding: 18px 16px;
-            margin-bottom: 24px;
-            border: 1px solid #e4eaf2;
-        }
-        .balls-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #3a5a7a;
-            margin-bottom: 12px;
-        }
-        .balls-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px 6px;
-        }
-        .ball {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: #ffffff;
-            border: 2px solid #cfddee;
-            font-weight: 700;
-            font-size: 15px;
-            color: #0b2b4a;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(0,210,255,0.12);
+            color: #00d2ff;
+            font-size: 12px;
+            font-weight: 600;
         }
-        .ball.highlight {
-            border-color: #2a7de1;
-            background: #e2edfc;
-            color: #0f3e77;
-            box-shadow: 0 0 0 3px rgba(42,125,225,0.15);
+        .status-badge .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #00d2ff;
+            box-shadow: 0 0 8px #00d2ff;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .update-time { color: #aaa; font-size: 12px; }
+        .source-indicator {
+            padding: 3px 10px;
+            border-radius: 12px;
+            background: rgba(123,47,247,0.15);
+            color: #b794f4;
+            font-size: 12px;
+        }
+        .error-msg {
+            color: #ff6b6b;
+            font-size: 12px;
+            display: none;
+        }
+        .btn-group { display: flex; gap: 8px; }
+        .btn {
+            padding: 7px 16px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+            color: #fff;
+            transition: transform 0.15s;
+        }
+        .btn:hover { transform: translateY(-1px); }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #ccc;
         }
 
-        .result-row {
+        /* 最新开奖 */
+        .latest-section {
+            margin-bottom: 24px;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #bbb;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .balls-row {
             display: flex;
+            gap: 16px;
             flex-wrap: wrap;
             align-items: center;
-            gap: 16px 30px;
-            background: #f2f7fe;
-            border-radius: 20px;
-            padding: 14px 22px;
-            margin-bottom: 24px;
-            border-left: 6px solid #1a5fb4;
         }
-        .result-item {
+        .ball-wrap {
             display: flex;
-            align-items: baseline;
+            flex-direction: column;
+            align-items: center;
             gap: 6px;
         }
-        .result-item .tag {
-            font-size: 14px;
-            font-weight: 500;
-            color: #3d5f7e;
-        }
-        .result-item .num {
-            font-size: 28px;
-            font-weight: 800;
-            color: #0b2b4a;
-        }
-        .result-item .num.special {
-            color: #c44536;
-            font-size: 34px;
-        }
-        .divider {
-            width: 1px;
-            height: 36px;
-            background: #cbdae9;
-        }
-
-        .terms {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px 16px;
-            background: #fafcff;
-            border-radius: 18px;
-            padding: 16px 20px;
-            border: 1px solid #e4ebf5;
-            margin-bottom: 12px;
-        }
-        .term-item {
+        .ball {
+            width: 64px; height: 64px;
+            border-radius: 50%;
             display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            border-bottom: 1px dashed #e6edf6;
-            font-size: 15px;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 800;
+            color: #fff;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 4px 20px rgba(102,126,234,0.4);
         }
-        .term-item:last-child { border-bottom: none; }
-        .term-key { color: #4a6a88; font-weight: 500; }
-        .term-value { font-weight: 600; color: #0b2b4a; }
-
-        .api-info {
-            background: #eaf3ff;
-            border-radius: 16px;
-            padding: 14px 18px;
-            margin-top: 14px;
+        .ball.sum {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            box-shadow: 0 4px 20px rgba(245,87,108,0.4);
+            width: 80px; height: 80px;
+            font-size: 32px;
+        }
+        .ball-label {
+            font-size: 11px;
+            color: #999;
+        }
+        .bigsmall {
+            margin-left: 12px;
+            padding: 6px 14px;
+            border-radius: 8px;
             font-size: 13px;
-            color: #1a3f66;
-            border: 1px solid #c0d8f0;
+            font-weight: 700;
+        }
+        .bigsmall.big { background: rgba(245,87,108,0.2); color: #f5576c; }
+        .bigsmall.small { background: rgba(0,210,255,0.2); color: #00d2ff; }
+        .bigsmall.single { background: rgba(251,146,60,0.2); color: #fb923c; }
+        .bigsmall.double { background: rgba(167,243,208,0.2); color: #6ee7b7; }
+
+        /* 数据表格 */
+        .table-wrap {
+            max-height: 420px;
+            overflow-y: auto;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        thead th {
+            position: sticky;
+            top: 0;
+            background: rgba(30,30,60,0.95);
+            color: #b794f4;
+            font-weight: 600;
+            padding: 10px 12px;
+            text-align: center;
+            z-index: 1;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        tbody td {
+            padding: 8px 12px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        tbody tr:hover { background: rgba(255,255,255,0.03); }
+        .num-cell {
+            display: inline-flex;
+            width: 28px; height: 28px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(102,126,234,0.2);
+            color: #c7d2fe;
+            font-weight: 700;
+            font-size: 12px;
+            margin: 0 2px;
+        }
+
+        /* API 说明 */
+        .api-info {
+            margin-top: 24px;
+            padding: 16px 20px;
+            background: rgba(0,210,255,0.05);
+            border: 1px solid rgba(0,210,255,0.15);
+            border-radius: 14px;
+            font-size: 13px;
             line-height: 1.8;
         }
         .api-info code {
-            background: #d4e2f7;
+            background: rgba(0,0,0,0.4);
             padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
+            border-radius: 4px;
+            color: #7dd3fc;
+            font-family: 'Fira Code', monospace;
         }
         .footnote {
-            font-size: 13px;
-            color: #6d8aaa;
-            margin-top: 18px;
-            border-top: 1px solid #e4ebf5;
-            padding-top: 16px;
+            margin-top: 16px;
             text-align: center;
-            line-height: 1.7;
+            font-size: 12px;
+            color: #666;
         }
-        @media (max-width: 600px) {
-            .container { padding: 18px 14px; }
-            .result-row { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .divider { display: none; }
-            .ball { width: 36px; height: 36px; font-size: 13px; }
-            .terms { grid-template-columns: 1fr 1fr; }
-            .top-bar { flex-direction: column; align-items: stretch; }
-            .btn-group { justify-content: center; }
-            .status-area { justify-content: center; }
+
+        /* 倒计时 */
+        .countdown {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fbbf24;
+            margin-left: auto;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>🎲 加拿大PC28 · 真实数据</h1>
-    <div class="subhead">
-        数据源：<span id="sourceDisplay">pc28.help</span> ｜ 自动更新间隔 <strong>10秒</strong> ｜ 无模拟数据
-    </div>
+    <h1>🎲 PC28 · 真实数据（本地同步）</h1>
+    <div class="subhead">数据源：GitHub Actions 定时同步 pc28.help · 每10分钟自动更新 · 无跨域</div>
 
     <div class="top-bar">
         <div class="status-area">
@@ -269,294 +256,203 @@
             <span class="source-indicator" id="sourceIndicator">数据源: --</span>
             <span class="error-msg" id="errorMsg">⚠️ 加载失败</span>
         </div>
+        <div class="countdown" id="countdown">下次刷新: --</div>
         <div class="btn-group">
             <button class="btn" id="refreshBtn">🔄 刷新</button>
             <button class="btn btn-outline" id="toggleBtn">⏸️ 暂停</button>
         </div>
     </div>
 
-    <div class="balls">
-        <div class="balls-title">📋 20个开奖号码（已排序）</div>
-        <div class="balls-grid" id="ballsContainer"></div>
+    <!-- 最新开奖 -->
+    <div class="latest-section">
+        <div class="section-title">最新开奖</div>
+        <div class="balls-row" id="latestBalls">
+            <div class="ball-wrap"><div class="ball" id="ball1">-</div><div class="ball-label">第1球</div></div>
+            <div class="ball-wrap"><div class="ball" id="ball2">-</div><div class="ball-label">第2球</div></div>
+            <div class="ball-wrap"><div class="ball" id="ball3">-</div><div class="ball-label">第3球</div></div>
+            <div class="ball-wrap"><div class="ball sum" id="ballSum">-</div><div class="ball-label">特码(和)</div></div>
+            <span class="bigsmall" id="bigSmallTag">-</span>
+            <span class="bigsmall" id="oddEvenTag">-</span>
+            <div style="margin-left:auto;font-size:12px;color:#888;" id="latestPeriod">期号: --</div>
+        </div>
     </div>
 
-    <div class="result-row">
-        <div class="result-item"><span class="tag">第1球</span><span class="num" id="ball1">-</span></div>
-        <div class="result-item"><span class="tag">第2球</span><span class="num" id="ball2">-</span></div>
-        <div class="result-item"><span class="tag">第3球</span><span class="num" id="ball3">-</span></div>
-        <div class="divider"></div>
-        <div class="result-item"><span class="tag">特码</span><span class="num special" id="special">--</span></div>
+    <!-- 历史数据表 -->
+    <div class="section-title">最近60期记录</div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>期号</th><th>时间</th><th>第1球</th><th>第2球</th><th>第3球</th><th>特码</th><th>大小</th><th>单双</th></tr>
+            </thead>
+            <tbody id="historyBody">
+                <tr><td colspan="8" style="padding:30px;color:#666;">加载中...</td></tr>
+            </tbody>
+        </table>
     </div>
 
-    <div class="terms">
-        <div class="term-item"><span class="term-key">单/双</span><span class="term-value" id="termOddEven">-</span></div>
-        <div class="term-item"><span class="term-key">大/小</span><span class="term-value" id="termBigSmall">-</span></div>
-        <div class="term-item"><span class="term-key">组合</span><span class="term-value" id="termCombination">-</span></div>
-        <div class="term-item"><span class="term-key">极值</span><span class="term-value" id="termExtreme">-</span></div>
-        <div class="term-item"><span class="term-key">顺子</span><span class="term-value" id="termStraight">-</span></div>
-        <div class="term-item"><span class="term-key">对子</span><span class="term-value" id="termPair">-</span></div>
-        <div class="term-item"><span class="term-key">豹子</span><span class="term-value" id="termTriple">-</span></div>
-        <div class="term-item"><span class="term-key">单点</span><span class="term-value" id="termPoint">-</span></div>
-    </div>
-
+    <!-- 对外接口说明 -->
     <div class="api-info">
-        <strong>🔌 对外接口（极简）</strong><br />
-        • <code>window.PC28_DATA</code> → 直接获取最新数据对象（实时更新）。<br />
-        • 监听 <code>pc28-data-updated</code> 事件：<br />
-        &nbsp;&nbsp;<code>window.addEventListener('pc28-data-updated', function(e) { console.log(e.detail); });</code><br />
-        • 数据格式示例见控制台（F12）。
+        <strong>🔌 对外接口（供其他仓库调用）</strong><br />
+        • 读取最新数据：<code>window.PC28_DATA</code><br />
+        • 监听更新事件：<code>window.addEventListener('pc28-data-updated', e => console.log(e.detail))</code><br />
+        • 直连 raw 文件：<code>https://raw.githubusercontent.com/tomf02391-crypto/PC28-data-source-interface/main/data.json</code>
     </div>
 
     <div class="footnote">
-        ⚡ 所有数据均来自第三方真实接口，接口失效时页面会提示错误，<strong>不会伪造开奖结果</strong>。
+        ⚡ 数据由 GitHub Actions 每10分钟自动从 pc28.help 拉取，写入 data.json，保证真实有效、无跨域。
     </div>
 </div>
 
 <script>
-    (function() {
-        'use strict';
+(function() {
+    'use strict';
 
-        // ============================================================
-        // 配置
-        // ============================================================
-        const REFRESH_INTERVAL = 10000; // 10秒
+    // ===== 全局状态 =====
+    let autoRefresh = true;
+    let countdown = 600; // 10分钟
+    let timer = null;
+    let currentData = null;
 
-        const DATA_SOURCES = [
-            {
-                name: 'pc28.help',
-                url: 'https://pc28.help/api/kj.json',
-                parser: (json) => {
-                    if (json.message !== 'success' || !json.data || !json.data[0]) return null;
-                    const item = json.data[0];
+    // ===== 仅读取本地 data.json（同源，无跨域） =====
+    async function fetchRealData() {
+        try {
+            const resp = await fetch('data.json', { cache: 'no-cache' });
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const json = await resp.json();
+
+            // pc28.help 返回格式: { message:'success', data:[{nbr, nbrs, bonus, time}, ...] }
+            if (json.message !== 'success' || !json.data || !json.data[0]) {
+                throw new Error('数据格式错误');
+            }
+
+            const items = json.data;
+            const latest = items[0];
+
+            // 解析三球
+            const nbrsStr = latest.nbrs || '';
+            const nums = nbrsStr.split(',').map(Number);
+            if (nums.length < 3) throw new Error('号码数量不足3个');
+
+            const b1 = nums[0], b2 = nums[1], b3 = nums[2];
+            const sum = b1 + b2 + b3;
+
+            const result = {
+                latest: {
+                    period: latest.nbr || latest.period || '',
+                    time: latest.time || '',
+                    b1, b2, b3,
+                    sum,
+                    bigSmall: sum >= 14 ? '大' : '小',
+                    oddEven: sum % 2 === 0 ? '双' : '单',
+                    rawNbrs: nbrsStr
+                },
+                history: items.map(item => {
+                    const ns = (item.nbrs || '').split(',').map(Number);
+                    const s = (ns[0]||0) + (ns[1]||0) + (ns[2]||0);
                     return {
-                        nbrs: item.nbrs.split(',').map(Number).sort((a, b) => a - b),
-                        bonus: parseInt(item.bonus, 10)
+                        period: item.nbr || item.period || '',
+                        time: item.time || '',
+                        b1: ns[0]||0, b2: ns[1]||0, b3: ns[2]||0,
+                        sum: s,
+                        bigSmall: s >= 14 ? '大' : '小',
+                        oddEven: s % 2 === 0 ? '双' : '单'
                     };
-                }
-            },
-            {
-                name: '168861.com',
-                url: 'https://api.168861.com/api/pc28/',
-                parser: (json) => {
-                    if (json.code !== 0 || !json.data) return null;
-                    const item = json.data;
-                    if (!item.number) return null;
-                    return {
-                        nbrs: item.number.split(',').map(Number).sort((a, b) => a - b),
-                        bonus: parseInt(item.bonus, 10)
-                    };
-                }
-            }
-        ];
+                }),
+                sourceName: 'GitHub Actions (本地data.json)',
+                fetchTime: Date.now()
+            };
 
-        // ============================================================
-        // DOM 引用
-        // ============================================================
-        const ballsContainer = document.getElementById('ballsContainer');
-        const ball1El = document.getElementById('ball1');
-        const ball2El = document.getElementById('ball2');
-        const ball3El = document.getElementById('ball3');
-        const specialEl = document.getElementById('special');
-        const updateTimeEl = document.getElementById('updateTime');
-        const errorMsgEl = document.getElementById('errorMsg');
-        const statusBadge = document.getElementById('statusBadge');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const sourceIndicator = document.getElementById('sourceIndicator');
-        const sourceDisplay = document.getElementById('sourceDisplay');
-
-        // ============================================================
-        // 工具函数
-        // ============================================================
-        function computeBalls(balls) {
-            const idx1 = [1, 4, 7, 10, 13, 16];
-            const sum1 = idx1.reduce((acc, i) => acc + balls[i], 0);
-            const ball1 = sum1 % 10;
-            const idx2 = [2, 5, 8, 11, 14, 17];
-            const sum2 = idx2.reduce((acc, i) => acc + balls[i], 0);
-            const ball2 = sum2 % 10;
-            const idx3 = [3, 6, 9, 12, 15, 18];
-            const sum3 = idx3.reduce((acc, i) => acc + balls[i], 0);
-            const ball3 = sum3 % 10;
-            const special = (ball1 + ball2 + ball3) % 10;
-            return { ball1, ball2, ball3, special };
+            return result;
+        } catch (err) {
+            throw new Error('读取本地数据失败: ' + err.message);
         }
+    }
 
-        function analyzeTerms(b1, b2, b3, special) {
-            const oddEven = special % 2 === 0 ? '双' : '单';
-            const bigSmall = special <= 13 ? '小' : '大';
-            let combination = '';
-            if (special <= 13 && special % 2 === 0) combination = '小双';
-            else if (special <= 13 && special % 2 === 1) combination = '小单';
-            else if (special > 13 && special % 2 === 0) combination = '大双';
-            else if (special > 13 && special % 2 === 1) combination = '大单';
-            let extreme = '—';
-            if (special >= 0 && special <= 5) extreme = '极小';
-            else if (special >= 22 && special <= 27) extreme = '极大';
-            const sorted = [b1, b2, b3].slice().sort((a, b) => a - b);
-            const isConsecutive = (sorted[2] - sorted[1] === 1 && sorted[1] - sorted[0] === 1);
-            let straight = '否';
-            if (isConsecutive && sorted[0] >= 1 && sorted[2] <= 9) straight = '是';
-            const pair = (b1 === b2 || b2 === b3 || b1 === b3) ? '是' : '否';
-            const triple = (b1 === b2 && b2 === b3) ? '是' : '否';
-            const point = String(special);
-            return { oddEven, bigSmall, combination, extreme, straight, pair, triple, point };
+    // ===== 渲染 =====
+    function render(data) {
+        const L = data.latest;
+        document.getElementById('ball1').textContent = L.b1;
+        document.getElementById('ball2').textContent = L.b2;
+        document.getElementById('ball3').textContent = L.b3;
+        document.getElementById('ballSum').textContent = L.sum;
+
+        const bsTag = document.getElementById('bigSmallTag');
+        bsTag.textContent = L.bigSmall;
+        bsTag.className = 'bigsmall ' + (L.bigSmall === '大' ? 'big' : 'small');
+
+        const oeTag = document.getElementById('oddEvenTag');
+        oeTag.textContent = L.oddEven;
+        oeTag.className = 'bigsmall ' + (L.oddEven === '双' ? 'double' : 'single');
+
+        document.getElementById('latestPeriod').textContent = '期号: ' + L.period;
+
+        // 历史表
+        const tbody = document.getElementById('historyBody');
+        tbody.innerHTML = data.history.slice(0, 60).map(h => `
+            <tr>
+                <td>${h.period}</td>
+                <td style="font-size:11px;color:#999">${h.time}</td>
+                <td><span class="num-cell">${h.b1}</span></td>
+                <td><span class="num-cell">${h.b2}</span></td>
+                <td><span class="num-cell">${h.b3}</span></td>
+                <td style="font-weight:700;color:#f5576c">${h.sum}</td>
+                <td style="color:${h.bigSmall==='大'?'#f5576c':'#00d2ff'}">${h.bigSmall}</td>
+                <td style="color:${h.oddEven==='双'?'#6ee7b7':'#fb923c'}">${h.oddEven}</td>
+            </tr>
+        `).join('');
+
+        // 状态
+        const now = new Date();
+        document.getElementById('updateTime').textContent = '最后更新: ' + now.toLocaleString('zh-CN');
+        document.getElementById('sourceIndicator').textContent = '数据源: ' + data.sourceName;
+        document.getElementById('errorMsg').style.display = 'none';
+
+        // 全局暴露
+        window.PC28_DATA = data;
+        window.dispatchEvent(new CustomEvent('pc28-data-updated', { detail: data }));
+    }
+
+    function showError(msg) {
+        console.error('[PC28]', msg);
+        document.getElementById('errorMsg').textContent = '⚠️ ' + msg;
+        document.getElementById('errorMsg').style.display = 'inline';
+    }
+
+    // ===== 主循环 =====
+    async function load() {
+        try {
+            const data = await fetchRealData();
+            currentData = data;
+            render(data);
+            countdown = 600; // 重置倒计时
+        } catch (err) {
+            showError(err.message);
         }
+    }
 
-        // ============================================================
-        // 数据获取
-        // ============================================================
-        async function fetchRealData() {
-            let lastError = null;
-            for (const source of DATA_SOURCES) {
-                try {
-                    const resp = await fetch(source.url, { mode: 'cors' });
-                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-                    const json = await resp.json();
-                    const parsed = source.parser(json);
-                    if (!parsed) throw new Error('解析失败');
-                    if (!Array.isArray(parsed.nbrs) || parsed.nbrs.length !== 20) throw new Error('号码数量不对');
-                    if (isNaN(parsed.bonus)) throw new Error('特码无效');
-                    return { data: parsed, sourceName: source.name };
-                } catch (err) {
-                    console.warn(`[PC28] 数据源 ${source.name} 失败:`, err.message);
-                    lastError = err;
-                }
-            }
-            throw new Error(`所有数据源失败，最后错误: ${lastError ? lastError.message : '未知'}`);
-        }
+    function tick() {
+        if (!autoRefresh) return;
+        countdown--;
+        const m = Math.floor(countdown / 60);
+        const s = countdown % 60;
+        document.getElementById('countdown').textContent =
+            `下次刷新: ${m}:${s.toString().padStart(2,'0')}`;
+        if (countdown <= 0) load();
+    }
 
-        // ============================================================
-        // 对外暴露（极简）
-        // ============================================================
-        let latestData = null;
-        // 直接挂载到 window，方便读取
-        window.PC28_DATA = null;  // 会随更新变化
-        // 别名
-        window.pc28 = {
-            get data() { return window.PC28_DATA; }
-        };
+    // ===== 事件绑定 =====
+    document.getElementById('refreshBtn').addEventListener('click', load);
+    document.getElementById('toggleBtn').addEventListener('click', function() {
+        autoRefresh = !autoRefresh;
+        this.textContent = autoRefresh ? '⏸️ 暂停' : '▶️ 继续';
+        if (autoRefresh) { countdown = 10; load(); }
+    });
 
-        // 触发自定义事件，方便其他脚本监听
-        function emitUpdate(data) {
-            const event = new CustomEvent('pc28-data-updated', { detail: data });
-            window.dispatchEvent(event);
-        }
+    // ===== 启动 =====
+    load();
+    timer = setInterval(tick, 1000);
 
-        // ============================================================
-        // 更新界面 + 更新全局数据 + 触发事件
-        // ============================================================
-        async function fetchAndRender() {
-            errorMsgEl.style.display = 'none';
-            sourceIndicator.textContent = '';
-
-            try {
-                const result = await fetchRealData();
-                const { nbrs, bonus } = result.data;
-                const { ball1, ball2, ball3, special } = computeBalls(nbrs);
-                const terms = analyzeTerms(ball1, ball2, ball3, special);
-                const timestamp = new Date().toISOString();
-
-                latestData = {
-                    nbrs: nbrs.slice(),
-                    bonus,
-                    ball1, ball2, ball3, special,
-                    terms,
-                    sourceName: result.sourceName,
-                    timestamp
-                };
-                // 更新全局变量
-                window.PC28_DATA = latestData;
-
-                // ----- 渲染界面 -----
-                ballsContainer.innerHTML = '';
-                const highlightIndices = new Set([1, 4, 7, 10, 13, 16]);
-                nbrs.forEach((num, idx) => {
-                    const ball = document.createElement('span');
-                    ball.className = 'ball' + (highlightIndices.has(idx) ? ' highlight' : '');
-                    ball.textContent = String(num).padStart(2, '0');
-                    ballsContainer.appendChild(ball);
-                });
-
-                ball1El.textContent = ball1;
-                ball2El.textContent = ball2;
-                ball3El.textContent = ball3;
-                specialEl.textContent = special;
-
-                document.getElementById('termOddEven').textContent = terms.oddEven;
-                document.getElementById('termBigSmall').textContent = terms.bigSmall;
-                document.getElementById('termCombination').textContent = terms.combination;
-                document.getElementById('termExtreme').textContent = terms.extreme;
-                document.getElementById('termStraight').textContent = terms.straight;
-                document.getElementById('termPair').textContent = terms.pair;
-                document.getElementById('termTriple').textContent = terms.triple;
-                document.getElementById('termPoint').textContent = terms.point;
-
-                const now = new Date();
-                updateTimeEl.textContent = '最后更新: ' + now.toLocaleString('zh-CN', { hour12: false });
-                sourceIndicator.textContent = '数据源: ' + result.sourceName;
-                sourceDisplay.textContent = result.sourceName;
-
-                // 触发自定义事件（对外通知）
-                emitUpdate(latestData);
-
-                console.log('[PC28] 数据已更新:', latestData);
-
-            } catch (err) {
-                console.error('[PC28] 数据拉取失败:', err);
-                errorMsgEl.style.display = 'inline-block';
-                errorMsgEl.textContent = '⚠️ ' + err.message;
-            }
-        }
-
-        // ============================================================
-        // 自动刷新控制
-        // ============================================================
-        let timer = null;
-        let isRunning = true;
-
-        function startAuto() {
-            if (timer) clearInterval(timer);
-            timer = setInterval(fetchAndRender, REFRESH_INTERVAL);
-            isRunning = true;
-            statusBadge.className = 'status-badge';
-            statusBadge.innerHTML = '<span class="dot"></span> 实时更新中';
-            toggleBtn.textContent = '⏸️ 暂停';
-        }
-
-        function stopAuto() {
-            if (timer) {
-                clearInterval(timer);
-                timer = null;
-            }
-            isRunning = false;
-            statusBadge.className = 'status-badge paused';
-            statusBadge.innerHTML = '<span class="dot" style="background:#f39c12;"></span> 已暂停';
-            toggleBtn.textContent = '▶️ 继续';
-        }
-
-        function toggleAuto() {
-            if (isRunning) stopAuto();
-            else { startAuto(); fetchAndRender(); }
-        }
-
-        function manualRefresh() { fetchAndRender(); }
-
-        // ============================================================
-        // 事件绑定 & 初始化
-        // ============================================================
-        document.getElementById('refreshBtn').addEventListener('click', manualRefresh);
-        toggleBtn.addEventListener('click', toggleAuto);
-
-        // 首次加载
-        fetchAndRender().then(() => startAuto()).catch(() => startAuto());
-
-        window.addEventListener('beforeunload', function() {
-            if (timer) clearInterval(timer);
-        });
-
-        // 提示
-        console.log('[PC28] 极简接口已就绪: 直接读取 window.PC28_DATA 或监听 pc28-data-updated 事件');
-    })();
+})();
 </script>
 </body>
 </html>
