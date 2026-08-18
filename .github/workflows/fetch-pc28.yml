@@ -16,36 +16,105 @@ jobs:
 
       - name: Fetch data from pc28.help
         run: |
-          # -L 跟随重定向, -H 模拟浏览器UA避免被拦截
+          # 主源：pc28.help（按自用接口.md要求）
           curl -sL \
-            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" \
             -H "Accept: application/json" \
             -H "Referer: https://pc28.help/" \
-            https://pc28.help/api/kj.json -o data.json
+            --max-time 30 \
+            "https://pc28.help/api/kj.json?nbr=60" -o data.json
 
-          echo "--- data.json size ---"
+          echo "=== 文件大小 ==="
           wc -c data.json
 
-          echo "--- first 300 chars ---"
-          head -c 300 data.json
+          echo "=== 前400字符 ==="
+          head -c 400 data.json
           echo ""
 
-          echo "--- validate JSON ---"
+          echo "=== JSON校验 ==="
           python3 -c "
           import json,sys
           try:
               d=json.load(open('data.json'))
-              print('JSON OK, keys:', list(d.keys())[:5])
-              if 'data' in d: print('data count:', len(d['data']))
+              print('✓ JSON有效')
+              if isinstance(d,dict):
+                  print('  keys:',list(d.keys())[:8])
+                  data=d.get('data') or d.get('list') or d.get('records')
+                  if isinstance(data,list): print(f'  数据条数: {len(data)}')
           except Exception as e:
-              print('JSON INVALID:', e)
-              sys.exit(1)
-          "
+              print('✗ 无效:',e)
+              # 如果失败，尝试备用源
+              sys.exit(2)
+          " || {
+            echo "⚠ 主源失败，尝试备用源 yu28.top..."
+            curl -sL \
+              -H "X-Api-Key: yu28_f9f41d673b447fac" \
+              -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" \
+              -H "Accept: application/json" \
+              --max-time 30 \
+              "https://yu28.top/api/kj.json?nbr=60" -o data.json
+            wc -c data.json
+            head -c 300 data.json
+            echo ""
+          }
+
+      - name: Normalize to standard format
+        run: |
+          python3 << 'PYEOF'
+          import json,sys
+
+          try:
+              raw = json.load(open('data.json'))
+          except Exception as e:
+              print(f'无法解析data.json: {e}')
+              # 保留旧文件
+              sys.exit(0)
+
+          # 提取数据数组
+          items = None
+          if isinstance(raw, dict):
+              for k in ['data','list','records','result','rows']:
+                  v = raw.get(k)
+                  if isinstance(v, list) and v:
+                      items = v; print(f'  字段: {k} ({len(v)}条)'); break
+          elif isinstance(raw, list):
+              items = raw; print(f'  根数组 ({len(raw)}条)')
+
+          if not items:
+              print('  无有效数据，保留原文件')
+              sys.exit(0)
+
+          normalized = []
+          for it in items:
+              if not isinstance(it, dict): continue
+              nbr = str(it.get('nbr') or it.get('period') or it.get('issue') or it.get('qihao') or '')
+              # 号码 → 逗号分隔
+              nbrs=''
+              for k in ['nbrs','number','opencode','nums','numbers']:
+                  if it.get(k): nbrs=str(it[k]).replace('=','').replace('+',',').strip(); break
+              if not nbrs:
+                  nums=[str(it[k]) for k in ['b1','b2','b3','n1','n2','n3'] if it.get(k) is not None]
+                  if nums: nbrs=','.join(nums)
+              t=str(it.get('time') or it.get('opentime') or it.get('drawTime') or it.get('datetime') or '')
+              try: nums=[int(x) for x in nbrs.split(',') if x.strip()]; bonus=sum(nums[:3])
+              except: bonus=0
+              if nbr or nbrs:
+                  normalized.append({'nbr':nbr,'nbrs':nbrs,'bonus':bonus,'time':t})
+
+          out={'message':'success' if normalized else 'error','data':normalized}
+          json.dump(out, open('data.json','w'), ensure_ascii=False, indent=2)
+          print(f'✓ 标准化: {len(normalized)}条')
+          if normalized: print(f'  最新: {json.dumps(normalized[0],ensure_ascii=False)}')
+          PYEOF
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
-          git diff --staged --quiet || git commit -m "Auto update data"
-          git push
+          if git diff --staged --quiet; then
+            echo "无变化，跳过提交"
+          else
+            git commit -m "Auto update data ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+            git push
+          fi
