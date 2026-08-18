@@ -227,7 +227,7 @@
             letter-spacing: 1px;
         }
 
-        /* ----- 20个号码 ----- */
+        /* ----- 20个号码（兼容显示） ----- */
         .balls {
             background: rgba(255,255,255,0.01);
             border-radius: 28px;
@@ -458,8 +458,8 @@
         </div>
     </div>
 
-    <!-- 20个号码 -->
-    <div class="balls">
+    <!-- 20个号码（如果旧格式有则显示） -->
+    <div class="balls" id="ballsSection">
         <div class="balls-title">📋 20个开奖号码（已排序）</div>
         <div class="balls-grid" id="ballsContainer"></div>
     </div>
@@ -530,7 +530,7 @@
         const MAX_HISTORY = 50;
 
         // ============================================================
-        // 星空背景
+        // 星空背景（不变）
         // ============================================================
         (function initStars() {
             const canvas = document.getElementById('stars-canvas');
@@ -582,10 +582,12 @@
         const countdownDisplay = document.getElementById('countdownDisplay');
         const countdownCircle = document.getElementById('countdownCircle');
         const historyBody = document.getElementById('historyBody');
+        const ballsSection = document.getElementById('ballsSection');
 
         // ============================================================
         // 工具函数
         // ============================================================
+        // 旧的 computeBalls 函数（用于旧格式）
         function computeBalls(balls) {
             if (!Array.isArray(balls) || balls.length !== 20) {
                 console.warn('号码数组无效，返回默认值');
@@ -630,7 +632,7 @@
         }
 
         // ============================================================
-        // 核心：读取 data.json （增强解析，兼容多种格式）
+        // 核心：读取 data.json （兼容新旧格式）
         // ============================================================
         async function fetchRealData() {
             try {
@@ -645,38 +647,65 @@
                 // 期号
                 const period = item.nbr || item.id || '未知期号';
 
-                // ----- 增强 nbrs 解析：兼容字符串/数组/多种分隔符 -----
+                // 解析三个球和特码
+                let ball1, ball2, ball3, special;
                 let nbrs = [];
-                if (typeof item.nbrs === 'string') {
-                    // 尝试按逗号、空格、竖线、分号等分隔
-                    nbrs = item.nbrs.split(/[,;\s|]+/).map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
-                } else if (Array.isArray(item.nbrs)) {
-                    nbrs = item.nbrs.map(n => parseInt(n, 10)).filter(n => !isNaN(n));
+
+                // ---------- 检查是否为新格式（有 number 字段） ----------
+                if (item.number && typeof item.number === 'string' && item.number.includes('+')) {
+                    const parts = item.number.split('+').map(s => parseInt(s.trim(), 10));
+                    if (parts.length === 3) {
+                        [ball1, ball2, ball3] = parts;
+                        special = (ball1 + ball2 + ball3) % 10;
+                        // 如果有 num 字段，可以作为校验，但以计算为准
+                    } else {
+                        throw new Error('number 字段解析错误');
+                    }
+                } 
+                // ---------- 旧格式（有 nbrs 字段） ----------
+                else if (item.nbrs) {
+                    let nbrsRaw = item.nbrs;
+                    if (typeof nbrsRaw === 'string') {
+                        nbrs = nbrsRaw.split(/[,;\s|]+/).map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+                    } else if (Array.isArray(nbrsRaw)) {
+                        nbrs = nbrsRaw.map(n => parseInt(n, 10)).filter(n => !isNaN(n));
+                    }
+                    if (nbrs.length !== 20) {
+                        throw new Error(`号码数量不正确，期望20，实际${nbrs.length}`);
+                    }
+                    nbrs.sort((a, b) => a - b);
+                    const result = computeBalls(nbrs);
+                    ball1 = result.ball1;
+                    ball2 = result.ball2;
+                    ball3 = result.ball3;
+                    special = result.special;
                 } else {
-                    throw new Error('nbrs 字段类型不支持');
+                    throw new Error('既没有 number 也没有 nbrs 字段');
                 }
 
-                // 验证数量
-                if (nbrs.length !== 20) {
-                    console.warn('实际解析出的号码:', nbrs);
-                    throw new Error(`号码数量不正确，期望20，实际${nbrs.length}`);
-                }
-                nbrs.sort((a, b) => a - b);
+                // 获取时间
+                const date = item.date || '';
+                const time = item.time || '';
 
-                // bonus
-                let bonus = 0;
-                if (item.bonus !== undefined) {
-                    const parsed = parseInt(item.bonus, 10);
-                    if (!isNaN(parsed)) bonus = parsed;
-                }
+                // 如果接口直接提供了 combination，我们可以使用，但为了统一，我们用计算值
+                // 但计算值可能和接口的 combination 不一致（因为接口可能用的是 num 字段）
+                // 为了确保一致，如果接口提供了 combination，我们可以用接口的
+                // 但为了保留我们自己的分析逻辑，我们仍然使用 analyzeTerms 计算
+                // 并在显示时覆盖 combination 字段（如果有）
+                const combinationFromApi = item.combination || '';
 
                 return {
                     data: {
                         period,
-                        nbrs,
-                        bonus,
-                        date: item.date || '',
-                        time: item.time || ''
+                        ball1,
+                        ball2,
+                        ball3,
+                        special,
+                        bonus: special,
+                        date,
+                        time,
+                        nbrs: nbrs, // 可能为空
+                        combinationFromApi // 接口给的组合
                     },
                     sourceName: 'GitHub Actions (本地 data.json)'
                 };
@@ -761,7 +790,7 @@
         }, 1000);
 
         // ============================================================
-        // Telegram 推送
+        // Telegram 推送（保持不变）
         // ============================================================
         function generateCardImage(data) {
             const { period, ball1, ball2, ball3, terms, date, time } = data;
@@ -909,15 +938,24 @@
             errorMsgEl.style.display = 'none';
             try {
                 const result = await fetchRealData();
-                const { period, nbrs, bonus, date, time } = result.data;
-                const { ball1, ball2, ball3, special } = computeBalls(nbrs);
+                const { period, ball1, ball2, ball3, special, nbrs, date, time, combinationFromApi } = result.data;
+                // 计算术语（如果接口提供了 combination，我们可以覆盖，但这里先用计算值）
                 const terms = analyzeTerms(ball1, ball2, ball3, special);
+                // 如果接口提供了 combination 且与计算值不同，我们可以选择使用接口的
+                // 但为了数据一致性，我们优先使用接口的 combination（如果有）
+                if (combinationFromApi) {
+                    // 但是 combinationFromApi 是字符串如 "小单"，我们可以保留，但 terms 里已经有 combination
+                    // 我们可以覆盖 terms.combination
+                    terms.combination = combinationFromApi;
+                }
                 const timestamp = new Date().toISOString();
 
                 const dataObj = {
-                    period, nbrs: nbrs.slice(), bonus,
+                    period,
                     ball1, ball2, ball3, special,
-                    terms, date, time,
+                    terms,
+                    date, time,
+                    nbrs: nbrs || [],
                     sourceName: result.sourceName,
                     timestamp
                 };
@@ -925,18 +963,26 @@
                 window.PC28_DATA = dataObj;
 
                 // 更新界面
+                // 显示20个号码（如果有）
                 ballsContainer.innerHTML = '';
-                const highlightIndices = new Set([1,4,7,10,13,16]);
-                nbrs.forEach((num, idx) => {
-                    const ball = document.createElement('span');
-                    ball.className = 'ball' + (highlightIndices.has(idx) ? ' highlight' : '');
-                    ball.textContent = String(num).padStart(2, '0');
-                    ballsContainer.appendChild(ball);
-                });
+                if (nbrs && nbrs.length === 20) {
+                    ballsSection.style.display = 'block';
+                    const highlightIndices = new Set([1,4,7,10,13,16]);
+                    nbrs.forEach((num, idx) => {
+                        const ball = document.createElement('span');
+                        ball.className = 'ball' + (highlightIndices.has(idx) ? ' highlight' : '');
+                        ball.textContent = String(num).padStart(2, '0');
+                        ballsContainer.appendChild(ball);
+                    });
+                } else {
+                    ballsSection.style.display = 'none';
+                }
+
                 ball1El.textContent = ball1;
                 ball2El.textContent = ball2;
                 ball3El.textContent = ball3;
                 specialEl.textContent = special;
+
                 document.getElementById('termOddEven').textContent = terms.oddEven;
                 document.getElementById('termBigSmall').textContent = terms.bigSmall;
                 document.getElementById('termCombination').textContent = terms.combination;
