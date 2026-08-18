@@ -13,24 +13,155 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Fetch data
+      - name: Fetch data from pc28.help
         run: |
           curl -sL \
             -H "User-Agent: Mozilla/5.0" \
             "https://pc28.help/api/kj.json" -o data.json
-          # 如果主源失败，尝试备用源
-          if [ ! -s data.json ]; then
-            curl -sL -H "User-Agent: Mozilla/5.0" \
-              "https://yu28.top/api/kj.json" -o data.json
-          fi
-          # 打印内容，方便排查
+          echo "=== data.json ==="
           cat data.json
 
-      - name: Commit and push
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Parse and push to Telegram
+        id: push_telegram
+        run: |
+          # ============================================================
+          # Telegram 配置
+          # ============================================================
+          BOT_TOKEN="8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo"
+          CHANNEL_ID="@pc28jndkj"
+          GROUP_ID="-1003480986680"
+
+          # ============================================================
+          # 提取最新数据
+          # ============================================================
+          PERIOD=$(jq -r '.data[0].nbr' data.json)
+          NUMBER=$(jq -r '.data[0].number' data.json)
+          COMBINATION=$(jq -r '.data[0].combination' data.json)
+          DATE=$(jq -r '.data[0].date' data.json)
+          TIME=$(jq -r '.data[0].time' data.json)
+
+          echo "最新期号: $PERIOD"
+          echo "号码: $NUMBER"
+          echo "组合: $COMBINATION"
+
+          if [ "$PERIOD" == "null" ] || [ -z "$PERIOD" ]; then
+            echo "❌ 数据无效，跳过推送"
+            exit 0
+          fi
+
+          # ============================================================
+          # 读取上次推送的期号
+          # ============================================================
+          if [ -f last_period.txt ]; then
+            LAST_PERIOD=$(cat last_period.txt)
+            echo "上次推送期号: $LAST_PERIOD"
+          else
+            LAST_PERIOD=""
+            echo "首次运行，无历史期号"
+          fi
+
+          # ============================================================
+          # 判断是否为新期号
+          # ============================================================
+          if [ "$PERIOD" == "$LAST_PERIOD" ]; then
+            echo "⏭️ 期号未变化 ($PERIOD)，跳过推送"
+            exit 0
+          fi
+
+          echo "🔄 检测到新期号: $LAST_PERIOD → $PERIOD"
+
+          # ============================================================
+          # 解析三个球
+          # ============================================================
+          BALL1=$(echo "$NUMBER" | cut -d'+' -f1)
+          BALL2=$(echo "$NUMBER" | cut -d'+' -f2)
+          BALL3=$(echo "$NUMBER" | cut -d'+' -f3)
+          SUM=$((BALL1 + BALL2 + BALL3))
+          COMBO="$COMBINATION"
+
+          # 判断形状
+          if [ "$BALL1" == "$BALL2" ] && [ "$BALL2" == "$BALL3" ]; then
+            SHAPE="豹子"
+          elif [ "$BALL1" == "$BALL2" ] || [ "$BALL2" == "$BALL3" ] || [ "$BALL1" == "$BALL3" ]; then
+            SHAPE="对子"
+          elif [ $((BALL2 - BALL1)) -eq 1 ] && [ $((BALL3 - BALL2)) -eq 1 ]; then
+            SHAPE="顺子"
+          else
+            SHAPE="杂六"
+          fi
+
+          # ============================================================
+          # 构建消息
+          # ============================================================
+          CHANNEL_MSG="<b>第${PERIOD}期</b>
+        ${BALL1} + ${BALL2} + ${BALL3} = ${SUM}
+        <b>${COMBO}</b> · 形态：${SHAPE}
+        开奖时间：${DATE} ${TIME}"
+
+          GROUP_MSG="📢 最新开奖信息
+        📅 最新期号: ${PERIOD}
+        🔢 开奖结果: ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO}
+        🎉 号码形式: ${SHAPE}|中
+        ⏰ 开奖时间: ${DATE} ${TIME}"
+
+          echo "=== 频道消息 ==="
+          echo "$CHANNEL_MSG"
+          echo "=== 群组消息 ==="
+          echo "$GROUP_MSG"
+
+          # ============================================================
+          # 发送到频道
+          # ============================================================
+          echo "📤 发送频道消息..."
+          curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d "{\"chat_id\":\"$CHANNEL_ID\",\"text\":\"$CHANNEL_MSG\",\"parse_mode\":\"HTML\",\"disable_web_page_preview\":true}" \
+            "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+            -o /tmp/channel_response.json
+
+          if grep -q '"ok":true' /tmp/channel_response.json; then
+            echo "✅ 频道推送成功"
+          else
+            echo "❌ 频道推送失败:"
+            cat /tmp/channel_response.json
+          fi
+
+          # ============================================================
+          # 发送到群组
+          # ============================================================
+          echo "📤 发送群组消息..."
+          curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -d "{\"chat_id\":\"$GROUP_ID\",\"text\":\"$GROUP_MSG\",\"parse_mode\":\"HTML\",\"disable_web_page_preview\":true}" \
+            "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+            -o /tmp/group_response.json
+
+          if grep -q '"ok":true' /tmp/group_response.json; then
+            echo "✅ 群组推送成功"
+          else
+            echo "❌ 群组推送失败:"
+            cat /tmp/group_response.json
+          fi
+
+          # ============================================================
+          # 记录本次期号
+          # ============================================================
+          echo "$PERIOD" > last_period.txt
+
+      - name: Commit changes (data.json + last_period.txt)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data.json
-          git diff --staged --quiet || git commit -m "Auto update data"
-          git push
+          git add data.json last_period.txt
+          if git diff --staged --quiet; then
+            echo "无变化，跳过提交"
+          else
+            git commit -m "Auto update data and period ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+            git push
+          fi
