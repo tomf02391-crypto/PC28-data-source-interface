@@ -3,456 +3,847 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PC28 数据接口 · 本地JSON</title>
+    <title>加拿大PC28 · 液态玻璃 + 图片推送</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* ========== 样式（液态玻璃，同上） ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #1a1a3e, #24243e);
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            padding: 24px 16px;
-            color: #e0e0e0;
+            align-items: center;
+            background: radial-gradient(circle at 20% 30%, #1a2a3a, #0b1a2b);
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
+            padding: 20px;
         }
-        .container {
+        .glass-container {
             max-width: 900px;
             width: 100%;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-            padding: 28px 26px 36px;
-            backdrop-filter: blur(12px);
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-radius: 48px;
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03) inset;
+            padding: 30px 32px 36px;
+            color: #f0f4fa;
+            position: relative;
+            overflow: hidden;
         }
+        .glass-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(120,200,255,0.05), transparent, rgba(200,120,255,0.05), transparent);
+            animation: rotateGlow 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .glass-container > * { position: relative; z-index: 1; }
         h1 {
-            font-size: 22px;
+            font-size: 28px;
             font-weight: 700;
-            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            background: linear-gradient(135deg, #b0d4ff, #e0c4ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
         .subhead {
-            font-size: 13px;
-            color: #999;
-            margin-bottom: 20px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            border-left: 3px solid rgba(120,200,255,0.4);
+            padding-left: 16px;
+            margin-bottom: 22px;
+            line-height: 1.6;
         }
         .top-bar {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding: 12px 16px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 14px;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 60px;
+            padding: 12px 20px;
+            border: 1px solid rgba(255,255,255,0.06);
+            margin-bottom: 24px;
         }
         .status-area {
             display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
             align-items: center;
-            font-size: 13px;
+            gap: 16px;
+            flex-wrap: wrap;
         }
         .status-badge {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: rgba(0,210,255,0.12);
-            color: #00d2ff;
-            font-size: 12px;
+            gap: 8px;
             font-weight: 600;
+            color: #7ecf9c;
         }
         .status-badge .dot {
-            width: 8px; height: 8px;
+            width: 10px;
+            height: 10px;
+            background: #4cdb7b;
             border-radius: 50%;
-            background: #00d2ff;
-            box-shadow: 0 0 8px #00d2ff;
-            animation: pulse 1.5s infinite;
+            display: inline-block;
+            animation: pulse 1.2s infinite;
+            box-shadow: 0 0 12px rgba(76,219,123,0.4);
         }
         @keyframes pulse {
-            0%,100% { opacity: 1; }
-            50% { opacity: 0.4; }
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.85); }
+            100% { opacity: 1; transform: scale(1); }
         }
-        .update-time { color: #aaa; font-size: 12px; }
+        .status-badge.paused .dot {
+            background: #f5a623;
+            animation: none;
+            box-shadow: 0 0 12px rgba(245,166,35,0.3);
+        }
+        .update-time { font-size: 14px; color: rgba(255,255,255,0.65); }
         .source-indicator {
-            padding: 3px 10px;
-            border-radius: 12px;
-            background: rgba(123,47,247,0.15);
-            color: #b794f4;
             font-size: 12px;
+            background: rgba(255,255,255,0.06);
+            padding: 4px 14px;
+            border-radius: 30px;
+            color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.05);
         }
         .error-msg {
-            color: #ff6b6b;
-            font-size: 12px;
+            background: rgba(255,80,80,0.15);
+            color: #ff7a7a;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: 500;
             display: none;
+            font-size: 13px;
+            border: 1px solid rgba(255,80,80,0.15);
         }
         .btn-group { display: flex; gap: 8px; }
         .btn {
-            padding: 7px 16px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            background: linear-gradient(135deg, #00d2ff, #7b2ff7);
+            background: rgba(255,255,255,0.07);
             color: #fff;
-            transition: transform 0.15s;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            backdrop-filter: blur(4px);
+            background: rgba(255,255,255,0.04);
         }
-        .btn:hover { transform: translateY(-1px); }
+        .btn:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.2);
+            transform: scale(1.02);
+        }
+        .btn:active { transform: scale(0.96); }
         .btn-outline {
             background: transparent;
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #ccc;
+            border-color: rgba(255,255,255,0.2);
+        }
+        .btn-outline:hover { background: rgba(255,255,255,0.08); }
+
+        .countdown-card {
+            background: rgba(255,255,255,0.04);
+            border-radius: 32px;
+            padding: 14px 24px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .countdown-label {
+            font-size: 15px;
+            color: rgba(255,255,255,0.6);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .countdown-time {
+            font-size: 28px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            background: linear-gradient(135deg, #8fcbff, #d4b0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            min-width: 100px;
+            text-align: right;
+        }
+        .countdown-time.warning {
+            background: linear-gradient(135deg, #ffb07a, #ff7a7a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* 最新开奖 */
-        .latest-section {
+        .balls {
+            background: rgba(255,255,255,0.03);
+            border-radius: 24px;
+            padding: 18px 16px;
             margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.04);
         }
-        .section-title {
+        .balls-title {
             font-size: 14px;
             font-weight: 600;
-            color: #bbb;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 14px;
+            letter-spacing: 0.5px;
         }
-        .balls-row {
+        .balls-grid {
             display: flex;
-            gap: 16px;
             flex-wrap: wrap;
-            align-items: center;
-        }
-        .ball-wrap {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
+            gap: 10px 8px;
         }
         .ball {
-            width: 64px; height: 64px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            font-weight: 800;
-            color: #fff;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            box-shadow: 0 4px 20px rgba(102,126,234,0.4);
-        }
-        .ball.sum {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-            box-shadow: 0 4px 20px rgba(245,87,108,0.4);
-            width: 80px; height: 80px;
-            font-size: 32px;
-        }
-        .ball-label {
-            font-size: 11px;
-            color: #999;
-        }
-        .bigsmall {
-            margin-left: 12px;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 700;
-        }
-        .bigsmall.big { background: rgba(245,87,108,0.2); color: #f5576c; }
-        .bigsmall.small { background: rgba(0,210,255,0.2); color: #00d2ff; }
-        .bigsmall.single { background: rgba(251,146,60,0.2); color: #fb923c; }
-        .bigsmall.double { background: rgba(167,243,208,0.2); color: #6ee7b7; }
-
-        /* 数据表格 */
-        .table-wrap {
-            max-height: 420px;
-            overflow-y: auto;
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.06);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-        thead th {
-            position: sticky;
-            top: 0;
-            background: rgba(30,30,60,0.95);
-            color: #b794f4;
-            font-weight: 600;
-            padding: 10px 12px;
-            text-align: center;
-            z-index: 1;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-        tbody td {
-            padding: 8px 12px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-        }
-        tbody tr:hover { background: rgba(255,255,255,0.03); }
-        .num-cell {
             display: inline-flex;
-            width: 28px; height: 28px;
             align-items: center;
             justify-content: center;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            background: rgba(102,126,234,0.2);
-            color: #c7d2fe;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
             font-weight: 700;
-            font-size: 12px;
-            margin: 0 2px;
+            font-size: 16px;
+            color: #e8edf5;
+            transition: 0.2s;
+        }
+        .ball.highlight {
+            border-color: rgba(120,200,255,0.5);
+            background: rgba(120,200,255,0.08);
+            box-shadow: 0 0 20px rgba(120,200,255,0.05);
+            color: #b0d4ff;
         }
 
-        /* API 说明 */
-        .api-info {
-            margin-top: 24px;
+        .result-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 18px 30px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 24px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .result-item {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+        .result-item .tag {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.4);
+        }
+        .result-item .num {
+            font-size: 30px;
+            font-weight: 800;
+            color: #e8edf5;
+            min-width: 30px;
+            text-align: center;
+        }
+        .result-item .num.special {
+            color: #ffba7a;
+            font-size: 36px;
+            text-shadow: 0 0 20px rgba(255,186,122,0.2);
+        }
+        .divider {
+            width: 1px;
+            height: 36px;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .terms {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px 16px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
             padding: 16px 20px;
-            background: rgba(0,210,255,0.05);
-            border: 1px solid rgba(0,210,255,0.15);
-            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.03);
+            margin-bottom: 18px;
+        }
+        .term-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 15px;
+        }
+        .term-item:last-child { border-bottom: none; }
+        .term-key { color: rgba(255,255,255,0.4); font-weight: 500; }
+        .term-value { font-weight: 600; color: #d4e0f0; }
+
+        .api-info {
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-top: 14px;
             font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.03);
             line-height: 1.8;
         }
         .api-info code {
-            background: rgba(0,0,0,0.4);
-            padding: 2px 8px;
-            border-radius: 4px;
-            color: #7dd3fc;
-            font-family: 'Fira Code', monospace;
+            background: rgba(255,255,255,0.06);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #b0cce0;
         }
         .footnote {
-            margin-top: 16px;
-            text-align: center;
             font-size: 12px;
-            color: #666;
+            color: rgba(255,255,255,0.25);
+            margin-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.03);
+            padding-top: 14px;
+            text-align: center;
+            letter-spacing: 0.3px;
         }
 
-        /* 倒计时 */
-        .countdown {
-            font-size: 14px;
-            font-weight: 700;
-            color: #fbbf24;
-            margin-left: auto;
+        @media (max-width: 600px) {
+            .glass-container { padding: 20px 16px; border-radius: 32px; }
+            .result-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .divider { display: none; }
+            .ball { width: 38px; height: 38px; font-size: 14px; }
+            .terms { grid-template-columns: 1fr 1fr; }
+            .top-bar { flex-direction: column; align-items: stretch; }
+            .btn-group { justify-content: center; }
+            .countdown-card { flex-direction: column; align-items: stretch; gap: 6px; }
+            .countdown-time { text-align: left; }
+            .status-area { justify-content: center; }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>🎲 PC28 · 真实数据（本地同步）</h1>
-    <div class="subhead">数据源：GitHub Actions 定时同步 pc28.help · 每10分钟自动更新 · 无跨域</div>
 
+<div class="glass-container" id="app">
+    <h1>🎲 加拿大PC28 · 液态玻璃面板</h1>
+    <div class="subhead">
+        数据源：GitHub Actions 实时同步 · 开奖周期 3.5 分钟 · Telegram 图片/文字推送
+    </div>
+
+    <!-- 顶部状态栏（同前） -->
     <div class="top-bar">
         <div class="status-area">
-            <span class="status-badge" id="statusBadge"><span class="dot"></span> 实时更新中</span>
+            <span class="status-badge" id="statusBadge">
+                <span class="dot"></span> 实时更新中
+            </span>
             <span class="update-time" id="updateTime">最后更新: --</span>
-            <span class="source-indicator" id="sourceIndicator">数据源: --</span>
+            <span class="source-indicator" id="sourceIndicator">数据源: 本地 data.json</span>
             <span class="error-msg" id="errorMsg">⚠️ 加载失败</span>
         </div>
-        <div class="countdown" id="countdown">下次刷新: --</div>
         <div class="btn-group">
             <button class="btn" id="refreshBtn">🔄 刷新</button>
             <button class="btn btn-outline" id="toggleBtn">⏸️ 暂停</button>
         </div>
     </div>
 
-    <!-- 最新开奖 -->
-    <div class="latest-section">
-        <div class="section-title">最新开奖</div>
-        <div class="balls-row" id="latestBalls">
-            <div class="ball-wrap"><div class="ball" id="ball1">-</div><div class="ball-label">第1球</div></div>
-            <div class="ball-wrap"><div class="ball" id="ball2">-</div><div class="ball-label">第2球</div></div>
-            <div class="ball-wrap"><div class="ball" id="ball3">-</div><div class="ball-label">第3球</div></div>
-            <div class="ball-wrap"><div class="ball sum" id="ballSum">-</div><div class="ball-label">特码(和)</div></div>
-            <span class="bigsmall" id="bigSmallTag">-</span>
-            <span class="bigsmall" id="oddEvenTag">-</span>
-            <div style="margin-left:auto;font-size:12px;color:#888;" id="latestPeriod">期号: --</div>
-        </div>
+    <!-- 倒计时卡片 -->
+    <div class="countdown-card">
+        <div class="countdown-label"><span>⏳</span> 距下次开奖</div>
+        <div class="countdown-time" id="countdownDisplay">--:--</div>
     </div>
 
-    <!-- 历史数据表 -->
-    <div class="section-title">最近60期记录</div>
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr><th>期号</th><th>时间</th><th>第1球</th><th>第2球</th><th>第3球</th><th>特码</th><th>大小</th><th>单双</th></tr>
-            </thead>
-            <tbody id="historyBody">
-                <tr><td colspan="8" style="padding:30px;color:#666;">加载中...</td></tr>
-            </tbody>
-        </table>
+    <!-- 20个号码 -->
+    <div class="balls">
+        <div class="balls-title">📋 20个开奖号码（已排序）</div>
+        <div class="balls-grid" id="ballsContainer"></div>
     </div>
 
-    <!-- 对外接口说明 -->
+    <!-- 三球 + 特码 -->
+    <div class="result-row">
+        <div class="result-item"><span class="tag">第1球</span><span class="num" id="ball1">-</span></div>
+        <div class="result-item"><span class="tag">第2球</span><span class="num" id="ball2">-</span></div>
+        <div class="result-item"><span class="tag">第3球</span><span class="num" id="ball3">-</span></div>
+        <div class="divider"></div>
+        <div class="result-item"><span class="tag">特码</span><span class="num special" id="special">--</span></div>
+    </div>
+
+    <!-- 术语 -->
+    <div class="terms">
+        <div class="term-item"><span class="term-key">单/双</span><span class="term-value" id="termOddEven">-</span></div>
+        <div class="term-item"><span class="term-key">大/小</span><span class="term-value" id="termBigSmall">-</span></div>
+        <div class="term-item"><span class="term-key">组合</span><span class="term-value" id="termCombination">-</span></div>
+        <div class="term-item"><span class="term-key">极值</span><span class="term-value" id="termExtreme">-</span></div>
+        <div class="term-item"><span class="term-key">顺子</span><span class="term-value" id="termStraight">-</span></div>
+        <div class="term-item"><span class="term-key">对子</span><span class="term-value" id="termPair">-</span></div>
+        <div class="term-item"><span class="term-key">豹子</span><span class="term-value" id="termTriple">-</span></div>
+        <div class="term-item"><span class="term-key">单点</span><span class="term-value" id="termPoint">-</span></div>
+    </div>
+
+    <!-- API 说明 -->
     <div class="api-info">
-        <strong>🔌 对外接口（供其他仓库调用）</strong><br />
+        <strong>🔌 对外接口</strong><br />
         • 读取最新数据：<code>window.PC28_DATA</code><br />
         • 监听更新事件：<code>window.addEventListener('pc28-data-updated', e => console.log(e.detail))</code><br />
-        • 直连 raw 文件：<code>https://raw.githubusercontent.com/tomf02391-crypto/PC28-data-source-interface/main/data.json</code>
+        • Telegram 推送：频道发图片，群组发文字（配置见代码顶部）
     </div>
 
     <div class="footnote">
-        ⚡ 数据由 GitHub Actions 每10分钟自动从 pc28.help 拉取，写入 data.json，保证真实有效、无跨域。
+        ⚡ 数据由 GitHub Actions 每3分钟拉取 · 前端每3分30秒刷新 · 倒计时基于固定周期估算
     </div>
 </div>
 
 <script>
-(function() {
-    'use strict';
+    (function() {
+        'use strict';
 
-    // ===== 全局状态 =====
-    let autoRefresh = true;
-    let countdown = 600; // 10分钟
-    let timer = null;
-    let currentData = null;
+        // ============================================================
+        // Telegram 推送配置
+        // ============================================================
+        const TG_CONFIG = {
+            botToken: '8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo',          // 例如 123456:ABC-DEF
+            channelId: '@pc28jndkj',          // 频道用户名（带@）或数字ID
+            groupId: '-1003480986680',           // 群组ID（负数）
+            enabled: true,                       // 是否启用推送
+        };
 
-    // ===== 仅读取本地 data.json（同源，无跨域） =====
-    async function fetchRealData() {
-        try {
-            const resp = await fetch('data.json', { cache: 'no-cache' });
-            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-            const json = await resp.json();
+        // ============================================================
+        // 通用配置
+        // ============================================================
+        const REFRESH_INTERVAL = 210000;   // 3分30秒
+        const ROUND_INTERVAL = 210;        // 3.5分钟 = 210秒
 
-            // pc28.help 返回格式: { message:'success', data:[{nbr, nbrs, bonus, time}, ...] }
-            if (json.message !== 'success' || !json.data || !json.data[0]) {
-                throw new Error('数据格式错误');
+        // ============================================================
+        // DOM 引用
+        // ============================================================
+        const ballsContainer = document.getElementById('ballsContainer');
+        const ball1El = document.getElementById('ball1');
+        const ball2El = document.getElementById('ball2');
+        const ball3El = document.getElementById('ball3');
+        const specialEl = document.getElementById('special');
+        const updateTimeEl = document.getElementById('updateTime');
+        const errorMsgEl = document.getElementById('errorMsg');
+        const statusBadge = document.getElementById('statusBadge');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const sourceIndicator = document.getElementById('sourceIndicator');
+        const countdownDisplay = document.getElementById('countdownDisplay');
+
+        // ============================================================
+        // 倒计时
+        // ============================================================
+        function updateCountdown() {
+            const now = Math.floor(Date.now() / 1000);
+            const elapsed = now % ROUND_INTERVAL;
+            const remaining = ROUND_INTERVAL - elapsed;
+            const mins = Math.floor(remaining / 60);
+            const secs = remaining % 60;
+            const str = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            countdownDisplay.textContent = str;
+            if (remaining < 30) countdownDisplay.classList.add('warning');
+            else countdownDisplay.classList.remove('warning');
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // ============================================================
+        // 工具函数
+        // ============================================================
+        function computeBalls(balls) {
+            const idx1 = [1,4,7,10,13,16];
+            const sum1 = idx1.reduce((a,i) => a + balls[i], 0);
+            const ball1 = sum1 % 10;
+            const idx2 = [2,5,8,11,14,17];
+            const sum2 = idx2.reduce((a,i) => a + balls[i], 0);
+            const ball2 = sum2 % 10;
+            const idx3 = [3,6,9,12,15,18];
+            const sum3 = idx3.reduce((a,i) => a + balls[i], 0);
+            const ball3 = sum3 % 10;
+            const special = (ball1 + ball2 + ball3) % 10;
+            return { ball1, ball2, ball3, special };
+        }
+
+        function analyzeTerms(b1, b2, b3, special) {
+            const oddEven = special % 2 === 0 ? '双' : '单';
+            const bigSmall = special <= 13 ? '小' : '大';
+            let combination = '';
+            if (special <= 13 && special % 2 === 0) combination = '小双';
+            else if (special <= 13 && special % 2 === 1) combination = '小单';
+            else if (special > 13 && special % 2 === 0) combination = '大双';
+            else if (special > 13 && special % 2 === 1) combination = '大单';
+            let extreme = '—';
+            if (special >= 0 && special <= 5) extreme = '极小';
+            else if (special >= 22 && special <= 27) extreme = '极大';
+            const sorted = [b1,b2,b3].slice().sort((a,b)=>a-b);
+            const isConsecutive = (sorted[2]-sorted[1]===1 && sorted[1]-sorted[0]===1);
+            let straight = '否';
+            if (isConsecutive && sorted[0]>=1 && sorted[2]<=9) straight = '是';
+            const pair = (b1===b2 || b2===b3 || b1===b3) ? '是' : '否';
+            const triple = (b1===b2 && b2===b3) ? '是' : '否';
+            const point = String(special);
+            // 组合形态（杂六、对子、顺子、豹子等）
+            let shape = '杂六';
+            if (triple === '是') shape = '豹子';
+            else if (pair === '是') shape = '对子';
+            else if (straight === '是') shape = '顺子';
+            return { oddEven, bigSmall, combination, extreme, straight, pair, triple, point, shape };
+        }
+
+        // ============================================================
+        // 读取本地 data.json（含期号）
+        // ============================================================
+        async function fetchRealData() {
+            try {
+                const resp = await fetch('data.json');
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const json = await resp.json();
+                if (json.message !== 'success' || !json.data || !json.data[0]) throw new Error('数据格式错误');
+                const item = json.data[0];
+                return {
+                    data: {
+                        period: item.nbr || '未知期号',
+                        nbrs: item.nbrs.split(',').map(Number).sort((a, b) => a - b),
+                        bonus: parseInt(item.bonus, 10),
+                        date: item.date || '',
+                        time: item.time || ''
+                    },
+                    sourceName: 'GitHub Actions (本地 data.json)'
+                };
+            } catch (err) {
+                throw new Error('读取本地数据失败: ' + err.message);
             }
-
-            const items = json.data;
-            const latest = items[0];
-
-            // 解析三球
-            const nbrsStr = latest.nbrs || '';
-            const nums = nbrsStr.split(',').map(Number);
-            if (nums.length < 3) throw new Error('号码数量不足3个');
-
-            const b1 = nums[0], b2 = nums[1], b3 = nums[2];
-            const sum = b1 + b2 + b3;
-
-            const result = {
-                latest: {
-                    period: latest.nbr || latest.period || '',
-                    time: latest.time || '',
-                    b1, b2, b3,
-                    sum,
-                    bigSmall: sum >= 14 ? '大' : '小',
-                    oddEven: sum % 2 === 0 ? '双' : '单',
-                    rawNbrs: nbrsStr
-                },
-                history: items.map(item => {
-                    const ns = (item.nbrs || '').split(',').map(Number);
-                    const s = (ns[0]||0) + (ns[1]||0) + (ns[2]||0);
-                    return {
-                        period: item.nbr || item.period || '',
-                        time: item.time || '',
-                        b1: ns[0]||0, b2: ns[1]||0, b3: ns[2]||0,
-                        sum: s,
-                        bigSmall: s >= 14 ? '大' : '小',
-                        oddEven: s % 2 === 0 ? '双' : '单'
-                    };
-                }),
-                sourceName: 'GitHub Actions (本地data.json)',
-                fetchTime: Date.now()
-            };
-
-            return result;
-        } catch (err) {
-            throw new Error('读取本地数据失败: ' + err.message);
         }
-    }
 
-    // ===== 渲染 =====
-    function render(data) {
-        const L = data.latest;
-        document.getElementById('ball1').textContent = L.b1;
-        document.getElementById('ball2').textContent = L.b2;
-        document.getElementById('ball3').textContent = L.b3;
-        document.getElementById('ballSum').textContent = L.sum;
+        // ============================================================
+        // Canvas 生成卡片图片
+        // ============================================================
+        function generateCardImage(data) {
+            const { period, ball1, ball2, ball3, special, terms, date, time } = data;
+            const sum = ball1 + ball2 + ball3;
+            const combination = terms.combination;
+            const shape = terms.shape;
+            const dateStr = date && time ? `${date} ${time}` : '未知时间';
 
-        const bsTag = document.getElementById('bigSmallTag');
-        bsTag.textContent = L.bigSmall;
-        bsTag.className = 'bigsmall ' + (L.bigSmall === '大' ? 'big' : 'small');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const width = 800;
+            const height = 420;
+            canvas.width = width;
+            canvas.height = height;
 
-        const oeTag = document.getElementById('oddEvenTag');
-        oeTag.textContent = L.oddEven;
-        oeTag.className = 'bigsmall ' + (L.oddEven === '双' ? 'double' : 'single');
+            // 背景渐变
+            const grad = ctx.createLinearGradient(0, 0, width, height);
+            grad.addColorStop(0, '#0f1f2f');
+            grad.addColorStop(0.7, '#1a2a4a');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, width, height);
 
-        document.getElementById('latestPeriod').textContent = '期号: ' + L.period;
+            // 边框光效
+            ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(10, 10, width-20, height-20);
 
-        // 历史表
-        const tbody = document.getElementById('historyBody');
-        tbody.innerHTML = data.history.slice(0, 60).map(h => `
-            <tr>
-                <td>${h.period}</td>
-                <td style="font-size:11px;color:#999">${h.time}</td>
-                <td><span class="num-cell">${h.b1}</span></td>
-                <td><span class="num-cell">${h.b2}</span></td>
-                <td><span class="num-cell">${h.b3}</span></td>
-                <td style="font-weight:700;color:#f5576c">${h.sum}</td>
-                <td style="color:${h.bigSmall==='大'?'#f5576c':'#00d2ff'}">${h.bigSmall}</td>
-                <td style="color:${h.oddEven==='双'?'#6ee7b7':'#fb923c'}">${h.oddEven}</td>
-            </tr>
-        `).join('');
+            // 顶部标题
+            ctx.textAlign = 'left';
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+            ctx.font = '16px "Segoe UI", "PingFang SC", sans-serif';
+            ctx.fillText('PC28 开奖结果', 30, 50);
 
-        // 状态
-        const now = new Date();
-        document.getElementById('updateTime').textContent = '最后更新: ' + now.toLocaleString('zh-CN');
-        document.getElementById('sourceIndicator').textContent = '数据源: ' + data.sourceName;
-        document.getElementById('errorMsg').style.display = 'none';
+            // 期号
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 22px "Segoe UI", "PingFang SC", sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(`第 ${period} 期`, width-30, 50);
 
-        // 全局暴露
-        window.PC28_DATA = data;
-        window.dispatchEvent(new CustomEvent('pc28-data-updated', { detail: data }));
-    }
+            // 三个大球
+            const circleY = 150;
+            const radius = 50;
+            const spacing = 130;
+            const startX = (width - 2*spacing) / 2 - 10;
 
-    function showError(msg) {
-        console.error('[PC28]', msg);
-        document.getElementById('errorMsg').textContent = '⚠️ ' + msg;
-        document.getElementById('errorMsg').style.display = 'inline';
-    }
+            const balls = [ball1, ball2, ball3];
+            const colors = ['#4fc3f7', '#4fc3f7', '#4fc3f7'];
+            balls.forEach((num, i) => {
+                const x = startX + i * spacing;
+                // 圆
+                const gradCirc = ctx.createRadialGradient(x-15, circleY-15, 10, x, circleY, radius);
+                gradCirc.addColorStop(0, '#6ad4ff');
+                gradCirc.addColorStop(1, '#1a7ab5');
+                ctx.shadowColor = 'rgba(79,195,247,0.3)';
+                ctx.shadowBlur = 20;
+                ctx.beginPath();
+                ctx.arc(x, circleY, radius, 0, Math.PI*2);
+                ctx.fillStyle = gradCirc;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
 
-    // ===== 主循环 =====
-    async function load() {
-        try {
-            const data = await fetchRealData();
-            currentData = data;
-            render(data);
-            countdown = 600; // 重置倒计时
-        } catch (err) {
-            showError(err.message);
+                // 数字
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 44px "Segoe UI", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                ctx.shadowBlur = 8;
+                ctx.fillText(num, x, circleY+2);
+                ctx.shadowBlur = 0;
+
+                // 加号
+                if (i < 2) {
+                    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                    ctx.font = '32px "Segoe UI", sans-serif';
+                    ctx.fillText('+', x + spacing/2, circleY+2);
+                }
+            });
+
+            // 和值及组合
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.shadowBlur = 0;
+
+            // 和值
+            ctx.fillStyle = '#ffd54f';
+            ctx.font = 'bold 36px "Segoe UI", sans-serif';
+            ctx.fillText(`= ${sum}`, width/2, circleY + radius + 20);
+
+            // 组合（大双/小单等）
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 28px "Segoe UI", sans-serif';
+            ctx.fillText(combination, width/2, circleY + radius + 70);
+
+            // 形态（对子/顺子等）
+            ctx.fillStyle = 'rgba(255,255,255,0.5)';
+            ctx.font = '22px "Segoe UI", sans-serif';
+            ctx.fillText(`形态：${shape}`, width/2, circleY + radius + 115);
+
+            // 底部时间
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'bottom';
+            ctx.fillStyle = 'rgba(255,255,255,0.25)';
+            ctx.font = '16px "Segoe UI", sans-serif';
+            ctx.fillText(`开奖时间 ${dateStr}`, width-30, height-20);
+
+            // 返回 Blob
+            return new Promise(resolve => {
+                canvas.toBlob(blob => resolve(blob), 'image/png');
+            });
         }
-    }
 
-    function tick() {
-        if (!autoRefresh) return;
-        countdown--;
-        const m = Math.floor(countdown / 60);
-        const s = countdown % 60;
-        document.getElementById('countdown').textContent =
-            `下次刷新: ${m}:${s.toString().padStart(2,'0')}`;
-        if (countdown <= 0) load();
-    }
+        // ============================================================
+        // Telegram 发送图片到频道
+        // ============================================================
+        async function sendPhotoToChannel(chatId, photoBlob, caption) {
+            if (!TG_CONFIG.enabled || !TG_CONFIG.botToken) return;
+            const url = `https://api.telegram.org/bot${TG_CONFIG.botToken}/sendPhoto`;
+            const formData = new FormData();
+            formData.append('chat_id', chatId);
+            formData.append('photo', photoBlob, 'result.png');
+            if (caption) formData.append('caption', caption);
+            formData.append('parse_mode', 'HTML');
 
-    // ===== 事件绑定 =====
-    document.getElementById('refreshBtn').addEventListener('click', load);
-    document.getElementById('toggleBtn').addEventListener('click', function() {
-        autoRefresh = !autoRefresh;
-        this.textContent = autoRefresh ? '⏸️ 暂停' : '▶️ 继续';
-        if (autoRefresh) { countdown = 10; load(); }
-    });
+            try {
+                const resp = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await resp.json();
+                if (!result.ok) console.error('发送图片失败:', result);
+                else console.log('图片发送成功 (chatId:', chatId, ')');
+            } catch (e) {
+                console.error('发送图片异常:', e);
+            }
+        }
 
-    // ===== 启动 =====
-    load();
-    timer = setInterval(tick, 1000);
+        // ============================================================
+        // 发送文字消息到群组
+        // ============================================================
+        async function sendTextToGroup(chatId, text) {
+            if (!TG_CONFIG.enabled || !TG_CONFIG.botToken) return;
+            const url = `https://api.telegram.org/bot${TG_CONFIG.botToken}/sendMessage`;
+            try {
+                const resp = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: text,
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: true
+                    })
+                });
+                const result = await resp.json();
+                if (!result.ok) console.error('发送文字失败:', result);
+                else console.log('文字发送成功 (chatId:', chatId, ')');
+            } catch (e) {
+                console.error('发送文字异常:', e);
+            }
+        }
 
-})();
+        // ============================================================
+        // 构建群组消息（带表情符号）
+        // ============================================================
+        function buildGroupMessage(data) {
+            const { period, ball1, ball2, ball3, terms, date, time } = data;
+            const sum = ball1 + ball2 + ball3;
+            const combination = terms.combination;
+            const shape = terms.shape;
+            const dateStr = date && time ? `${date} ${time}` : '未知时间';
+            return `📢 最新开奖信息\n` +
+                   `📅 最新期号: ${period}\n` +
+                   `🔢 开奖结果: ${ball1}+${ball2}+${ball3}=${sum} ${combination}\n` +
+                   `🎉 号码形式: ${shape}|中\n` +
+                   `⏰ 开奖时间: ${dateStr}`;
+        }
+
+        // ============================================================
+        // 对外数据 & 事件
+        // ============================================================
+        let latestData = null;
+        let lastPushDigest = '';
+        window.PC28_DATA = null;
+
+        function emitUpdate(data) {
+            const event = new CustomEvent('pc28-data-updated', { detail: data });
+            window.dispatchEvent(event);
+        }
+
+        // ============================================================
+        // 主更新流程
+        // ============================================================
+        async function fetchAndRender() {
+            errorMsgEl.style.display = 'none';
+            sourceIndicator.textContent = '';
+
+            try {
+                const result = await fetchRealData();
+                const { period, nbrs, bonus, date, time } = result.data;
+                const { ball1, ball2, ball3, special } = computeBalls(nbrs);
+                const terms = analyzeTerms(ball1, ball2, ball3, special);
+                const timestamp = new Date().toISOString();
+
+                const dataObj = {
+                    period,
+                    nbrs: nbrs.slice(),
+                    bonus,
+                    ball1, ball2, ball3, special,
+                    terms,
+                    date,
+                    time,
+                    sourceName: result.sourceName,
+                    timestamp
+                };
+
+                const digest = `${period}|${ball1}|${ball2}|${ball3}`;
+                const isNew = (digest !== lastPushDigest);
+
+                latestData = dataObj;
+                window.PC28_DATA = dataObj;
+
+                // 渲染界面（省略，与之前相同）
+                ballsContainer.innerHTML = '';
+                const highlightIndices = new Set([1,4,7,10,13,16]);
+                nbrs.forEach((num, idx) => {
+                    const ball = document.createElement('span');
+                    ball.className = 'ball' + (highlightIndices.has(idx) ? ' highlight' : '');
+                    ball.textContent = String(num).padStart(2, '0');
+                    ballsContainer.appendChild(ball);
+                });
+                ball1El.textContent = ball1;
+                ball2El.textContent = ball2;
+                ball3El.textContent = ball3;
+                specialEl.textContent = special;
+                document.getElementById('termOddEven').textContent = terms.oddEven;
+                document.getElementById('termBigSmall').textContent = terms.bigSmall;
+                document.getElementById('termCombination').textContent = terms.combination;
+                document.getElementById('termExtreme').textContent = terms.extreme;
+                document.getElementById('termStraight').textContent = terms.straight;
+                document.getElementById('termPair').textContent = terms.pair;
+                document.getElementById('termTriple').textContent = terms.triple;
+                document.getElementById('termPoint').textContent = terms.point;
+
+                const now = new Date();
+                updateTimeEl.textContent = '最后更新: ' + now.toLocaleString('zh-CN', { hour12: false });
+                sourceIndicator.textContent = '数据源: ' + result.sourceName;
+                emitUpdate(dataObj);
+                console.log('[PC28] 数据已更新:', dataObj);
+
+                // ===== 推送（仅当新数据且启用） =====
+                if (isNew && TG_CONFIG.enabled) {
+                    lastPushDigest = digest;
+
+                    // 1. 频道：发送图片
+                    if (TG_CONFIG.channelId) {
+                        const caption = `<b>第${period}期</b> ${ball1}+${ball2}+${ball3}=${ball1+ball2+ball3} ${terms.combination}`;
+                        const imgBlob = await generateCardImage(dataObj);
+                        await sendPhotoToChannel(TG_CONFIG.channelId, imgBlob, caption);
+                    }
+
+                    // 2. 群组：发送文字
+                    if (TG_CONFIG.groupId) {
+                        const msg = buildGroupMessage(dataObj);
+                        await sendTextToGroup(TG_CONFIG.groupId, msg);
+                    }
+                }
+
+            } catch (err) {
+                console.error('[PC28] 加载失败:', err);
+                errorMsgEl.style.display = 'inline-block';
+                errorMsgEl.textContent = '⚠️ ' + err.message;
+            }
+        }
+
+        // ============================================================
+        // 自动刷新控制
+        // ============================================================
+        let timer = null;
+        let isRunning = true;
+
+        function startAuto() {
+            if (timer) clearInterval(timer);
+            timer = setInterval(fetchAndRender, REFRESH_INTERVAL);
+            isRunning = true;
+            statusBadge.className = 'status-badge';
+            statusBadge.innerHTML = '<span class="dot"></span> 实时更新中';
+            toggleBtn.textContent = '⏸️ 暂停';
+        }
+
+        function stopAuto() {
+            if (timer) { clearInterval(timer); timer = null; }
+            isRunning = false;
+            statusBadge.className = 'status-badge paused';
+            statusBadge.innerHTML = '<span class="dot" style="background:#f5a623;"></span> 已暂停';
+            toggleBtn.textContent = '▶️ 继续';
+        }
+
+        function toggleAuto() {
+            if (isRunning) stopAuto();
+            else { startAuto(); fetchAndRender(); }
+        }
+
+        document.getElementById('refreshBtn').addEventListener('click', fetchAndRender);
+        toggleBtn.addEventListener('click', toggleAuto);
+
+        fetchAndRender().then(() => startAuto()).catch(() => startAuto());
+
+        window.addEventListener('beforeunload', function() {
+            if (timer) clearInterval(timer);
+        });
+
+        console.log('[PC28] 面板已加载，Telegram推送' + (TG_CONFIG.enabled ? '已启用' : '已禁用'));
+    })();
 </script>
 </body>
 </html>
