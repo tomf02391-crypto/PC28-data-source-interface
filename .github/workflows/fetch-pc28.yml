@@ -17,6 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch data from pc28.help
         id: fetch_data
@@ -29,14 +30,12 @@ jobs:
           wc -c data.json
           echo "=== data.json 内容 ==="
           cat data.json
-          # 检查是否包含有效数据
           if ! grep -q '"data"' data.json; then
             echo "❌ data.json 中没有 data 字段，尝试备用源..."
             curl -sL -H "User-Agent: Mozilla/5.0" \
               "https://yu28.top/api/kj.json" -o data.json
             cat data.json
           fi
-          # 提取期号检查
           PERIOD=$(jq -r '.data[0].nbr' data.json 2>/dev/null || echo "")
           if [ -z "$PERIOD" ] || [ "$PERIOD" == "null" ]; then
             echo "❌ 无法解析期号，数据无效"
@@ -52,16 +51,10 @@ jobs:
       - name: Generate card and push to Telegram
         if: success()
         run: |
-          # ============================================================
-          # Telegram 配置
-          # ============================================================
           BOT_TOKEN="8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo"
           CHANNEL_ID="@pc28jndkj"
           GROUP_ID="-1003480986680"
 
-          # ============================================================
-          # 提取最新数据
-          # ============================================================
           PERIOD=$(jq -r '.data[0].nbr' data.json)
           NUMBER=$(jq -r '.data[0].number' data.json)
           COMBINATION=$(jq -r '.data[0].combination' data.json)
@@ -77,9 +70,6 @@ jobs:
             exit 0
           fi
 
-          # ============================================================
-          # 读取上次推送的期号
-          # ============================================================
           if [ -f last_period.txt ]; then
             LAST_PERIOD=$(cat last_period.txt)
           else
@@ -93,16 +83,12 @@ jobs:
 
           echo "🔄 检测到新期号: $LAST_PERIOD → $PERIOD"
 
-          # ============================================================
-          # 解析三个球
-          # ============================================================
           BALL1=$(echo "$NUMBER" | cut -d'+' -f1)
           BALL2=$(echo "$NUMBER" | cut -d'+' -f2)
           BALL3=$(echo "$NUMBER" | cut -d'+' -f3)
           SUM=$((BALL1 + BALL2 + BALL3))
           COMBO="$COMBINATION"
 
-          # 判断形状
           if [ "$BALL1" == "$BALL2" ] && [ "$BALL2" == "$BALL3" ]; then
             SHAPE="豹子"
           elif [ "$BALL1" == "$BALL2" ] || [ "$BALL2" == "$BALL3" ] || [ "$BALL1" == "$BALL3" ]; then
@@ -113,9 +99,6 @@ jobs:
             SHAPE="杂六"
           fi
 
-          # ============================================================
-          # 生成图片卡片（Python + Pillow）
-          # ============================================================
           python3 << 'PYEOF'
           import json
           from PIL import Image, ImageDraw, ImageFont
@@ -173,14 +156,8 @@ jobs:
           print("✅ 图片生成成功")
           PYEOF
 
-          # ============================================================
-          # 构建 caption
-          # ============================================================
           CAPTION="<b>第${PERIOD}期</b> ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO}"
 
-          # ============================================================
-          # 发送图片到频道
-          # ============================================================
           echo "📤 发送频道图片..."
           curl -s -X POST \
             -F "chat_id=$CHANNEL_ID" \
@@ -197,9 +174,6 @@ jobs:
             cat /tmp/channel_response.json
           fi
 
-          # ============================================================
-          # 发送文字到群组
-          # ============================================================
           GROUP_MSG="📢 最新开奖信息\n📅 最新期号: ${PERIOD}\n🔢 开奖结果: ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO}\n🎉 号码形式: ${SHAPE}|中\n⏰ 开奖时间: ${DATE} ${TIME}"
 
           echo "📤 发送群组文字..."
@@ -216,9 +190,6 @@ jobs:
             cat /tmp/group_response.json
           fi
 
-          # ============================================================
-          # 记录本次期号
-          # ============================================================
           echo "$PERIOD" > last_period.txt
 
       - name: Commit changes (data.json + last_period.txt)
@@ -230,6 +201,8 @@ jobs:
           if git diff --staged --quiet; then
             echo "无变化，跳过提交"
           else
+            # 先拉取远程最新代码，避免冲突
+            git pull origin main --rebase --autostash || true
             git commit -m "Auto update data and period ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
-            git push
+            git push origin main
           fi
