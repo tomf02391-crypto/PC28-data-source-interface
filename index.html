@@ -630,7 +630,7 @@
         }
 
         // ============================================================
-        // 读取本地 data.json（健壮解析）
+        // 核心：读取 data.json （增强解析，兼容多种格式）
         // ============================================================
         async function fetchRealData() {
             try {
@@ -641,20 +641,40 @@
                     throw new Error('数据格式错误');
                 }
                 const item = json.data[0];
+
+                // 期号
                 const period = item.nbr || item.id || '未知期号';
-                let nbrsStr = item.nbrs || '';
-                if (typeof nbrsStr !== 'string') nbrsStr = String(nbrsStr);
-                const nbrs = nbrsStr.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+
+                // ----- 增强 nbrs 解析：兼容字符串/数组/多种分隔符 -----
+                let nbrs = [];
+                if (typeof item.nbrs === 'string') {
+                    // 尝试按逗号、空格、竖线、分号等分隔
+                    nbrs = item.nbrs.split(/[,;\s|]+/).map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+                } else if (Array.isArray(item.nbrs)) {
+                    nbrs = item.nbrs.map(n => parseInt(n, 10)).filter(n => !isNaN(n));
+                } else {
+                    throw new Error('nbrs 字段类型不支持');
+                }
+
+                // 验证数量
                 if (nbrs.length !== 20) {
+                    console.warn('实际解析出的号码:', nbrs);
                     throw new Error(`号码数量不正确，期望20，实际${nbrs.length}`);
                 }
-                nbrs.sort((a,b) => a-b);
-                const bonus = item.bonus !== undefined ? parseInt(item.bonus, 10) : 0;
+                nbrs.sort((a, b) => a - b);
+
+                // bonus
+                let bonus = 0;
+                if (item.bonus !== undefined) {
+                    const parsed = parseInt(item.bonus, 10);
+                    if (!isNaN(parsed)) bonus = parsed;
+                }
+
                 return {
                     data: {
                         period,
                         nbrs,
-                        bonus: isNaN(bonus) ? 0 : bonus,
+                        bonus,
                         date: item.date || '',
                         time: item.time || ''
                     },
@@ -677,7 +697,6 @@
 
         function saveHistory(entry) {
             let history = getHistory();
-            // 去重（按期号）
             history = history.filter(h => h.period !== entry.period);
             history.unshift(entry);
             if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
@@ -726,7 +745,6 @@
             const str = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
             countdownDisplay.textContent = str;
 
-            // 环形进度 (总周长 2*PI*30 ≈ 188.5)
             const progress = 1 - (remaining / ROUND_INTERVAL);
             const offset = 188.5 * progress;
             countdownCircle.style.strokeDashoffset = offset;
@@ -738,13 +756,12 @@
             }
         }
 
-        // 每秒更新
         setInterval(() => {
             if (lastOpenTime) updateCountdownFromData(lastOpenTime);
         }, 1000);
 
         // ============================================================
-        // Telegram 推送（图片 + 文字）
+        // Telegram 推送
         // ============================================================
         function generateCardImage(data) {
             const { period, ball1, ball2, ball3, terms, date, time } = data;
@@ -880,6 +897,7 @@
         let latestData = null;
         let lastPushDigest = '';
         window.PC28_DATA = null;
+
         function emitUpdate(data) {
             window.dispatchEvent(new CustomEvent('pc28-data-updated', { detail: data }));
         }
