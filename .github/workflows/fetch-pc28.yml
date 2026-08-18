@@ -16,134 +16,24 @@ jobs:
 
       - name: Fetch data from pc28.help
         run: |
-          # 主源：pc28.help（按自用接口.md要求）
+          # 直接获取原始 JSON，不做任何转换
           curl -sL \
-            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
             -H "Accept: application/json" \
-            -H "Referer: https://pc28.help/" \
-            --max-time 30 \
-            "https://pc28.help/api/kj.json?nbr=60" -o data.json
+            "https://pc28.help/api/kj.json" -o data.json
 
-          echo "=== 文件大小 ==="
-          wc -c data.json
+          echo "=== 下载完成，文件内容 ==="
+          cat data.json
 
-          echo "=== 前400字符 ==="
-          head -c 400 data.json
-          echo ""
-
-          echo "=== JSON校验 ==="
-          python3 -c "
-          import json,sys
-          try:
-              d=json.load(open('data.json'))
-              print('✓ JSON有效')
-              if isinstance(d,dict):
-                  print('  keys:',list(d.keys())[:8])
-                  data=d.get('data') or d.get('list') or d.get('records')
-                  if isinstance(data,list): print(f'  数据条数: {len(data)}')
-          except Exception as e:
-              print('✗ 无效:',e)
-              # 如果失败，尝试备用源
-              sys.exit(2)
-          " || {
-            echo "⚠ 主源失败，尝试备用源 yu28.top..."
+          # 检查是否有效（包含 "data" 字段）
+          if ! grep -q '"data"' data.json; then
+            echo "⚠️ 主源数据无效，尝试备用源 yu28.top..."
             curl -sL \
-              -H "X-Api-Key: yu28_f9f41d673b447fac" \
-              -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" \
-              -H "Accept: application/json" \
-              --max-time 30 \
-              "https://yu28.top/api/kj.json?nbr=60" -o data.json
-            wc -c data.json
-            head -c 300 data.json
-            echo ""
-          }
-
-      - name: Normalize to standard format
-        run: |
-          python3 << 'PYEOF'
-          import json,sys
-
-          try:
-              raw = json.load(open('data.json'))
-          except Exception as e:
-              print(f'无法解析data.json: {e}')
-              # 保留旧文件
-              sys.exit(0)
-
-          # 提取数据数组
-          items = None
-          if isinstance(raw, dict):
-              for k in ['data','list','records','result','rows']:
-                  v = raw.get(k)
-                  if isinstance(v, list) and v:
-                      items = v; print(f'  字段: {k} ({len(v)}条)'); break
-          elif isinstance(raw, list):
-              items = raw; print(f'  根数组 ({len(raw)}条)')
-
-          if not items:
-              print('  无有效数据，保留原文件')
-              sys.exit(0)
-
-          normalized = []
-          for it in items:
-              if not isinstance(it, dict): continue
-              nbr = str(it.get('nbr') or it.get('period') or it.get('issue') or it.get('qihao') or '')
-              
-              # ===== 核心修复：正确提取 nbrs =====
-              nbrs = ''
-              # 优先从标准字段获取
-              for k in ['nbrs','number','opencode','nums','numbers']:
-                  if it.get(k):
-                      val = str(it[k])
-                      # 如果包含逗号，直接使用；否则尝试清洗
-                      if ',' in val:
-                          nbrs = val
-                      else:
-                          # 可能是空格或竖线分隔，统一转为逗号
-                          import re
-                          parts = re.split(r'[,\s|]+', val.strip())
-                          if len(parts) >= 3:
-                              nbrs = ','.join(parts)
-                      break
-              
-              # 如果还是没有，尝试从 b1,b2,b3 构造（但仅作为最后手段，且确保是20个号码）
-              if not nbrs:
-                  nums = [str(it.get(k)) for k in ['b1','b2','b3','n1','n2','n3'] if it.get(k) is not None]
-                  if nums:
-                      # 注意：这里如果只有3个数字，说明接口返回的是三球，那我们需要特殊处理
-                      # 但 pc28.help 不会这样，所以如果落到这里，说明数据格式不对
-                      print(f'警告: 未找到nbrs，但找到三球数据 {nums}，将保存原样')
-                      nbrs = ','.join(nums)
-              
-              # 如果仍然没有，跳过这条记录
-              if not nbrs:
-                  print(f'跳过无号码记录: {it}')
-                  continue
-              
-              # 提取时间
-              t = str(it.get('time') or it.get('opentime') or it.get('drawTime') or it.get('datetime') or '')
-              
-              # bonus: 如果接口直接提供则使用，否则计算前三球的和
-              bonus = 0
-              if 'bonus' in it:
-                  try: bonus = int(it['bonus'])
-                  except: pass
-              if bonus == 0:
-                  # 计算前三球的和（仅当nbrs是逗号分隔的数字）
-                  try:
-                      nums = [int(x) for x in nbrs.split(',') if x.strip()]
-                      if nums:
-                          bonus = sum(nums[:3])
-                  except: pass
-              
-              normalized.append({'nbr': nbr, 'nbrs': nbrs, 'bonus': bonus, 'time': t})
-
-          out = {'message':'success' if normalized else 'error','data':normalized}
-          json.dump(out, open('data.json','w'), ensure_ascii=False, indent=2)
-          print(f'✓ 标准化: {len(normalized)}条')
-          if normalized:
-              print(f'  最新: {json.dumps(normalized[0], ensure_ascii=False)}')
-          PYEOF
+              -H "User-Agent: Mozilla/5.0" \
+              "https://yu28.top/api/kj.json" -o data.json
+            echo "=== 备用源内容 ==="
+            cat data.json
+          fi
 
       - name: Commit and push if changed
         run: |
