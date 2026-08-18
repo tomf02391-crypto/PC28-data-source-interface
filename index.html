@@ -5,57 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PC28未来数据站</title>
     <style>
-        /* ===== 全局重置 ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #080c18;
+            background: radial-gradient(ellipse at 20% 30%, #0d1a2b, #060b14);
             font-family: 'Segoe UI', 'PingFang SC', Roboto, sans-serif;
             padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* 动态粒子背景 */
-        #particles-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        /* 主容器 - 高级玻璃效果 */
-        .glass-container {
-            max-width: 960px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border-radius: 48px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 
-                0 40px 120px rgba(0, 0, 0, 0.8),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05),
-                0 0 80px rgba(80, 160, 255, 0.03);
-            padding: 32px 36px 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
             color: #eef4fc;
+        }
+
+        .glass-container {
+            max-width: 880px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.035);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 30px 100px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.04), 0 0 60px rgba(80,160,255,0.02);
+            padding: 28px 32px 36px;
             position: relative;
-            z-index: 1;
             overflow: hidden;
+            margin-top: 10px;
         }
         .glass-container::before {
             content: '';
             position: absolute;
-            top: -60%;
-            left: -60%;
-            width: 220%;
-            height: 220%;
-            background: conic-gradient(from 0deg, transparent, rgba(80, 180, 255, 0.04), transparent, rgba(200, 130, 255, 0.04), transparent);
-            animation: rotateGlow 40s linear infinite;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(80,180,255,0.04), transparent, rgba(200,130,255,0.04), transparent);
+            animation: rotateGlow 35s linear infinite;
             pointer-events: none;
             z-index: 0;
         }
@@ -65,301 +49,239 @@
         }
         .glass-container > * { position: relative; z-index: 1; }
 
-        /* ----- 头部 ----- */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            margin-bottom: 8px;
+            gap: 10px;
             padding-bottom: 14px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .logo-icon {
-            font-size: 32px;
-            filter: drop-shadow(0 0 20px rgba(100, 200, 255, 0.15));
+            border-bottom: 1px solid rgba(255,255,255,0.04);
         }
         .header h1 {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
-            background: linear-gradient(135deg, #8fcbff, #c8a8ff);
+            background: linear-gradient(135deg, #7ec8ff, #b494ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 1px;
-        }
-        .header .badge {
-            font-size: 11px;
-            background: rgba(100, 200, 255, 0.1);
-            border: 1px solid rgba(100, 200, 255, 0.15);
-            padding: 4px 14px;
-            border-radius: 30px;
-            color: rgba(255, 255, 255, 0.5);
             letter-spacing: 0.5px;
         }
-        .header-right {
+        .header .status {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.3);
         }
-        .status-dot {
+        .header .status .dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             background: #4cdb7b;
             display: inline-block;
-            animation: pulse-dot 1.5s ease-in-out infinite;
-            box-shadow: 0 0 16px rgba(76, 219, 123, 0.3);
+            animation: pulse-dot 1.5s infinite;
+            box-shadow: 0 0 12px rgba(76,219,123,0.2);
         }
         @keyframes pulse-dot {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.3; transform: scale(0.8); }
         }
-        .status-dot.paused { background: #f5a623; animation: none; box-shadow: 0 0 16px rgba(245, 166, 35, 0.2); }
+        .header .status .dot.paused { background: #f5a623; animation: none; box-shadow: 0 0 12px rgba(245,166,35,0.15); }
+        .header .status .time-label { color: rgba(255,255,255,0.2); margin-left: 4px; }
 
-        /* ----- 状态栏 ----- */
-        .status-bar {
+        .toolbar {
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            gap: 10px;
-            padding: 10px 0 14px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .status-info {
-            display: flex;
-            align-items: center;
-            gap: 18px;
+            padding: 14px 0 10px;
             flex-wrap: wrap;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.45);
+            gap: 8px;
         }
-        .status-info .label { color: rgba(255, 255, 255, 0.25); }
-        .status-info .value { color: rgba(255, 255, 255, 0.7); font-weight: 500; }
-        .btn-group { display: flex; gap: 8px; }
-        .btn {
-            background: rgba(255, 255, 255, 0.04);
-            color: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+        .toolbar .info {
+            font-size: 13px;
+            color: rgba(255,255,255,0.2);
+        }
+        .toolbar .info span { color: rgba(255,255,255,0.5); }
+        .toolbar .btns { display: flex; gap: 6px; }
+        .toolbar .btns button {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.5);
             padding: 6px 18px;
             border-radius: 30px;
             font-size: 13px;
-            font-weight: 500;
             cursor: pointer;
             transition: 0.25s;
+            backdrop-filter: blur(4px);
         }
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.12);
+        .toolbar .btns button:hover {
+            background: rgba(255,255,255,0.08);
             color: #fff;
+            border-color: rgba(255,255,255,0.1);
         }
-        .btn:active { transform: scale(0.95); }
-        .btn-primary {
-            background: rgba(100, 200, 255, 0.08);
-            border-color: rgba(100, 200, 255, 0.15);
-            color: rgba(100, 200, 255, 0.8);
+        .toolbar .btns .primary {
+            background: rgba(100,200,255,0.06);
+            border-color: rgba(100,200,255,0.08);
+            color: rgba(100,200,255,0.6);
         }
-        .btn-primary:hover {
-            background: rgba(100, 200, 255, 0.15);
-            border-color: rgba(100, 200, 255, 0.25);
+        .toolbar .btns .primary:hover {
+            background: rgba(100,200,255,0.12);
+            color: rgba(100,200,255,0.8);
         }
         .error-msg {
-            background: rgba(255, 80, 80, 0.08);
-            color: #ff7a7a;
-            padding: 4px 14px;
-            border-radius: 30px;
+            color: #ff6b6b;
             font-size: 13px;
             display: none;
-            border: 1px solid rgba(255, 80, 80, 0.06);
+            margin-left: 10px;
         }
 
-        /* ----- 倒计时卡片（强化） ----- */
         .countdown-card {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 20px 30px;
+            margin: 10px 0 22px;
+            border: 1px solid rgba(255,255,255,0.04);
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 18px 28px;
-            margin: 18px 0 22px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            align-items: center;
             flex-wrap: wrap;
             gap: 12px;
         }
-        .countdown-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .countdown-left .icon { font-size: 24px; }
-        .countdown-left .label {
+        .countdown-card .label {
             font-size: 15px;
-            color: rgba(255, 255, 255, 0.4);
-            letter-spacing: 0.3px;
-        }
-        .countdown-right {
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 10px;
         }
-        .countdown-ring-wrap {
-            position: relative;
-            width: 64px;
-            height: 64px;
-        }
-        .countdown-ring-wrap svg {
-            transform: rotate(-90deg);
-            width: 64px;
-            height: 64px;
-        }
-        .countdown-ring-wrap .bg {
-            fill: none;
-            stroke: rgba(255, 255, 255, 0.04);
-            stroke-width: 5;
-        }
-        .countdown-ring-wrap .progress {
-            fill: none;
-            stroke: #8fcbff;
-            stroke-width: 5;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 0.3s ease;
-        }
-        .countdown-ring-wrap .progress.warning { stroke: #ff7a7a; }
-        .countdown-ring-wrap .time-text {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 22px;
+        .countdown-card .label .icon { font-size: 22px; }
+        .countdown-card .time {
+            font-size: 44px;
             font-weight: 700;
-            letter-spacing: 1px;
-            color: #f0f6fe;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, #8fcbff, #b494ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            min-width: 140px;
+            text-align: right;
         }
-        .countdown-ring-wrap .time-text.warning { color: #ff7a7a; }
+        .countdown-card .time.warning {
+            background: linear-gradient(135deg, #ffb07a, #ff7a7a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        /* ----- 三球展示（大号霓虹） ----- */
-        .balls-display {
+        .balls-row {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
-            padding: 24px 0 16px;
-            margin-bottom: 16px;
+            gap: 16px;
+            padding: 22px 0 14px;
+            flex-wrap: wrap;
         }
-        .ball-glow {
+        .balls-row .ball-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
         }
-        .ball-glow .num {
-            width: 72px;
-            height: 72px;
+        .balls-row .ball-item .num {
+            width: 74px;
+            height: 74px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 34px;
-            font-weight: 800;
-            background: radial-gradient(circle at 30% 30%, rgba(100, 200, 255, 0.15), rgba(20, 60, 120, 0.2));
-            border: 1px solid rgba(100, 200, 255, 0.15);
-            box-shadow: 0 0 40px rgba(100, 200, 255, 0.05);
+            font-weight: 700;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 0 30px rgba(255,255,255,0.02);
             color: #eef4fc;
             transition: 0.3s;
         }
-        .ball-glow .num.special-num {
-            background: radial-gradient(circle at 30% 30%, rgba(255, 180, 100, 0.15), rgba(180, 80, 30, 0.15));
-            border-color: rgba(255, 180, 100, 0.2);
-            box-shadow: 0 0 50px rgba(255, 180, 100, 0.08);
-            color: #ffba7a;
-            font-size: 38px;
+        .balls-row .ball-item .num.special {
+            border-color: rgba(255,200,100,0.12);
+            background: rgba(255,200,100,0.03);
+            color: #ffd54f;
+            box-shadow: 0 0 40px rgba(255,200,100,0.04);
         }
-        .ball-glow .label {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.2);
+        .balls-row .ball-item .label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.15);
             letter-spacing: 0.5px;
         }
-        .ball-glow .label.highlight { color: rgba(255, 180, 100, 0.4); }
-        .balls-display .operator {
-            font-size: 28px;
-            color: rgba(255, 255, 255, 0.1);
+        .balls-row .op {
+            font-size: 24px;
+            color: rgba(255,255,255,0.05);
             font-weight: 300;
         }
-        .balls-display .equals {
-            font-size: 28px;
-            color: rgba(255, 255, 255, 0.2);
+        .balls-row .eq {
+            font-size: 24px;
+            color: rgba(255,255,255,0.06);
             font-weight: 300;
         }
-        .balls-display .result-sum {
-            font-size: 32px;
+        .balls-row .sum {
+            font-size: 30px;
             font-weight: 700;
             color: #ffd54f;
-            text-shadow: 0 0 40px rgba(255, 213, 79, 0.1);
-            min-width: 50px;
+            min-width: 44px;
             text-align: center;
+            text-shadow: 0 0 30px rgba(255,213,79,0.05);
         }
 
-        /* ----- 组合标签 ----- */
-        .combination-tag {
+        .combo-tag {
             text-align: center;
-            margin-bottom: 22px;
-            padding: 8px 0;
-        }
-        .combination-tag .tag {
-            display: inline-block;
-            padding: 6px 28px;
-            border-radius: 30px;
+            padding: 6px 0 18px;
             font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            background: rgba(100, 200, 255, 0.04);
-            border: 1px solid rgba(100, 200, 255, 0.06);
-            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            color: rgba(255,255,255,0.35);
         }
-        .combination-tag .tag .highlight {
-            color: #ffd54f;
+        .combo-tag strong {
+            background: linear-gradient(135deg, #ffd54f, #ffb07a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
         }
 
-        /* ----- 术语网格 ----- */
-        .terms-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 8px 12px;
-            padding: 16px 20px;
-            background: rgba(255, 255, 255, 0.01);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
+        .terms-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px 28px;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.03);
             margin-bottom: 20px;
         }
-        .term-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            font-size: 14px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-        }
-        .term-item:last-child { border-bottom: none; }
-        .term-item .key { color: rgba(255, 255, 255, 0.25); font-weight: 400; }
-        .term-item .val { color: rgba(255, 255, 255, 0.75); font-weight: 500; }
-
-        /* ----- 历史记录 ----- */
-        .history-section {
-            padding: 16px 18px;
-            background: rgba(255, 255, 255, 0.01);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            margin-top: 16px;
-        }
-        .history-title {
+        .terms-row .item {
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.2);
-            margin-bottom: 12px;
+            color: rgba(255,255,255,0.2);
+        }
+        .terms-row .item span {
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+            margin-left: 6px;
+        }
+
+        .history-section {
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(4px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.03);
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .history-section .title {
+            padding: 14px 20px 10px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.15);
             letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
         }
         .history-table {
             width: 100%;
@@ -368,196 +290,148 @@
         }
         .history-table th {
             text-align: left;
-            color: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            color: rgba(255,255,255,0.12);
             font-weight: 400;
-            padding: 4px 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            font-size: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
         }
         .history-table td {
-            padding: 4px 8px;
-            color: rgba(255, 255, 255, 0.5);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.015);
+            padding: 7px 16px;
+            color: rgba(255,255,255,0.4);
+            border-bottom: 1px solid rgba(255,255,255,0.01);
+            font-size: 13px;
         }
-        .history-table .latest td { color: rgba(255, 255, 255, 0.8); }
+        .history-table tr:last-child td { border-bottom: none; }
+        .history-table .latest td {
+            color: rgba(255,255,255,0.8);
+        }
+        .history-table .latest .highlight {
+            color: #ffd54f;
+        }
+        .history-table .col-period { width: 20%; }
+        .history-table .col-result { width: 26%; }
+        .history-table .col-sum { width: 16%; }
+        .history-table .col-combo { width: 20%; }
+        .history-table .col-shape { width: 18%; }
 
-        /* ----- 底部 ----- */
         .footer {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.02);
             text-align: center;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.12);
-            letter-spacing: 0.3px;
+            padding: 20px 0 4px;
+            font-size: 11px;
+            color: rgba(255,255,255,0.06);
+            letter-spacing: 0.5px;
         }
         .footer code {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 2px 10px;
+            background: rgba(255,255,255,0.03);
+            padding: 1px 10px;
             border-radius: 12px;
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.2);
+            font-size: 10px;
+            color: rgba(255,255,255,0.08);
         }
 
-        /* 20个号码（旧格式兼容） */
-        .old-balls {
-            padding: 12px 14px;
-            background: rgba(255, 255, 255, 0.01);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            margin-bottom: 16px;
-            display: none;
-        }
-        .old-balls.show { display: block; }
-        .old-balls .title {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.15);
-            margin-bottom: 10px;
-        }
-        .old-balls .grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .old-balls .grid .b {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.3);
-        }
-        .old-balls .grid .b.hl {
-            border-color: rgba(100, 200, 255, 0.15);
-            color: rgba(100, 200, 255, 0.5);
-        }
-
-        /* 响应式 */
         @media (max-width: 640px) {
-            .glass-container { padding: 20px 16px; border-radius: 32px; }
-            .header h1 { font-size: 22px; }
-            .balls-display { gap: 12px; flex-wrap: wrap; }
-            .ball-glow .num { width: 56px; height: 56px; font-size: 26px; }
-            .ball-glow .num.special-num { font-size: 30px; }
-            .countdown-card { padding: 14px 18px; }
-            .countdown-ring-wrap { width: 52px; height: 52px; }
-            .countdown-ring-wrap .time-text { font-size: 18px; }
-            .terms-grid { grid-template-columns: 1fr 1fr; padding: 12px 14px; }
-            .status-bar { flex-direction: column; align-items: stretch; gap: 8px; }
-            .status-info { justify-content: center; }
-            .btn-group { justify-content: center; }
+            .glass-container { padding: 18px 16px 24px; border-radius: 28px; }
+            .countdown-card .time { font-size: 32px; min-width: 100px; }
+            .countdown-card { padding: 16px 20px; }
+            .balls-row .ball-item .num { width: 58px; height: 58px; font-size: 26px; }
+            .balls-row { gap: 10px; }
+            .history-table { font-size: 12px; }
+            .history-table th, .history-table td { padding: 5px 10px; }
+            .header h1 { font-size: 20px; }
+            .terms-row { gap: 6px 16px; padding: 10px 14px; }
+            .terms-row .item { font-size: 12px; }
+        }
+        @media (max-width: 420px) {
+            .countdown-card { flex-direction: column; align-items: stretch; text-align: center; }
+            .countdown-card .time { text-align: center; font-size: 28px; }
+            .balls-row .ball-item .num { width: 48px; height: 48px; font-size: 20px; }
+            .balls-row { gap: 6px; }
+            .balls-row .op, .balls-row .eq { font-size: 16px; }
+            .history-table { font-size: 11px; }
+            .history-table th, .history-table td { padding: 4px 6px; }
         }
     </style>
 </head>
 <body>
 
-<canvas id="particles-canvas"></canvas>
-
 <div class="glass-container">
-    <!-- 头部 -->
     <div class="header">
-        <div class="header-left">
-            <span class="logo-icon">📡</span>
-            <h1>PC28未来数据站</h1>
-            <span class="badge">LIVE</span>
-        </div>
-        <div class="header-right">
-            <span class="status-dot" id="statusDot"></span>
-            <span style="font-size:13px;color:rgba(255,255,255,0.3);" id="statusLabel">实时</span>
+        <h1>📡 PC28未来数据站</h1>
+        <div class="status">
+            <span class="dot" id="statusDot"></span>
+            <span id="statusLabel">实时</span>
+            <span class="time-label" id="updateTime">--</span>
         </div>
     </div>
 
-    <!-- 状态栏 -->
-    <div class="status-bar">
-        <div class="status-info">
-            <span><span class="label">最后更新</span> <span class="value" id="updateTime">--</span></span>
-            <span><span class="label">数据源</span> <span class="value" id="sourceIndicator">data.json</span></span>
+    <div class="toolbar">
+        <div class="info">
+            数据源 <span id="sourceIndicator">data.json</span>
             <span class="error-msg" id="errorMsg">⚠️ 加载失败</span>
         </div>
-        <div class="btn-group">
-            <button class="btn btn-primary" id="refreshBtn">🔄 刷新</button>
-            <button class="btn" id="toggleBtn">⏸️ 暂停</button>
+        <div class="btns">
+            <button class="primary" id="refreshBtn">🔄 刷新</button>
+            <button id="toggleBtn">⏸️ 暂停</button>
         </div>
     </div>
 
-    <!-- 倒计时 -->
     <div class="countdown-card">
-        <div class="countdown-left">
-            <span class="icon">⏳</span>
-            <span class="label">距下期开奖</span>
-        </div>
-        <div class="countdown-right">
-            <div class="countdown-ring-wrap">
-                <svg viewBox="0 0 64 64">
-                    <circle class="bg" cx="32" cy="32" r="27" />
-                    <circle class="progress" id="countdownCircle" cx="32" cy="32" r="27"
-                        stroke-dasharray="169.65" stroke-dashoffset="0" />
-                </svg>
-                <div class="time-text" id="countdownDisplay">--:--</div>
-            </div>
-        </div>
+        <div class="label"><span class="icon">⏳</span>下一期倒计时</div>
+        <div class="time" id="countdownDisplay">--:--</div>
     </div>
 
-    <!-- 三球展示 -->
-    <div class="balls-display" id="ballsDisplay">
-        <div class="ball-glow">
+    <div class="balls-row" id="ballsDisplay">
+        <div class="ball-item">
             <div class="num" id="displayBall1">-</div>
             <span class="label">第1球</span>
         </div>
-        <span class="operator">+</span>
-        <div class="ball-glow">
+        <span class="op">+</span>
+        <div class="ball-item">
             <div class="num" id="displayBall2">-</div>
             <span class="label">第2球</span>
         </div>
-        <span class="operator">+</span>
-        <div class="ball-glow">
+        <span class="op">+</span>
+        <div class="ball-item">
             <div class="num" id="displayBall3">-</div>
             <span class="label">第3球</span>
         </div>
-        <span class="equals">=</span>
-        <div class="ball-glow">
-            <div class="num special-num" id="displaySpecial">-</div>
-            <span class="label highlight">特码</span>
+        <span class="eq">=</span>
+        <div class="ball-item">
+            <div class="num special" id="displaySpecial">-</div>
+            <span class="label" style="color:rgba(255,200,100,0.15);">特码</span>
         </div>
     </div>
 
-    <!-- 组合标签 -->
-    <div class="combination-tag">
-        <span class="tag" id="combinationTag">—</span>
+    <div class="combo-tag" id="combinationTag">—</div>
+
+    <div class="terms-row" id="termsRow">
+        <div class="item">单/双 <span id="termOddEven">-</span></div>
+        <div class="item">大/小 <span id="termBigSmall">-</span></div>
+        <div class="item">组合 <span id="termCombination">-</span></div>
+        <div class="item">形态 <span id="termShape">-</span></div>
     </div>
 
-    <!-- 20个号码（旧格式兼容） -->
-    <div class="old-balls" id="oldBallsSection">
-        <div class="title">📋 20个开奖号码</div>
-        <div class="grid" id="oldBallsGrid"></div>
-    </div>
-
-    <!-- 术语 -->
-    <div class="terms-grid" id="termsGrid">
-        <div class="term-item"><span class="key">单/双</span><span class="val" id="termOddEven">-</span></div>
-        <div class="term-item"><span class="key">大/小</span><span class="val" id="termBigSmall">-</span></div>
-        <div class="term-item"><span class="key">组合</span><span class="val" id="termCombination">-</span></div>
-        <div class="term-item"><span class="key">极值</span><span class="val" id="termExtreme">-</span></div>
-        <div class="term-item"><span class="key">顺子</span><span class="val" id="termStraight">-</span></div>
-        <div class="term-item"><span class="key">对子</span><span class="val" id="termPair">-</span></div>
-        <div class="term-item"><span class="key">豹子</span><span class="val" id="termTriple">-</span></div>
-        <div class="term-item"><span class="key">形态</span><span class="val" id="termShape">-</span></div>
-    </div>
-
-    <!-- 历史 -->
     <div class="history-section">
-        <div class="history-title">📊 最近开奖</div>
+        <div class="title">📊 最近开奖</div>
         <table class="history-table">
-            <thead><tr><th>期号</th><th>开奖</th><th>和值</th><th>组合</th></tr></thead>
-            <tbody id="historyBody"></tbody>
+            <thead>
+                <tr>
+                    <th class="col-period">期号</th>
+                    <th class="col-result">开奖</th>
+                    <th class="col-sum">和值</th>
+                    <th class="col-combo">组合</th>
+                    <th class="col-shape">形态</th>
+                </tr>
+            </thead>
+            <tbody id="historyBody">
+                <tr><td colspan="5" style="text-align:center;color:rgba(255,255,255,0.06);padding:20px 0;">暂无数据</td></tr>
+            </tbody>
         </table>
     </div>
 
     <div class="footer">
-        ⚡ 数据每3分钟自动更新 · 前端每3分30秒刷新 · <code>window.PC28_DATA</code> 对外接口
+        <code>window.PC28_DATA</code> 对外接口 · 每3分钟自动更新
     </div>
 </div>
 
@@ -566,7 +440,7 @@
         'use strict';
 
         // ============================================================
-        // Telegram 配置（已填入您的信息）
+        // Telegram 配置
         // ============================================================
         const TG_CONFIG = {
             botToken: '8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo',
@@ -583,61 +457,6 @@
         const MAX_HISTORY = 50;
 
         // ============================================================
-        // 粒子背景
-        // ============================================================
-        (function initParticles() {
-            const canvas = document.getElementById('particles-canvas');
-            const ctx = canvas.getContext('2d');
-            let w, h;
-            function resize() {
-                w = canvas.width = window.innerWidth;
-                h = canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
-
-            const particles = Array.from({ length: 60 }, () => ({
-                x: Math.random() * w,
-                y: Math.random() * h,
-                r: Math.random() * 1.2 + 0.3,
-                vx: (Math.random() - 0.5) * 0.3,
-                vy: (Math.random() - 0.5) * 0.3,
-                a: Math.random() * 0.5 + 0.1
-            }));
-
-            function draw() {
-                ctx.clearRect(0, 0, w, h);
-                particles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    if (p.x < 0 || p.x > w) p.vx *= -1;
-                    if (p.y < 0 || p.y > h) p.vy *= -1;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255,255,255,${p.a * 0.3})`;
-                    ctx.fill();
-                });
-                for (let i = 0; i < particles.length; i++) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const dist = Math.sqrt(dx*dx + dy*dy);
-                        if (dist < 120) {
-                            ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(255,255,255,${0.04 * (1 - dist/120)})`;
-                            ctx.lineWidth = 0.5;
-                            ctx.stroke();
-                        }
-                    }
-                }
-                requestAnimationFrame(draw);
-            }
-            draw();
-        })();
-
-        // ============================================================
         // DOM 引用
         // ============================================================
         const displayBall1 = document.getElementById('displayBall1');
@@ -652,13 +471,10 @@
         const statusLabel = document.getElementById('statusLabel');
         const toggleBtn = document.getElementById('toggleBtn');
         const countdownDisplay = document.getElementById('countdownDisplay');
-        const countdownCircle = document.getElementById('countdownCircle');
         const historyBody = document.getElementById('historyBody');
-        const oldBallsSection = document.getElementById('oldBallsSection');
-        const oldBallsGrid = document.getElementById('oldBallsGrid');
 
         // ============================================================
-        // 工具
+        // 工具函数
         // ============================================================
         function analyzeTerms(b1, b2, b3, special) {
             const oddEven = special % 2 === 0 ? '双' : '单';
@@ -668,9 +484,6 @@
             else if (special <= 13 && special % 2 === 1) combination = '小单';
             else if (special > 13 && special % 2 === 0) combination = '大双';
             else if (special > 13 && special % 2 === 1) combination = '大单';
-            let extreme = '—';
-            if (special >= 0 && special <= 5) extreme = '极小';
-            else if (special >= 22 && special <= 27) extreme = '极大';
             const sorted = [b1,b2,b3].slice().sort((a,b)=>a-b);
             const isConsecutive = (sorted[2]-sorted[1]===1 && sorted[1]-sorted[0]===1);
             let straight = '否';
@@ -681,11 +494,11 @@
             if (triple === '是') shape = '豹子';
             else if (pair === '是') shape = '对子';
             else if (straight === '是') shape = '顺子';
-            return { oddEven, bigSmall, combination, extreme, straight, pair, triple, shape };
+            return { oddEven, bigSmall, combination, shape };
         }
 
         // ============================================================
-        // 读取 data.json（兼容新旧格式）
+        // 读取 data.json
         // ============================================================
         async function fetchRealData() {
             try {
@@ -696,11 +509,9 @@
                     throw new Error('数据格式错误');
                 }
                 const item = json.data[0];
-
                 const period = item.nbr || item.id || '未知期号';
                 let ball1, ball2, ball3, special;
 
-                // 新格式：有 number 字段 (如 "5+1+1")
                 if (item.number && typeof item.number === 'string' && item.number.includes('+')) {
                     const parts = item.number.split('+').map(s => parseInt(s.trim(), 10));
                     if (parts.length === 3) {
@@ -709,18 +520,14 @@
                     } else {
                         throw new Error('number 字段解析错误');
                     }
-                }
-                // 旧格式：有 nbrs 字段
-                else if (item.nbrs) {
+                } else if (item.nbrs) {
                     let nbrs = [];
                     if (typeof item.nbrs === 'string') {
                         nbrs = item.nbrs.split(/[,;\s|]+/).map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
                     } else if (Array.isArray(item.nbrs)) {
                         nbrs = item.nbrs.map(n => parseInt(n, 10)).filter(n => !isNaN(n));
                     }
-                    if (nbrs.length !== 20) {
-                        throw new Error(`号码数量不正确，期望20，实际${nbrs.length}`);
-                    }
+                    if (nbrs.length !== 20) throw new Error(`号码数量不正确，实际${nbrs.length}`);
                     nbrs.sort((a, b) => a - b);
                     const idx1 = [1,4,7,10,13,16];
                     const sum1 = idx1.reduce((a,i) => a + (nbrs[i] || 0), 0);
@@ -732,7 +539,6 @@
                     const sum3 = idx3.reduce((a,i) => a + (nbrs[i] || 0), 0);
                     ball3 = sum3 % 10;
                     special = (ball1 + ball2 + ball3) % 10;
-                    window._lastNbrs = nbrs;
                 } else {
                     throw new Error('既没有 number 也没有 nbrs 字段');
                 }
@@ -743,7 +549,7 @@
 
                 return {
                     data: { period, ball1, ball2, ball3, special, date, time, combinationFromApi },
-                    sourceName: 'GitHub Actions (本地 data.json)'
+                    sourceName: 'data.json'
                 };
             } catch (err) {
                 throw new Error('读取本地数据失败: ' + err.message);
@@ -764,10 +570,20 @@
         }
         function renderHistory(history) {
             historyBody.innerHTML = '';
-            history.slice(0, 10).forEach((h, i) => {
+            if (!history.length) {
+                historyBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:rgba(255,255,255,0.06);padding:20px 0;">暂无数据</td></tr>';
+                return;
+            }
+            history.slice(0, 15).forEach((h, i) => {
                 const tr = document.createElement('tr');
                 if (i === 0) tr.className = 'latest';
-                tr.innerHTML = `<td>${h.period}</td><td>${h.ball1}+${h.ball2}+${h.ball3}</td><td>${h.sum}</td><td>${h.combination}</td>`;
+                tr.innerHTML = `
+                    <td class="col-period">${h.period}</td>
+                    <td class="col-result">${h.ball1}+${h.ball2}+${h.ball3}</td>
+                    <td class="col-sum">${h.sum}</td>
+                    <td class="col-combo">${h.combination || '-'}</td>
+                    <td class="col-shape">${h.shape || '-'}</td>
+                `;
                 historyBody.appendChild(tr);
             });
         }
@@ -776,25 +592,29 @@
         // 倒计时
         // ============================================================
         let lastOpenTime = null;
-        function updateCountdown(openTime) {
-            if (!openTime) { countdownDisplay.textContent = '--:--'; countdownCircle.style.strokeDashoffset = '169.65'; return; }
+        function updateCountdown() {
+            if (!lastOpenTime) {
+                countdownDisplay.textContent = '--:--';
+                return;
+            }
             const now = Date.now();
-            const elapsed = (now - openTime.getTime()) / 1000;
+            const elapsed = (now - lastOpenTime) / 1000;
             const rounds = Math.floor(elapsed / ROUND_INTERVAL);
-            const nextTime = new Date(openTime.getTime() + (rounds + 1) * ROUND_INTERVAL * 1000);
+            const nextTime = new Date(lastOpenTime + (rounds + 1) * ROUND_INTERVAL * 1000);
             const remaining = (nextTime - now) / 1000;
-            if (remaining < 0) { countdownDisplay.textContent = '00:00'; countdownCircle.style.strokeDashoffset = '0'; return; }
+            if (remaining < 0) {
+                countdownDisplay.textContent = '00:00';
+                return;
+            }
             const mins = Math.floor(remaining / 60);
             const secs = Math.floor(remaining % 60);
             countdownDisplay.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
-            const progress = 1 - (remaining / ROUND_INTERVAL);
-            countdownCircle.style.strokeDashoffset = 169.65 * progress;
-            countdownCircle.classList.toggle('warning', remaining < 30);
+            countdownDisplay.classList.toggle('warning', remaining < 30);
         }
-        setInterval(() => { if (lastOpenTime) updateCountdown(lastOpenTime); }, 1000);
+        setInterval(updateCountdown, 500);
 
         // ============================================================
-        // Telegram 推送
+        // Telegram 推送 - 频道发图片卡片
         // ============================================================
         function generateCardImage(data) {
             const { period, ball1, ball2, ball3, terms, date, time } = data;
@@ -808,6 +628,7 @@
             const width = 800, height = 420;
             canvas.width = width; canvas.height = height;
 
+            // 背景
             const grad = ctx.createLinearGradient(0,0,width,height);
             grad.addColorStop(0, '#0f1f2f');
             grad.addColorStop(0.7, '#1a2a4a');
@@ -815,58 +636,80 @@
             ctx.strokeStyle = 'rgba(255,255,255,0.06)';
             ctx.lineWidth = 2; ctx.strokeRect(10,10,width-20,height-20);
 
+            // 标题：PC28开奖结果
             ctx.textAlign = 'left';
-            ctx.fillStyle = 'rgba(255,255,255,0.25)';
-            ctx.font = '16px "Segoe UI", sans-serif';
-            ctx.fillText('PC28 开奖结果', 30, 50);
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 22px "Segoe UI", sans-serif';
-            ctx.textAlign = 'right';
-            ctx.fillText(`第 ${period} 期`, width-30, 50);
+            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.font = '14px "Segoe UI", sans-serif';
+            ctx.fillText('PC28 开奖结果', 30, 45);
 
-            const circleY = 150, radius = 50, spacing = 130;
+            // 期号
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 20px "Segoe UI", sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(`第 ${period} 期`, width-30, 45);
+
+            // 三个大球
+            const circleY = 155, radius = 52, spacing = 135;
             const startX = (width - 2*spacing)/2 - 10;
             const balls = [ball1, ball2, ball3];
+            const colors = ['#4fc3f7', '#4fc3f7', '#4fc3f7'];
             balls.forEach((num, i) => {
                 const x = startX + i * spacing;
                 const gradCirc = ctx.createRadialGradient(x-15, circleY-15, 10, x, circleY, radius);
                 gradCirc.addColorStop(0, '#6ad4ff');
                 gradCirc.addColorStop(1, '#1a7ab5');
-                ctx.shadowColor = 'rgba(79,195,247,0.3)';
-                ctx.shadowBlur = 20;
-                ctx.beginPath(); ctx.arc(x, circleY, radius, 0, Math.PI*2);
-                ctx.fillStyle = gradCirc; ctx.fill();
+                ctx.shadowColor = 'rgba(79,195,247,0.2)';
+                ctx.shadowBlur = 15;
+                ctx.beginPath();
+                ctx.arc(x, circleY, radius, 0, Math.PI*2);
+                ctx.fillStyle = gradCirc;
+                ctx.fill();
                 ctx.shadowBlur = 0;
-                ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-                ctx.lineWidth = 2; ctx.stroke();
+                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
                 ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 44px "Segoe UI", sans-serif';
-                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                ctx.shadowColor = 'rgba(0,0,0,0.5)';
-                ctx.shadowBlur = 8;
-                ctx.fillText(num, x, circleY+2);
+                ctx.font = 'bold 40px "Segoe UI", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(0,0,0,0.4)';
+                ctx.shadowBlur = 6;
+                ctx.fillText(num, x, circleY+1);
                 ctx.shadowBlur = 0;
+
                 if (i < 2) {
-                    ctx.fillStyle = 'rgba(255,255,255,0.25)';
-                    ctx.font = '32px "Segoe UI", sans-serif';
-                    ctx.fillText('+', x + spacing/2, circleY+2);
+                    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                    ctx.font = '28px "Segoe UI", sans-serif';
+                    ctx.fillText('+', x + spacing/2, circleY+1);
                 }
             });
 
-            ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            // 和值
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.shadowBlur = 0;
+
             ctx.fillStyle = '#ffd54f';
-            ctx.font = 'bold 36px "Segoe UI", sans-serif';
-            ctx.fillText(`= ${sum}`, width/2, circleY + radius + 20);
+            ctx.font = 'bold 34px "Segoe UI", sans-serif';
+            ctx.fillText(`= ${sum}`, width/2, circleY + radius + 15);
+
+            // 组合
             ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 28px "Segoe UI", sans-serif';
-            ctx.fillText(combination, width/2, circleY + radius + 70);
-            ctx.fillStyle = 'rgba(255,255,255,0.4)';
-            ctx.font = '22px "Segoe UI", sans-serif';
-            ctx.fillText(`形态：${shape}`, width/2, circleY + radius + 115);
-            ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
-            ctx.fillStyle = 'rgba(255,255,255,0.2)';
-            ctx.font = '16px "Segoe UI", sans-serif';
-            ctx.fillText(`开奖时间 ${dateStr}`, width-30, height-20);
+            ctx.font = 'bold 26px "Segoe UI", sans-serif';
+            ctx.fillText(combination, width/2, circleY + radius + 60);
+
+            // 形态
+            ctx.fillStyle = 'rgba(255,255,255,0.35)';
+            ctx.font = '20px "Segoe UI", sans-serif';
+            ctx.fillText(`形态：${shape}`, width/2, circleY + radius + 100);
+
+            // 底部时间
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'bottom';
+            ctx.fillStyle = 'rgba(255,255,255,0.15)';
+            ctx.font = '14px "Segoe UI", sans-serif';
+            ctx.fillText(`开奖时间 ${dateStr}`, width-30, height-18);
 
             return new Promise(resolve => {
                 canvas.toBlob(blob => resolve(blob), 'image/png');
@@ -885,10 +728,13 @@
                 const r = await fetch(url, { method: 'POST', body: fd });
                 const j = await r.json();
                 if (!j.ok) console.error('图片发送失败:', j);
-                else console.log('图片发送成功');
+                else console.log('✅ 频道图片发送成功');
             } catch (e) { console.error('图片发送异常:', e); }
         }
 
+        // ============================================================
+        // Telegram 推送 - 群组发文字
+        // ============================================================
         async function sendTextToGroup(chatId, text) {
             if (!TG_CONFIG.enabled || !TG_CONFIG.botToken) return;
             const url = `https://api.telegram.org/bot${TG_CONFIG.botToken}/sendMessage`;
@@ -896,11 +742,16 @@
                 const r = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML', disable_web_page_preview: true })
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: text,
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: true
+                    })
                 });
                 const j = await r.json();
                 if (!j.ok) console.error('文字发送失败:', j);
-                else console.log('文字发送成功');
+                else console.log('✅ 群组文字发送成功');
             } catch (e) { console.error('文字发送异常:', e); }
         }
 
@@ -929,7 +780,7 @@
                 const terms = analyzeTerms(ball1, ball2, ball3, special);
                 if (combinationFromApi) terms.combination = combinationFromApi;
 
-                const dataObj = { period, ball1, ball2, ball3, special, terms, date, time, sourceName: result.sourceName };
+                const dataObj = { period, ball1, ball2, ball3, special, terms, date, time };
                 latestData = dataObj;
                 window.PC28_DATA = dataObj;
 
@@ -937,57 +788,49 @@
                 displayBall2.textContent = ball2;
                 displayBall3.textContent = ball3;
                 displaySpecial.textContent = special;
-                combinationTag.innerHTML = `<span class="highlight">${terms.combination}</span> · ${terms.shape}`;
+                combinationTag.innerHTML = `<strong>${terms.combination}</strong> · ${terms.shape}`;
 
                 document.getElementById('termOddEven').textContent = terms.oddEven;
                 document.getElementById('termBigSmall').textContent = terms.bigSmall;
                 document.getElementById('termCombination').textContent = terms.combination;
-                document.getElementById('termExtreme').textContent = terms.extreme;
-                document.getElementById('termStraight').textContent = terms.straight;
-                document.getElementById('termPair').textContent = terms.pair;
-                document.getElementById('termTriple').textContent = terms.triple;
                 document.getElementById('termShape').textContent = terms.shape;
 
-                if (window._lastNbrs && window._lastNbrs.length === 20) {
-                    oldBallsSection.classList.add('show');
-                    oldBallsGrid.innerHTML = '';
-                    const hl = new Set([1,4,7,10,13,16]);
-                    window._lastNbrs.forEach((n, i) => {
-                        const span = document.createElement('span');
-                        span.className = 'b' + (hl.has(i) ? ' hl' : '');
-                        span.textContent = String(n).padStart(2, '0');
-                        oldBallsGrid.appendChild(span);
-                    });
-                } else {
-                    oldBallsSection.classList.remove('show');
-                }
-
                 const now = new Date();
-                updateTimeEl.textContent = now.toLocaleString('zh-CN', { hour12: false });
+                updateTimeEl.textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
                 sourceIndicator.textContent = 'data.json';
 
                 if (date && time) {
                     const ot = new Date(`${date} ${time}`);
-                    if (!isNaN(ot)) { lastOpenTime = ot; updateCountdown(ot); }
+                    if (!isNaN(ot)) {
+                        lastOpenTime = ot.getTime();
+                        updateCountdown();
+                    }
                 }
 
-                saveHistory({ period, ball1, ball2, ball3, sum: ball1+ball2+ball3, combination: terms.combination });
+                const entry = { period, ball1, ball2, ball3, sum: ball1+ball2+ball3, combination: terms.combination, shape: terms.shape };
+                saveHistory(entry);
                 renderHistory(getHistory());
 
+                // ----- 推送 -----
                 const digest = `${period}|${ball1}|${ball2}|${ball3}`;
                 if (digest !== lastPushDigest && TG_CONFIG.enabled) {
                     lastPushDigest = digest;
+
+                    // 频道：发送图片卡片
                     if (TG_CONFIG.channelId) {
                         const caption = `<b>第${period}期</b> ${ball1}+${ball2}+${ball3}=${ball1+ball2+ball3} ${terms.combination}`;
                         const img = await generateCardImage(dataObj);
                         await sendPhotoToChannel(TG_CONFIG.channelId, img, caption);
                     }
+
+                    // 群组：发送文字
                     if (TG_CONFIG.groupId) {
-                        await sendTextToGroup(TG_CONFIG.groupId, buildGroupMessage(dataObj));
+                        const msg = buildGroupMessage(dataObj);
+                        await sendTextToGroup(TG_CONFIG.groupId, msg);
                     }
                 }
 
-                console.log('[PC28] 数据更新:', dataObj);
+                console.log('[PC28] 更新:', period, ball1, ball2, ball3, '=', ball1+ball2+ball3);
 
             } catch (err) {
                 console.error('[PC28] 加载失败:', err);
@@ -1006,7 +849,7 @@
             if (timer) clearInterval(timer);
             timer = setInterval(fetchAndRender, REFRESH_INTERVAL);
             isRunning = true;
-            statusDot.className = 'status-dot';
+            statusDot.className = 'dot';
             statusLabel.textContent = '实时';
             toggleBtn.textContent = '⏸️ 暂停';
         }
@@ -1014,7 +857,7 @@
         function stopAuto() {
             if (timer) { clearInterval(timer); timer = null; }
             isRunning = false;
-            statusDot.className = 'status-dot paused';
+            statusDot.className = 'dot paused';
             statusLabel.textContent = '暂停';
             toggleBtn.textContent = '▶️ 继续';
         }
@@ -1030,9 +873,10 @@
         fetchAndRender().then(startAuto).catch(startAuto);
         window.addEventListener('beforeunload', () => { if (timer) clearInterval(timer); });
 
-        console.log('[PC28] 未来数据站已启动，Telegram推送已启用');
-        console.log('  频道ID:', TG_CONFIG.channelId);
-        console.log('  群组ID:', TG_CONFIG.groupId);
+        console.log('[PC28] 未来数据站已启动');
+        console.log('  频道:', TG_CONFIG.channelId);
+        console.log('  群组:', TG_CONFIG.groupId);
+        console.log('  Bot Token:', TG_CONFIG.botToken.substring(0, 10) + '...');
     })();
 </script>
 </body>
