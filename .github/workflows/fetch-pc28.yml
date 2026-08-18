@@ -14,109 +14,23 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Fetch data from primary source
-        id: fetch_primary
+      - name: Fetch data
         run: |
-          echo "正在从主源获取数据..."
-          curl -sL \
-            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
-            -H "Accept: application/json" \
-            --max-time 30 \
-            "https://pc28.help/api/kj.json" -o data.json.tmp
-
-          # 检查文件是否有效
-          if [ ! -s data.json.tmp ]; then
-            echo "主源返回空文件"
-            exit 1
-          fi
-
-          # 验证JSON有效性并检查nbrs字段
-          python3 << 'PYEOF'
-          import json, sys
-          try:
-              with open('data.json.tmp') as f:
-                  d = json.load(f)
-              if d.get('message') != 'success' or not d.get('data'):
-                  sys.exit(1)
-              item = d['data'][0]
-              nbrs = item.get('nbrs', '')
-              if not nbrs or len(nbrs.split(',')) != 20:
-                  print(f"主源nbrs字段无效: {nbrs[:100]}")
-                  sys.exit(1)
-              print("主源数据验证通过")
-              sys.exit(0)
-          except Exception as e:
-              print(f"主源验证失败: {e}")
-              sys.exit(1)
-          PYEOF
-
-          if [ $? -eq 0 ]; then
-            mv data.json.tmp data.json
-            echo "主源数据有效"
-          else
-            echo "主源数据无效，将尝试备用源"
-            exit 1
-          fi
-
-      - name: Fetch from backup source if primary failed
-        if: failure() && steps.fetch_primary.outcome == 'failure'
-        run: |
-          echo "正在从备用源获取数据..."
           curl -sL \
             -H "User-Agent: Mozilla/5.0" \
-            -H "Accept: application/json" \
-            --max-time 30 \
-            "https://yu28.top/api/kj.json" -o data.json.tmp
-
-          if [ ! -s data.json.tmp ]; then
-            echo "备用源返回空文件"
-            exit 1
+            "https://pc28.help/api/kj.json" -o data.json
+          # 如果主源失败，尝试备用源
+          if [ ! -s data.json ]; then
+            curl -sL -H "User-Agent: Mozilla/5.0" \
+              "https://yu28.top/api/kj.json" -o data.json
           fi
+          # 打印内容，方便排查
+          cat data.json
 
-          python3 << 'PYEOF'
-          import json, sys
-          try:
-              with open('data.json.tmp') as f:
-                  d = json.load(f)
-              if d.get('message') != 'success' or not d.get('data'):
-                  sys.exit(1)
-              item = d['data'][0]
-              nbrs = item.get('nbrs', '')
-              if not nbrs or len(nbrs.split(',')) != 20:
-                  print(f"备用源nbrs字段无效: {nbrs[:100]}")
-                  sys.exit(1)
-              print("备用源数据验证通过")
-              sys.exit(0)
-          except Exception as e:
-              print(f"备用源验证失败: {e}")
-              sys.exit(1)
-          PYEOF
-
-          if [ $? -eq 0 ]; then
-            mv data.json.tmp data.json
-            echo "备用源数据有效"
-          else
-            echo "所有数据源均失败，将保留旧文件"
-            rm -f data.json.tmp
-            exit 1
-          fi
-
-      - name: Display fetched data
-        run: |
-          echo "=== 最终 data.json 内容 ==="
-          cat data.json | head -c 500
-          echo ""
-          echo "=== 文件大小 ==="
-          wc -c data.json
-
-      - name: Commit and push if changed
+      - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
-          if git diff --staged --quiet; then
-            echo "无变化，跳过提交"
-          else
-            git commit -m "Auto update data ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
-            git push
-          fi
+          git diff --staged --quiet || git commit -m "Auto update data"
+          git push
