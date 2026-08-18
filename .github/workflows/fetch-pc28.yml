@@ -2,8 +2,8 @@ name: Fetch PC28 Data
 
 on:
   schedule:
-    - cron: '*/3 * * * *'   # 每3分钟运行一次
-  workflow_dispatch:         # 允许手动触发
+    - cron: '*/3 * * * *'
+  workflow_dispatch:
 
 jobs:
   fetch:
@@ -88,23 +88,61 @@ jobs:
           for it in items:
               if not isinstance(it, dict): continue
               nbr = str(it.get('nbr') or it.get('period') or it.get('issue') or it.get('qihao') or '')
-              # 号码 → 逗号分隔
-              nbrs=''
+              
+              # ===== 核心修复：正确提取 nbrs =====
+              nbrs = ''
+              # 优先从标准字段获取
               for k in ['nbrs','number','opencode','nums','numbers']:
-                  if it.get(k): nbrs=str(it[k]).replace('=','').replace('+',',').strip(); break
+                  if it.get(k):
+                      val = str(it[k])
+                      # 如果包含逗号，直接使用；否则尝试清洗
+                      if ',' in val:
+                          nbrs = val
+                      else:
+                          # 可能是空格或竖线分隔，统一转为逗号
+                          import re
+                          parts = re.split(r'[,\s|]+', val.strip())
+                          if len(parts) >= 3:
+                              nbrs = ','.join(parts)
+                      break
+              
+              # 如果还是没有，尝试从 b1,b2,b3 构造（但仅作为最后手段，且确保是20个号码）
               if not nbrs:
-                  nums=[str(it[k]) for k in ['b1','b2','b3','n1','n2','n3'] if it.get(k) is not None]
-                  if nums: nbrs=','.join(nums)
-              t=str(it.get('time') or it.get('opentime') or it.get('drawTime') or it.get('datetime') or '')
-              try: nums=[int(x) for x in nbrs.split(',') if x.strip()]; bonus=sum(nums[:3])
-              except: bonus=0
-              if nbr or nbrs:
-                  normalized.append({'nbr':nbr,'nbrs':nbrs,'bonus':bonus,'time':t})
+                  nums = [str(it.get(k)) for k in ['b1','b2','b3','n1','n2','n3'] if it.get(k) is not None]
+                  if nums:
+                      # 注意：这里如果只有3个数字，说明接口返回的是三球，那我们需要特殊处理
+                      # 但 pc28.help 不会这样，所以如果落到这里，说明数据格式不对
+                      print(f'警告: 未找到nbrs，但找到三球数据 {nums}，将保存原样')
+                      nbrs = ','.join(nums)
+              
+              # 如果仍然没有，跳过这条记录
+              if not nbrs:
+                  print(f'跳过无号码记录: {it}')
+                  continue
+              
+              # 提取时间
+              t = str(it.get('time') or it.get('opentime') or it.get('drawTime') or it.get('datetime') or '')
+              
+              # bonus: 如果接口直接提供则使用，否则计算前三球的和
+              bonus = 0
+              if 'bonus' in it:
+                  try: bonus = int(it['bonus'])
+                  except: pass
+              if bonus == 0:
+                  # 计算前三球的和（仅当nbrs是逗号分隔的数字）
+                  try:
+                      nums = [int(x) for x in nbrs.split(',') if x.strip()]
+                      if nums:
+                          bonus = sum(nums[:3])
+                  except: pass
+              
+              normalized.append({'nbr': nbr, 'nbrs': nbrs, 'bonus': bonus, 'time': t})
 
-          out={'message':'success' if normalized else 'error','data':normalized}
+          out = {'message':'success' if normalized else 'error','data':normalized}
           json.dump(out, open('data.json','w'), ensure_ascii=False, indent=2)
           print(f'✓ 标准化: {len(normalized)}条')
-          if normalized: print(f'  最新: {json.dumps(normalized[0],ensure_ascii=False)}')
+          if normalized:
+              print(f'  最新: {json.dumps(normalized[0], ensure_ascii=False)}')
           PYEOF
 
       - name: Commit and push if changed
