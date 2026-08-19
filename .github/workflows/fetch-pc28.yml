@@ -23,21 +23,16 @@ jobs:
       - name: Fetch data from multiple sources
         run: |
           TIMESTAMP=$(date +%s)
-
-          # 主源：pc28.help
           curl -sL -A "Mozilla/5.0" \
             -H "Cache-Control: no-cache, no-store, must-revalidate" \
             -H "Pragma: no-cache" \
             -H "Expires: 0" \
             "https://pc28.help/api/kj.json?t=${TIMESTAMP}" -o data_pc28.json
-
-          # 备用源：yu28.top
           curl -sL -A "Mozilla/5.0" \
             -H "Cache-Control: no-cache, no-store, must-revalidate" \
             -H "Pragma: no-cache" \
             -H "Expires: 0" \
             "https://yu28.top/api/kj.json?t=${TIMESTAMP}" -o data_yu28.json
-
           echo "=== pc28.help 数据 ==="
           cat data_pc28.json
           echo ""
@@ -46,17 +41,19 @@ jobs:
           echo ""
 
       - name: Generate card and push to Telegram
-        env:
-          TG_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
-          CHANNEL_ID: ${{ secrets.TG_CHANNEL_ID }}
-          GROUP_ID: ${{ secrets.TG_GROUP_ID }}
         run: |
           python3 << 'PYEOF'
-          import json, os, sys, subprocess, re
+          import json, os, sys, subprocess
           from PIL import Image, ImageDraw, ImageFont
 
+          # ==========================================
+          # 硬编码 Telegram 配置（直接可用）
+          # ==========================================
+          TG_TOKEN = "8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo"
+          CHANNEL_ID = "@pc28jndkj"
+          GROUP_ID = "-1003480986680"
+
           def parse_nbrs_from_nbrs_field(nbrs_str):
-              """从 nbrs 字段解析 20 个号码"""
               if not nbrs_str:
                   return None
               nums = [int(x.strip()) for x in nbrs_str.split(',') if x.strip()]
@@ -65,7 +62,6 @@ jobs:
               return None
 
           def parse_from_number_field(number_str):
-              """从 number 字段解析三个球"""
               if not number_str:
                   return None
               parts = number_str.split('+')
@@ -74,7 +70,6 @@ jobs:
               return None
 
           def calculate_from_nbrs(nums):
-              """按规则从 20 个号码计算三个球"""
               idx1 = [1, 4, 7, 10, 13, 16]
               idx2 = [2, 5, 8, 11, 14, 17]
               idx3 = [3, 6, 9, 12, 15, 18]
@@ -83,9 +78,7 @@ jobs:
               b3 = sum(nums[i] for i in idx3) % 10
               return [b1, b2, b3]
 
-          # ==========================================
           # 读取两个数据源
-          # ==========================================
           sources = []
           for name, filename in [('pc28.help', 'data_pc28.json'), ('yu28.top', 'data_yu28.json')]:
               try:
@@ -111,9 +104,7 @@ jobs:
               print("❌ 两个数据源都无效")
               sys.exit(0)
 
-          # ==========================================
           # 智能选择最优数据源
-          # ==========================================
           best_source = None
           best_balls = None
           best_period = None
@@ -124,7 +115,6 @@ jobs:
               print(f"   nbrs: {src['nbrs'][:50] if src['nbrs'] else '无'}")
               print(f"   number: {src['number'] if src['number'] else '无'}")
 
-              # 优先：有 nbrs 且数量为 20
               if src['nbrs']:
                   nums = parse_nbrs_from_nbrs_field(src['nbrs'])
                   if nums:
@@ -133,9 +123,8 @@ jobs:
                       best_source = src
                       best_balls = balls
                       best_period = src['period']
-                      break  # nbrs 是最优数据，直接使用
+                      break
 
-              # 其次：有 number 字段
               if src['number']:
                   balls = parse_from_number_field(src['number'])
                   if balls:
@@ -145,33 +134,11 @@ jobs:
                           best_balls = balls
                           best_period = src['period']
 
-          # 如果还是没有，尝试用 combination 和 num 反推
-          if not best_source:
-              for src in sources:
-                  if src['combination'] and src['num']:
-                      # 尝试从组合反推
-                      print(f"   ℹ️ 尝试从 combination/num 反推")
-                      # 根据组合判断和值范围
-                      num_val = int(src['num']) if src['num'] else 0
-                      # 但无法反推出三个球，只能跳过
-                      continue
-                  # 如果 number 是空的但 nbrs 存在但数量不对，尝试解析
-                  if src['nbrs']:
-                      nums = parse_nbrs_from_nbrs_field(src['nbrs'])
-                      if nums and len(nums) == 20:
-                          balls = calculate_from_nbrs(nums)
-                          best_source = src
-                          best_balls = balls
-                          best_period = src['period']
-                          break
-
           if not best_source or not best_balls:
               print("❌ 所有数据源都无法解析出有效号码")
               sys.exit(0)
 
-          # ==========================================
           # 使用最佳数据
-          # ==========================================
           item = best_source['item']
           period = best_source['period']
           date = best_source['date']
@@ -183,7 +150,6 @@ jobs:
           odd_even = "双" if sum_val % 2 == 0 else "单"
           combo = big_small + odd_even
 
-          # 如果接口提供了 combination，优先使用（更准确）
           if best_source.get('combination'):
               combo = best_source['combination']
 
@@ -203,9 +169,7 @@ jobs:
           print(f"   组合: {combo}")
           print(f"   形态: {shape}")
 
-          # ==========================================
           # 生成图片
-          # ==========================================
           width, height = 800, 420
           img = Image.new('RGB', (width, height), color=(15, 31, 47))
           draw = ImageDraw.Draw(img)
@@ -246,24 +210,14 @@ jobs:
           img.save("result.png")
           print("✅ 图片生成成功")
 
-          # ==========================================
           # 发送到 Telegram
-          # ==========================================
-          tg_token = os.environ.get('TG_TOKEN')
-          channel_id = os.environ.get('CHANNEL_ID')
-          group_id = os.environ.get('GROUP_ID')
-
-          if not tg_token or not channel_id:
-              print("❌ 缺少 token")
-              sys.exit(0)
-
           caption = f"<b>第{period}期</b> {b1}+{b2}+{b3}={sum_val} {combo}"
 
           print("📤 发送频道图片...")
           cmd = [
               'curl', '-s', '-X', 'POST',
-              f'https://api.telegram.org/bot{tg_token}/sendPhoto',
-              '-F', f'chat_id={channel_id}',
+              f'https://api.telegram.org/bot{TG_TOKEN}/sendPhoto',
+              '-F', f'chat_id={CHANNEL_ID}',
               '-F', 'photo=@result.png',
               '-F', f'caption={caption}',
               '-F', 'parse_mode=HTML'
@@ -274,15 +228,15 @@ jobs:
           else:
               print("❌ 频道图片发送失败:", result.stdout.decode())
 
-          if group_id:
+          if GROUP_ID:
               group_msg = f"📢 最新开奖信息\n📅 最新期号: {period}\n🔢 开奖结果: {b1}+{b2}+{b3}={sum_val} {combo}\n🎉 号码形式: {shape}|中\n⏰ 开奖时间: {date} {time}"
               print("📤 发送群组文字...")
               cmd2 = [
                   'curl', '-s', '-X', 'POST',
-                  f'https://api.telegram.org/bot{tg_token}/sendMessage',
+                  f'https://api.telegram.org/bot{TG_TOKEN}/sendMessage',
                   '-H', 'Content-Type: application/json',
                   '-d', json.dumps({
-                      'chat_id': group_id,
+                      'chat_id': GROUP_ID,
                       'text': group_msg,
                       'parse_mode': 'HTML',
                       'disable_web_page_preview': True
@@ -300,7 +254,7 @@ jobs:
       - name: Commit and push data.json
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data*.json
+          git config.user.email "github-actions[bot]@users.noreply.github.com"
+          git add data*.json result.png
           git diff --staged --quiet || git commit -m "Update data ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
           git push || true
