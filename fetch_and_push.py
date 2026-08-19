@@ -253,6 +253,30 @@ def send_message(period, date, time_str, balls, s, combo, shape):
     return ok
 
 
+# ================= Git 实时提交 =================
+def git_commit_push():
+    """数据文件实时提交推送到 GitHub（保证对外接口数据实时更新）"""
+    try:
+        import subprocess
+        subprocess.run(["git", "config", "user.name", "github-actions[bot]"], check=False, capture_output=True)
+        subprocess.run(["git", "config", "user.email", "github-actions[bot]@users.noreply.github.com"], check=False, capture_output=True)
+        subprocess.run(["git", "add", DATA_FILE, LAST_SENT_FILE], check=False, capture_output=True)
+        r = subprocess.run(["git", "diff", "--cached", "--quiet"], capture_output=True)
+        if r.returncode == 0:
+            print("[git] 无数据变更，跳过提交")
+            return
+        now = datetime.datetime.now(datetime.timezone.utc)
+        subprocess.run(["git", "commit", "-m", f"Update data {now:%Y-%m-%dT%H:%M:%SZ}"], check=False, capture_output=True)
+        p = subprocess.run(["git", "push", "origin", "main"], check=False, capture_output=True, timeout=60)
+        if p.returncode == 0:
+            print("[git] 数据已实时提交并推送")
+        else:
+            err = (p.stderr or b"").decode("utf-8", errors="replace")[:300]
+            print(f"[git] push 失败（不影响推送）: {err}")
+    except Exception as e:
+        print(f"[git] 提交异常（不影响推送）: {e}")
+
+
 # ================= 单次抓取推送 =================
 def run_once(force=False):
     """抓取最新一期并推送。返回 True 表示本次有推送动作。"""
@@ -274,6 +298,7 @@ def run_once(force=False):
     if ok_channel or ok_group:
         write_last_sent(period)
         save_data(item)
+        git_commit_push()
         print("✅ 推送完成")
         return True
 
