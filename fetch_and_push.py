@@ -275,4 +275,14 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except SystemExit:
+        raise
+    except Exception as e:
+        import traceback
+        tb = traceback.format_exc()
+        print(tb, file=sys.stderr)
+        with open("error.log", "w", encoding="utf-8") as f:
+            f.write(tb)
+        sys.exit(1)
