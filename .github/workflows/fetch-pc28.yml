@@ -20,21 +20,40 @@ jobs:
           sudo apt-get install -y jq
           pip install pillow
 
-      - name: Fetch data
+      - name: Fetch data with cache-busting headers
         run: |
-          curl -sL -A "Mozilla/5.0" "https://pc28.help/api/kj.json" -o data.json
-          echo "=== 拉取的数据 ==="
-          cat data.json
+          # 添加时间戳参数强制刷新
+          TIMESTAMP=$(date +%s)
+          curl -sL -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
+            -H "Cache-Control: no-cache, no-store, must-revalidate" \
+            -H "Pragma: no-cache" \
+            -H "Expires: 0" \
+            "https://pc28.help/api/kj.json?t=${TIMESTAMP}" -o data.json
 
-      - name: Generate card and push to Telegram (FORCED)
+          echo "=== 拉取的数据（完整） ==="
+          cat data.json
+          echo ""
+
+          # 提取期号和 nbrs 字段验证
+          PERIOD=$(jq -r '.data[0].nbr' data.json 2>/dev/null || echo "")
+          NBRS=$(jq -r '.data[0].nbrs' data.json 2>/dev/null || echo "")
+          echo "期号: $PERIOD"
+          echo "nbrs: $NBRS"
+
+          if [ -z "$PERIOD" ] || [ "$PERIOD" == "null" ]; then
+            echo "❌ 数据无效，退出"
+            exit 1
+          fi
+
+      - name: Generate card and push to Telegram
         env:
           TG_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           CHANNEL_ID: ${{ secrets.TG_CHANNEL_ID }}
           GROUP_ID: ${{ secrets.TG_GROUP_ID }}
         run: |
-          # 用 Python 完整解析，避免 Shell 数组问题
+          # 全部在 Python 中处理，避免 shell 解析问题
           python3 << 'PYEOF'
-          import json, os, sys
+          import json, os, sys, subprocess, time
           from PIL import Image, ImageDraw, ImageFont
 
           # 读取数据
@@ -46,17 +65,16 @@ jobs:
               sys.exit(0)
 
           item = data['data'][0]
-
           period = item.get('nbr', '未知')
           date = item.get('date', '')
           time = item.get('time', '')
-
-          # ---------- 核心：从 nbrs 解析 20 个号码 ----------
           nbrs_str = item.get('nbrs', '')
-          print(f"原始 nbrs: {nbrs_str}")
 
+          print(f"期号: {period}")
+          print(f"nbrs: {nbrs_str}")
+
+          # 如果 nbrs 为空，尝试备用 number 字段
           if not nbrs_str:
-              # 备用格式：直接用 number 字段
               number_str = item.get('number', '')
               if number_str:
                   parts = number_str.split('+')
@@ -65,19 +83,16 @@ jobs:
                       b2 = int(parts[1].strip())
                       b3 = int(parts[2].strip())
                   else:
-                      print("❌ 无法解析 number")
+                      print("❌ number 格式错误")
                       sys.exit(0)
               else:
                   print("❌ 没有 nbrs 也没有 number")
                   sys.exit(0)
           else:
-              # 标准格式：20个逗号分隔的数字
               nums = [int(x.strip()) for x in nbrs_str.split(',') if x.strip()]
               print(f"解析到 {len(nums)} 个号码")
-
               if len(nums) != 20:
-                  print(f"⚠️ 号码数量不是20，实际 {len(nums)}，尝试备用逻辑")
-                  # 如果数量不对，尝试用 number 字段
+                  print(f"⚠️ 号码数量 {len(nums)}，尝试备用 number")
                   number_str = item.get('number', '')
                   if number_str:
                       parts = number_str.split('+')
@@ -85,78 +100,41 @@ jobs:
                           b1 = int(parts[0].strip())
                           b2 = int(parts[1].strip())
                           b3 = int(parts[2].strip())
-                          sum_val = b1 + b2 + b3
-                          special = sum_val % 10
-                          # 判断组合
-                          big_small = "小" if sum_val <= 13 else "大"
-                          odd_even = "双" if sum_val % 2 == 0 else "单"
-                          combo = big_small + odd_even
-                          # 判断形态
-                          if b1 == b2 and b2 == b3:
-                              shape = "豹子"
-                          elif b1 == b2 or b2 == b3 or b1 == b3:
-                              shape = "对子"
-                          elif (b2 - b1 == 1 and b3 - b2 == 1) or (b1 - b2 == 1 and b2 - b3 == 1):
-                              shape = "顺子"
-                          else:
-                              shape = "杂六"
-                          # 生成图片并推送...
-                          print(f"使用备用 number 字段: {b1}+{b2}+{b3}={sum_val} {combo}")
-                          # 这里需要继续执行图片生成，但为了代码完整，放到后面统一处理
-                          # 用标志位控制
-                          use_number_fallback = True
                       else:
-                          print("❌ 数据异常")
+                          print("❌ 备用 number 也无效")
                           sys.exit(0)
                   else:
                       print("❌ 数据异常")
                       sys.exit(0)
               else:
-                  use_number_fallback = False
                   # 标准计算
-                  idx1 = [1, 4, 7, 10, 13, 16]  # 第2/5/8/11/14/17位
-                  idx2 = [2, 5, 8, 11, 14, 17]  # 第3/6/9/12/15/18位
-                  idx3 = [3, 6, 9, 12, 15, 18]  # 第4/7/10/13/16/19位
+                  idx1 = [1, 4, 7, 10, 13, 16]
+                  idx2 = [2, 5, 8, 11, 14, 17]
+                  idx3 = [3, 6, 9, 12, 15, 18]
+                  b1 = sum(nums[i] for i in idx1) % 10
+                  b2 = sum(nums[i] for i in idx2) % 10
+                  b3 = sum(nums[i] for i in idx3) % 10
 
-                  sum1 = sum(nums[i] for i in idx1)
-                  sum2 = sum(nums[i] for i in idx2)
-                  sum3 = sum(nums[i] for i in idx3)
+          sum_val = b1 + b2 + b3
+          big_small = "小" if sum_val <= 13 else "大"
+          odd_even = "双" if sum_val % 2 == 0 else "单"
+          combo = big_small + odd_even
 
-                  b1 = sum1 % 10
-                  b2 = sum2 % 10
-                  b3 = sum3 % 10
-                  sum_val = b1 + b2 + b3
-                  special = sum_val % 10
+          if b1 == b2 and b2 == b3:
+              shape = "豹子"
+          elif b1 == b2 or b2 == b3 or b1 == b3:
+              shape = "对子"
+          elif (b2 - b1 == 1 and b3 - b2 == 1):
+              shape = "顺子"
+          else:
+              shape = "杂六"
 
-                  big_small = "小" if sum_val <= 13 else "大"
-                  odd_even = "双" if sum_val % 2 == 0 else "单"
-                  combo = big_small + odd_even
+          print(f"✅ 计算结果: {b1}+{b2}+{b3}={sum_val} {combo} 形态:{shape}")
 
-                  # 形态判断
-                  if b1 == b2 and b2 == b3:
-                      shape = "豹子"
-                  elif b1 == b2 or b2 == b3 or b1 == b3:
-                      shape = "对子"
-                  elif (b2 - b1 == 1 and b3 - b2 == 1):
-                      shape = "顺子"
-                  else:
-                      shape = "杂六"
-
-                  print(f"✅ 计算完成: {b1}+{b2}+{b3}={sum_val} {combo} 形态:{shape}")
-
-          # 如果使用了备用逻辑，b1/b2/b3 已在上面赋值
-          # 但为了统一，如果 use_number_fallback 为 True，上面已经处理了
-          # 这里用变量判断是否已经计算完成
-          if 'b1' not in locals():
-              # 如果上面没有定义 b1，说明前面的逻辑都没走通
-              print("❌ 数据解析失败，跳过推送")
-              sys.exit(0)
-
-          # ---------- 生成图片 ----------
+          # 生成图片
           width, height = 800, 420
           img = Image.new('RGB', (width, height), color=(15, 31, 47))
           draw = ImageDraw.Draw(img)
-
           draw.rectangle((10, 10, width-10, height-10), outline=(60, 80, 100), width=2)
 
           try:
@@ -194,15 +172,13 @@ jobs:
           img.save("result.png")
           print("✅ 图片生成成功")
 
-          # ---------- 发送到 Telegram ----------
-          import subprocess
-
+          # 发送到 Telegram
           tg_token = os.environ.get('TG_TOKEN')
           channel_id = os.environ.get('CHANNEL_ID')
           group_id = os.environ.get('GROUP_ID')
 
           if not tg_token or not channel_id:
-              print("❌ 缺少 TG_TOKEN 或 CHANNEL_ID")
+              print("❌ 缺少 token")
               sys.exit(0)
 
           caption = f"<b>第{period}期</b> {b1}+{b2}+{b3}={sum_val} {combo}"
@@ -223,7 +199,7 @@ jobs:
           else:
               print("❌ 频道图片发送失败:", result.stdout.decode())
 
-          # 发送文字到群组
+          # 发送到群组
           if group_id:
               group_msg = f"📢 最新开奖信息\n📅 最新期号: {period}\n🔢 开奖结果: {b1}+{b2}+{b3}={sum_val} {combo}\n🎉 号码形式: {shape}|中\n⏰ 开奖时间: {date} {time}"
               print("📤 发送群组文字...")
