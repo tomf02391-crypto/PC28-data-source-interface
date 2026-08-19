@@ -103,7 +103,7 @@ def validate(item):
     if date and time_str:
         try:
             dt = datetime.datetime.strptime(f"{date} {time_str}", "%Y-%m-%d %H:%M:%S")
-            now_bj = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
+            now_bj = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=8)
             diff = abs((now_bj - dt).total_seconds())
             if diff > 20 * 60:
                 raise ValueError(
