@@ -207,23 +207,14 @@ def is_summer():
 
 
 def erase_top_text(img, summer):
-    """擦除顶部旧期号文字（夏=金色 / 冬=红色），用中值滤波背景填充"""
-    a = np.array(img).astype(int)
-    r, g, b = a[:, :, 0], a[:, :, 1], a[:, :, 2]
-    if summer:
-        mask = (r > 150) & (g > 100) & (b < 130) & (r > g)
-    else:
-        mask = (r > 165) & (g < 100) & (b < 110)
-    mask[240:, :] = False
-    if mask.sum() < 50:
-        print("[擦除] 顶部未检测到文字，跳过")
-        return img
-    blur = img.filter(ImageFilter.MedianFilter(9))
-    b_arr = np.array(blur).astype(int)
-    b_arr[mask] = a[mask]
-    b_arr[~mask] = a[~mask]
-    print(f"[擦除] 已擦除顶部文字 {mask.sum()} 像素")
-    return Image.fromarray(b_arr.astype(np.uint8))
+    """擦除顶部旧期号文字区域（固定矩形，避开左侧国旗），用高斯模糊背景填充"""
+    w, h = img.size
+    box = (int(w * 0.092), int(h * 0.075), int(w * 0.64), int(h * 0.32))
+    blur = img.filter(ImageFilter.GaussianBlur(25))
+    region = blur.crop(box)
+    img.paste(region, box)
+    print(f"[擦除] 已擦除顶部期号区域 {box}")
+    return img
 
 
 def repaint_balls(img, balls, b1, b2, b3, s):
