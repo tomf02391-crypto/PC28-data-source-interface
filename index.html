@@ -367,7 +367,7 @@
 
     <div class="toolbar">
         <div class="info">
-            数据源 <span id="sourceIndicator">data.json</span>
+            数据源 <span id="sourceIndicator">pc28.help</span>
             <span class="error-msg" id="errorMsg">⚠️ 加载失败</span>
         </div>
         <div class="btns">
@@ -440,20 +440,10 @@
         'use strict';
 
         // ============================================================
-        // Telegram 配置
-        // ============================================================
-        const TG_CONFIG = {
-            botToken: '8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo',
-            channelId: '@pc28jndkj',
-            groupId: '-1003480986680',
-            enabled: true,
-        };
-
-        // ============================================================
         // 配置
         // ============================================================
-        const REFRESH_INTERVAL = 210000;
-        const ROUND_INTERVAL = 210;
+        const REFRESH_INTERVAL = 180000;   // 3分钟
+        const ROUND_INTERVAL = 210;        // 3.5分钟
         const MAX_HISTORY = 50;
 
         // ============================================================
@@ -497,62 +487,52 @@
             return { oddEven, bigSmall, combination, shape };
         }
 
+        function parseFromNumber(numberStr) {
+            if (!numberStr) return null;
+            const parts = numberStr.split('+');
+            if (parts.length === 3) {
+                return [parseInt(parts[0].trim()), parseInt(parts[1].trim()), parseInt(parts[2].trim())];
+            }
+            return null;
+        }
+
+        function calculateFromNbrs(nbrsStr) {
+            if (!nbrsStr) return null;
+            const nums = nbrsStr.split(',').map(x => parseInt(x.trim())).filter(x => !isNaN(x));
+            if (nums.length !== 20) return null;
+            const idx1 = [1, 4, 7, 10, 13, 16];
+            const idx2 = [2, 5, 8, 11, 14, 17];
+            const idx3 = [3, 6, 9, 12, 15, 18];
+            const b1 = idx1.reduce((s, i) => s + nums[i], 0) % 10;
+            const b2 = idx2.reduce((s, i) => s + nums[i], 0) % 10;
+            const b3 = idx3.reduce((s, i) => s + nums[i], 0) % 10;
+            return [b1, b2, b3];
+        }
+
         // ============================================================
-        // 读取 data.json
+        // 获取最新数据（优先读取 data_pc28.json）
         // ============================================================
-        async function fetchRealData() {
+        async function fetchData() {
             try {
-                const resp = await fetch('data.json');
-                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                // 优先读 pc28.help 的数据
+                let resp = await fetch('data_pc28.json');
+                if (!resp.ok) {
+                    resp = await fetch('data_yu28.json');
+                }
+                if (!resp.ok) {
+                    resp = await fetch('data.json');
+                }
+                if (!resp.ok) {
+                    throw new Error('无法获取数据');
+                }
                 const json = await resp.json();
-                if (json.message !== 'success' || !json.data || !json.data[0]) {
-                    throw new Error('数据格式错误');
+                if (!json.data || json.data.length === 0) {
+                    throw new Error('数据为空');
                 }
-                const item = json.data[0];
-                const period = item.nbr || item.id || '未知期号';
-                let ball1, ball2, ball3, special;
-
-                if (item.number && typeof item.number === 'string' && item.number.includes('+')) {
-                    const parts = item.number.split('+').map(s => parseInt(s.trim(), 10));
-                    if (parts.length === 3) {
-                        [ball1, ball2, ball3] = parts;
-                        special = (ball1 + ball2 + ball3) % 10;
-                    } else {
-                        throw new Error('number 字段解析错误');
-                    }
-                } else if (item.nbrs) {
-                    let nbrs = [];
-                    if (typeof item.nbrs === 'string') {
-                        nbrs = item.nbrs.split(/[,;\s|]+/).map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
-                    } else if (Array.isArray(item.nbrs)) {
-                        nbrs = item.nbrs.map(n => parseInt(n, 10)).filter(n => !isNaN(n));
-                    }
-                    if (nbrs.length !== 20) throw new Error(`号码数量不正确，实际${nbrs.length}`);
-                    nbrs.sort((a, b) => a - b);
-                    const idx1 = [1,4,7,10,13,16];
-                    const sum1 = idx1.reduce((a,i) => a + (nbrs[i] || 0), 0);
-                    ball1 = sum1 % 10;
-                    const idx2 = [2,5,8,11,14,17];
-                    const sum2 = idx2.reduce((a,i) => a + (nbrs[i] || 0), 0);
-                    ball2 = sum2 % 10;
-                    const idx3 = [3,6,9,12,15,18];
-                    const sum3 = idx3.reduce((a,i) => a + (nbrs[i] || 0), 0);
-                    ball3 = sum3 % 10;
-                    special = (ball1 + ball2 + ball3) % 10;
-                } else {
-                    throw new Error('既没有 number 也没有 nbrs 字段');
-                }
-
-                const date = item.date || '';
-                const time = item.time || '';
-                const combinationFromApi = item.combination || '';
-
-                return {
-                    data: { period, ball1, ball2, ball3, special, date, time, combinationFromApi },
-                    sourceName: 'data.json'
-                };
+                return json;
             } catch (err) {
-                throw new Error('读取本地数据失败: ' + err.message);
+                console.error('获取数据失败:', err);
+                throw err;
             }
         }
 
@@ -614,159 +594,8 @@
         setInterval(updateCountdown, 500);
 
         // ============================================================
-        // Telegram 推送 - 频道发图片卡片
-        // ============================================================
-        function generateCardImage(data) {
-            const { period, ball1, ball2, ball3, terms, date, time } = data;
-            const sum = ball1 + ball2 + ball3;
-            const combination = terms.combination;
-            const shape = terms.shape;
-            const dateStr = date && time ? `${date} ${time}` : '未知时间';
-
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const width = 800, height = 420;
-            canvas.width = width; canvas.height = height;
-
-            // 背景
-            const grad = ctx.createLinearGradient(0,0,width,height);
-            grad.addColorStop(0, '#0f1f2f');
-            grad.addColorStop(0.7, '#1a2a4a');
-            ctx.fillStyle = grad; ctx.fillRect(0,0,width,height);
-            ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-            ctx.lineWidth = 2; ctx.strokeRect(10,10,width-20,height-20);
-
-            // 标题：PC28开奖结果
-            ctx.textAlign = 'left';
-            ctx.fillStyle = 'rgba(255,255,255,0.2)';
-            ctx.font = '14px "Segoe UI", sans-serif';
-            ctx.fillText('PC28 开奖结果', 30, 45);
-
-            // 期号
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 20px "Segoe UI", sans-serif';
-            ctx.textAlign = 'right';
-            ctx.fillText(`第 ${period} 期`, width-30, 45);
-
-            // 三个大球
-            const circleY = 155, radius = 52, spacing = 135;
-            const startX = (width - 2*spacing)/2 - 10;
-            const balls = [ball1, ball2, ball3];
-            const colors = ['#4fc3f7', '#4fc3f7', '#4fc3f7'];
-            balls.forEach((num, i) => {
-                const x = startX + i * spacing;
-                const gradCirc = ctx.createRadialGradient(x-15, circleY-15, 10, x, circleY, radius);
-                gradCirc.addColorStop(0, '#6ad4ff');
-                gradCirc.addColorStop(1, '#1a7ab5');
-                ctx.shadowColor = 'rgba(79,195,247,0.2)';
-                ctx.shadowBlur = 15;
-                ctx.beginPath();
-                ctx.arc(x, circleY, radius, 0, Math.PI*2);
-                ctx.fillStyle = gradCirc;
-                ctx.fill();
-                ctx.shadowBlur = 0;
-                ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-
-                ctx.fillStyle = '#ffffff';
-                ctx.font = 'bold 40px "Segoe UI", sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.shadowColor = 'rgba(0,0,0,0.4)';
-                ctx.shadowBlur = 6;
-                ctx.fillText(num, x, circleY+1);
-                ctx.shadowBlur = 0;
-
-                if (i < 2) {
-                    ctx.fillStyle = 'rgba(255,255,255,0.2)';
-                    ctx.font = '28px "Segoe UI", sans-serif';
-                    ctx.fillText('+', x + spacing/2, circleY+1);
-                }
-            });
-
-            // 和值
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'top';
-            ctx.shadowBlur = 0;
-
-            ctx.fillStyle = '#ffd54f';
-            ctx.font = 'bold 34px "Segoe UI", sans-serif';
-            ctx.fillText(`= ${sum}`, width/2, circleY + radius + 15);
-
-            // 组合
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 26px "Segoe UI", sans-serif';
-            ctx.fillText(combination, width/2, circleY + radius + 60);
-
-            // 形态
-            ctx.fillStyle = 'rgba(255,255,255,0.35)';
-            ctx.font = '20px "Segoe UI", sans-serif';
-            ctx.fillText(`形态：${shape}`, width/2, circleY + radius + 100);
-
-            // 底部时间
-            ctx.textAlign = 'right';
-            ctx.textBaseline = 'bottom';
-            ctx.fillStyle = 'rgba(255,255,255,0.15)';
-            ctx.font = '14px "Segoe UI", sans-serif';
-            ctx.fillText(`开奖时间 ${dateStr}`, width-30, height-18);
-
-            return new Promise(resolve => {
-                canvas.toBlob(blob => resolve(blob), 'image/png');
-            });
-        }
-
-        async function sendPhotoToChannel(chatId, photoBlob, caption) {
-            if (!TG_CONFIG.enabled || !TG_CONFIG.botToken) return;
-            const url = `https://api.telegram.org/bot${TG_CONFIG.botToken}/sendPhoto`;
-            const fd = new FormData();
-            fd.append('chat_id', chatId);
-            fd.append('photo', photoBlob, 'result.png');
-            if (caption) fd.append('caption', caption);
-            fd.append('parse_mode', 'HTML');
-            try {
-                const r = await fetch(url, { method: 'POST', body: fd });
-                const j = await r.json();
-                if (!j.ok) console.error('图片发送失败:', j);
-                else console.log('✅ 频道图片发送成功');
-            } catch (e) { console.error('图片发送异常:', e); }
-        }
-
-        // ============================================================
-        // Telegram 推送 - 群组发文字
-        // ============================================================
-        async function sendTextToGroup(chatId, text) {
-            if (!TG_CONFIG.enabled || !TG_CONFIG.botToken) return;
-            const url = `https://api.telegram.org/bot${TG_CONFIG.botToken}/sendMessage`;
-            try {
-                const r = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: chatId,
-                        text: text,
-                        parse_mode: 'HTML',
-                        disable_web_page_preview: true
-                    })
-                });
-                const j = await r.json();
-                if (!j.ok) console.error('文字发送失败:', j);
-                else console.log('✅ 群组文字发送成功');
-            } catch (e) { console.error('文字发送异常:', e); }
-        }
-
-        function buildGroupMessage(data) {
-            const { period, ball1, ball2, ball3, terms, date, time } = data;
-            const sum = ball1 + ball2 + ball3;
-            const dateStr = date && time ? `${date} ${time}` : '未知时间';
-            return `📢 最新开奖信息\n📅 最新期号: ${period}\n🔢 开奖结果: ${ball1}+${ball2}+${ball3}=${sum} ${terms.combination}\n🎉 号码形式: ${terms.shape}|中\n⏰ 开奖时间: ${dateStr}`;
-        }
-
-        // ============================================================
         // 对外接口
         // ============================================================
-        let latestData = null;
-        let lastPushDigest = '';
         window.PC28_DATA = null;
 
         // ============================================================
@@ -775,18 +604,59 @@
         async function fetchAndRender() {
             errorMsgEl.style.display = 'none';
             try {
-                const result = await fetchRealData();
-                const { period, ball1, ball2, ball3, special, date, time, combinationFromApi } = result.data;
-                const terms = analyzeTerms(ball1, ball2, ball3, special);
-                if (combinationFromApi) terms.combination = combinationFromApi;
+                const json = await fetchData();
+                const item = json.data[0];
 
-                const dataObj = { period, ball1, ball2, ball3, special, terms, date, time };
-                latestData = dataObj;
+                const period = item.nbr || '未知期号';
+                const date = item.date || '';
+                const time = item.time || '';
+                const nbrs = item.nbrs || '';
+                const number = item.number || '';
+                const combination = item.combination || '';
+
+                let balls = null;
+                let sourceName = '';
+
+                // 优先用 nbrs 按规则计算
+                if (nbrs) {
+                    balls = calculateFromNbrs(nbrs);
+                    if (balls) {
+                        sourceName = 'Keno原始数据(按规则计算)';
+                    }
+                }
+
+                // 如果没有 nbrs，用 number
+                if (!balls && number) {
+                    balls = parseFromNumber(number);
+                    if (balls) {
+                        sourceName = 'PC28数据(直接解析)';
+                    }
+                }
+
+                if (!balls) {
+                    throw new Error('无法解析号码');
+                }
+
+                const [b1, b2, b3] = balls;
+                const sum_val = b1 + b2 + b3;
+                const special = sum_val % 10;
+                const terms = analyzeTerms(b1, b2, b3, special);
+
+                // 如果接口提供了 combination，优先使用
+                if (combination) {
+                    terms.combination = combination;
+                }
+
+                const dataObj = {
+                    period, b1, b2, b3, special, sum: sum_val,
+                    terms, date, time, sourceName
+                };
                 window.PC28_DATA = dataObj;
 
-                displayBall1.textContent = ball1;
-                displayBall2.textContent = ball2;
-                displayBall3.textContent = ball3;
+                // 更新界面
+                displayBall1.textContent = b1;
+                displayBall2.textContent = b2;
+                displayBall3.textContent = b3;
                 displaySpecial.textContent = special;
                 combinationTag.innerHTML = `<strong>${terms.combination}</strong> · ${terms.shape}`;
 
@@ -797,8 +667,9 @@
 
                 const now = new Date();
                 updateTimeEl.textContent = now.toLocaleTimeString('zh-CN', { hour12: false });
-                sourceIndicator.textContent = 'data.json';
+                sourceIndicator.textContent = sourceName || 'pc28.help';
 
+                // 倒计时
                 if (date && time) {
                     const ot = new Date(`${date} ${time}`);
                     if (!isNaN(ot)) {
@@ -807,30 +678,18 @@
                     }
                 }
 
-                const entry = { period, ball1, ball2, ball3, sum: ball1+ball2+ball3, combination: terms.combination, shape: terms.shape };
+                // 历史
+                const entry = {
+                    period,
+                    ball1: b1, ball2: b2, ball3: b3,
+                    sum: sum_val,
+                    combination: terms.combination,
+                    shape: terms.shape
+                };
                 saveHistory(entry);
                 renderHistory(getHistory());
 
-                // ----- 推送 -----
-                const digest = `${period}|${ball1}|${ball2}|${ball3}`;
-                if (digest !== lastPushDigest && TG_CONFIG.enabled) {
-                    lastPushDigest = digest;
-
-                    // 频道：发送图片卡片
-                    if (TG_CONFIG.channelId) {
-                        const caption = `<b>第${period}期</b> ${ball1}+${ball2}+${ball3}=${ball1+ball2+ball3} ${terms.combination}`;
-                        const img = await generateCardImage(dataObj);
-                        await sendPhotoToChannel(TG_CONFIG.channelId, img, caption);
-                    }
-
-                    // 群组：发送文字
-                    if (TG_CONFIG.groupId) {
-                        const msg = buildGroupMessage(dataObj);
-                        await sendTextToGroup(TG_CONFIG.groupId, msg);
-                    }
-                }
-
-                console.log('[PC28] 更新:', period, ball1, ball2, ball3, '=', ball1+ball2+ball3);
+                console.log('[PC28] 更新:', period, b1, b2, b3, '=', sum_val);
 
             } catch (err) {
                 console.error('[PC28] 加载失败:', err);
@@ -874,9 +733,6 @@
         window.addEventListener('beforeunload', () => { if (timer) clearInterval(timer); });
 
         console.log('[PC28] 未来数据站已启动');
-        console.log('  频道:', TG_CONFIG.channelId);
-        console.log('  群组:', TG_CONFIG.groupId);
-        console.log('  Bot Token:', TG_CONFIG.botToken.substring(0, 10) + '...');
     })();
 </script>
 </body>
