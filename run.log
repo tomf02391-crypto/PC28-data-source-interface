@@ -1,7 +1,71 @@
+[循环] 循环模式启动，计划运行 25 分钟（每 3 分钟抓取一次）
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471519 结果: 2+5+9=16 大双 形态:杂六
-[去重] 上次已推送: '3471509', 本次: 3471519
+[数] 最新期号: 3471533 结果: 3+4+5=12 小双 形态:顺子
+[去重] 上次已推送: '3471519', 本次: 3471533
 [图] result.png 生成成功
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 50, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787149752, "photo": [{"file_id":
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 156787, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "万亿🇨🇦PC28🇨🇦", "username": "wyjtpc28a", "type": "supergroup"}, "date": 1787149752, "text": "📢 最新开奖信息\n📅 最新期号:
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 51, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787152760, "photo": [{"file_id":
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 156807, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "万亿🇨🇦PC28🇨🇦", "username": "wyjtpc28a", "type": "supergroup"}, "date": 1787152761, "text": "📢 最新开奖信息\n📅 最新期号:
 ✅ 推送完成
+[循环] 等待 180s 后继续...
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471534 结果: 1+6+7=14 大双 形态:杂六
+[去重] 上次已推送: '3471533', 本次: 3471534
+[图] result.png 生成成功
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 52, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787152943, "photo": [{"file_id":
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 156809, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "万亿🇨🇦PC28🇨🇦", "username": "wyjtpc28a", "type": "supergroup"}, "date": 1787152943, "text": "📢 最新开奖信息\n📅 最新期号:
+✅ 推送完成
+[循环] 等待 180s 后继续...
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471535 结果: 7+5+1=13 小单 形态:杂六
+[去重] 上次已推送: '3471534', 本次: 3471535
+[图] result.png 生成成功
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 53, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787153125, "photo": [{"file_id":
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 156811, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "万亿🇨🇦PC28🇨🇦", "username": "wyjtpc28a", "type": "supergroup"}, "date": 1787153126, "text": "📢 最新开奖信息\n📅 最新期号:
+✅ 推送完成
+[循环] 等待 180s 后继续...
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471536 结果: 0+4+4=8 小双 形态:对子
+[去重] 上次已推送: '3471535', 本次: 3471536
+[图] result.png 生成成功
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 54, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787153316, "photo": [{"file_id":
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 156813, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "万亿🇨🇦PC28🇨🇦", "username": "wyjtpc28a", "type": "supergroup"}, "date": 1787153316, "text": "📢 最新开奖信息\n📅 最新期号:
+✅ 推送完成
+[循环] 等待 180s 后继续...
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471537 结果: 3+9+6=18 大双 形态:杂六
+[去重] 上次已推送: '3471536', 本次: 3471537
+[图] result.png 生成成功
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 55, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787153498, "photo": [{"file_id":
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 156815, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "万亿🇨🇦PC28🇨🇦", "username": "wyjtpc28a", "type": "supergroup"}, "date": 1787153498, "text": "📢 最新开奖信息\n📅 最新期号:
+✅ 推送完成
+[循环] 等待 180s 后继续...
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471538 结果: 6+9+0=15 大单 形态:杂六
+[去重] 上次已推送: '3471537', 本次: 3471538
+[图] result.png 生成成功
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 56, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787153680, "photo": [{"file_id":
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 156816, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "万亿🇨🇦PC28🇨🇦", "username": "wyjtpc28a", "type": "supergroup"}, "date": 1787153681, "text": "📢 最新开奖信息\n📅 最新期号:
+✅ 推送完成
+[循环] 等待 180s 后继续...
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471538 结果: 6+9+0=15 大单 形态:杂六
+[去重] 上次已推送: '3471538', 本次: 3471538
+已推送过该期，跳过推送（仅更新数据文件）
+[循环] 等待 180s 后继续...
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471539 结果: 8+4+0=12 小双 形态:杂六
+[去重] 上次已推送: '3471538', 本次: 3471539
+[图] result.png 生成成功
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 57, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787154043, "photo": [{"file_id":
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 156819, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "万亿🇨🇦PC28🇨🇦", "username": "wyjtpc28a", "type": "supergroup"}, "date": 1787154044, "text": "📢 最新开奖信息\n📅 最新期号:
+✅ 推送完成
+[循环] 等待 180s 后继续...
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471540 结果: 9+2+2=13 小单 形态:对子
+[去重] 上次已推送: '3471539', 本次: 3471540
+[图] result.png 生成成功
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 58, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787154226, "photo": [{"file_id":
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 156821, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "万亿🇨🇦PC28🇨🇦", "username": "wyjtpc28a", "type": "supergroup"}, "date": 1787154226, "text": "📢 最新开奖信息\n📅 最新期号:
+✅ 推送完成
+[循环] 等待 32s 后继续...
+[循环] 结束：共尝试 9 次，成功推送 8 期
