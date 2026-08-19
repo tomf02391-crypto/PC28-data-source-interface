@@ -20,7 +20,7 @@ jobs:
           sudo apt-get install -y jq
           pip install pillow
 
-      - name: Fetch data from multiple sources
+      - name: Fetch latest data directly
         run: |
           TIMESTAMP=$(date +%s)
           curl -sL -A "Mozilla/5.0" \
@@ -28,22 +28,19 @@ jobs:
             -H "Pragma: no-cache" \
             -H "Expires: 0" \
             "https://pc28.help/api/kj.json?t=${TIMESTAMP}" -o data_pc28.json
-          curl -sL -A "Mozilla/5.0" \
-            -H "Cache-Control: no-cache, no-store, must-revalidate" \
-            -H "Pragma: no-cache" \
-            -H "Expires: 0" \
-            "https://yu28.top/api/kj.json?t=${TIMESTAMP}" -o data_yu28.json
+
           echo "=== pc28.help 数据 ==="
           cat data_pc28.json
           echo ""
-          echo "=== yu28.top 数据 ==="
-          cat data_yu28.json
-          echo ""
+
+          # 提取期号
+          PERIOD=$(jq -r '.data[0].nbr' data_pc28.json 2>/dev/null || echo "")
+          echo "最新期号: $PERIOD"
 
       - name: Generate card and push to Telegram
         run: |
           python3 << 'PYEOF'
-          import json, os, sys, subprocess
+          import json, os, sys, subprocess, time
           from PIL import Image, ImageDraw, ImageFont
 
           # ==========================================
@@ -53,15 +50,7 @@ jobs:
           CHANNEL_ID = "@pc28jndkj"
           GROUP_ID = "-1003480986680"
 
-          def parse_nbrs_from_nbrs_field(nbrs_str):
-              if not nbrs_str:
-                  return None
-              nums = [int(x.strip()) for x in nbrs_str.split(',') if x.strip()]
-              if len(nums) == 20:
-                  return nums
-              return None
-
-          def parse_from_number_field(number_str):
+          def parse_from_number(number_str):
               if not number_str:
                   return None
               parts = number_str.split('+')
@@ -69,105 +58,53 @@ jobs:
                   return [int(p.strip()) for p in parts]
               return None
 
-          def calculate_from_nbrs(nums):
-              idx1 = [1, 4, 7, 10, 13, 16]
-              idx2 = [2, 5, 8, 11, 14, 17]
-              idx3 = [3, 6, 9, 12, 15, 18]
-              b1 = sum(nums[i] for i in idx1) % 10
-              b2 = sum(nums[i] for i in idx2) % 10
-              b3 = sum(nums[i] for i in idx3) % 10
-              return [b1, b2, b3]
+          # 读取数据
+          with open('data_pc28.json', 'r') as f:
+              data = json.load(f)
 
-          # 读取两个数据源
-          sources = []
-          for name, filename in [('pc28.help', 'data_pc28.json'), ('yu28.top', 'data_yu28.json')]:
-              try:
-                  with open(filename, 'r') as f:
-                      data = json.load(f)
-                  if data.get('data') and len(data['data']) > 0:
-                      item = data['data'][0]
-                      sources.append({
-                          'name': name,
-                          'item': item,
-                          'period': item.get('nbr', ''),
-                          'date': item.get('date', ''),
-                          'time': item.get('time', ''),
-                          'nbrs': item.get('nbrs', ''),
-                          'number': item.get('number', ''),
-                          'combination': item.get('combination', ''),
-                          'num': item.get('num', '')
-                      })
-              except:
-                  pass
-
-          if not sources:
-              print("❌ 两个数据源都无效")
+          if not data.get('data') or len(data['data']) == 0:
+              print("❌ 无数据")
               sys.exit(0)
 
-          # 智能选择最优数据源
-          best_source = None
-          best_balls = None
-          best_period = None
+          item = data['data'][0]
+          period = item.get('nbr', '未知')
+          date = item.get('date', '')
+          time = item.get('time', '')
+          number = item.get('number', '')
+          combination = item.get('combination', '')
 
-          for src in sources:
-              print(f"\n📡 检查数据源: {src['name']}")
-              print(f"   期号: {src['period']}")
-              print(f"   nbrs: {src['nbrs'][:50] if src['nbrs'] else '无'}")
-              print(f"   number: {src['number'] if src['number'] else '无'}")
+          print(f"期号: {period}")
+          print(f"number: {number}")
+          print(f"combination: {combination}")
 
-              if src['nbrs']:
-                  nums = parse_nbrs_from_nbrs_field(src['nbrs'])
-                  if nums:
-                      balls = calculate_from_nbrs(nums)
-                      print(f"   ✅ 从 nbrs 计算: {balls[0]}+{balls[1]}+{balls[2]}")
-                      best_source = src
-                      best_balls = balls
-                      best_period = src['period']
-                      break
-
-              if src['number']:
-                  balls = parse_from_number_field(src['number'])
-                  if balls:
-                      print(f"   ✅ 从 number 解析: {balls[0]}+{balls[1]}+{balls[2]}")
-                      if not best_source or src['period'] > best_period:
-                          best_source = src
-                          best_balls = balls
-                          best_period = src['period']
-
-          if not best_source or not best_balls:
-              print("❌ 所有数据源都无法解析出有效号码")
+          # 解析三个球
+          balls = parse_from_number(number)
+          if not balls:
+              print("❌ 无法解析号码")
               sys.exit(0)
 
-          # 使用最佳数据
-          item = best_source['item']
-          period = best_source['period']
-          date = best_source['date']
-          time = best_source['time']
-          b1, b2, b3 = best_balls
-
+          b1, b2, b3 = balls
           sum_val = b1 + b2 + b3
-          big_small = "小" if sum_val <= 13 else "大"
-          odd_even = "双" if sum_val % 2 == 0 else "单"
-          combo = big_small + odd_even
 
-          if best_source.get('combination'):
-              combo = best_source['combination']
+          # 组合
+          if combination:
+              combo = combination
+          else:
+              big_small = "小" if sum_val <= 13 else "大"
+              odd_even = "双" if sum_val % 2 == 0 else "单"
+              combo = big_small + odd_even
 
           # 形态判断
           if b1 == b2 and b2 == b3:
               shape = "豹子"
           elif b1 == b2 or b2 == b3 or b1 == b3:
               shape = "对子"
-          elif (b2 - b1 == 1 and b3 - b2 == 1):
+          elif (b2 - b1 == 1 and b3 - b2 == 1) or (b1 - b2 == 1 and b2 - b3 == 1):
               shape = "顺子"
           else:
               shape = "杂六"
 
-          print(f"\n📊 最终结果 (来源: {best_source['name']})")
-          print(f"   期号: {period}")
-          print(f"   号码: {b1}+{b2}+{b3}={sum_val}")
-          print(f"   组合: {combo}")
-          print(f"   形态: {shape}")
+          print(f"结果: {b1}+{b2}+{b3}={sum_val} {combo} 形态:{shape}")
 
           # 生成图片
           width, height = 800, 420
@@ -193,8 +130,8 @@ jobs:
           radius = 52
           spacing = 140
           start_x = (width - 2*spacing) // 2 - 10
-          balls = [str(b1), str(b2), str(b3)]
-          for i, num in enumerate(balls):
+          balls_draw = [str(b1), str(b2), str(b3)]
+          for i, num in enumerate(balls_draw):
               x = start_x + i * spacing
               draw.ellipse((x-radius, circle_y-radius, x+radius, circle_y+radius),
                            fill=(20, 80, 140), outline=(100, 200, 255), width=2)
@@ -251,10 +188,10 @@ jobs:
           print("✅ 推送完成")
           PYEOF
 
-      - name: Commit and push data.json
+      - name: Commit and push files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data*.json result.png
+          git add data_pc28.json result.png
           git diff --staged --quiet || git commit -m "Update data ($(date -u +%Y-%m-%dT%H:%M:%SZ))" || true
           git push || true
