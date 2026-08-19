@@ -144,8 +144,13 @@ def write_last_sent(period):
 
 
 def save_data(item):
+    payload = {
+        "countdown": "",
+        "data": [item],
+        "message": "success"
+    }
     with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(item, f, ensure_ascii=False, indent=2)
+        json.dump(payload, f, ensure_ascii=False, indent=2)
 
 
 # ================= 图片 =================
