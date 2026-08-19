@@ -24,7 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --quiet --no-cache-dir pillow requests 2>&1 | tail -1 || true
+          pip install --quiet --no-cache-dir pillow requests numpy 2>&1 | tail -1 || true
           if fc-list 2>/dev/null | grep -qi "noto\|wqy\|uming"; then
             echo "字体已存在"
           else
