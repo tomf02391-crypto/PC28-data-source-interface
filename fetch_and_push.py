@@ -345,11 +345,11 @@ def main():
             print(f"[循环] 第 {attempts} 次异常: {e}")
             traceback.print_exc()
 
-        # 等待到下一个 3 分钟边界，或直到截止时间
+        # 等待到下一个 30 秒边界，或直到截止时间
         remaining = deadline - time.time()
         if remaining <= 0:
             break
-        wait = min(180, remaining)
+        wait = min(30, remaining)
         print(f"[循环] 等待 {wait:.0f}s 后继续...")
         time.sleep(wait)
 
