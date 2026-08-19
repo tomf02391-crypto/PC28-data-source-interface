@@ -29,12 +29,12 @@ jobs:
 
       - name: Fetch data
         run: |
-          curl -sL -A "Mozilla/5.0" "https://pc28.help/api/kj.json" -o data.json
+          curl -sL -A "Mozilla/5.0" "https://pc28.help/api/kj.json" -o data.json || true
           if [ ! -s data.json ] || ! grep -q '"data"' data.json; then
-            curl -sL -A "Mozilla/5.0" "https://yu28.top/api/kj.json" -o data.json
+            curl -sL -A "Mozilla/5.0" "https://yu28.top/api/kj.json" -o data.json || true
           fi
           echo "=== data.json ==="
-          cat data.json
+          cat data.json || true
 
       - name: Generate card and push to Telegram
         env:
@@ -42,15 +42,23 @@ jobs:
           CHANNEL_ID: ${{ secrets.TG_CHANNEL_ID }}
           GROUP_ID: ${{ secrets.TG_GROUP_ID }}
         run: |
-          PERIOD=$(jq -r '.data[0].nbr' data.json)
-          NUMBER=$(jq -r '.data[0].number' data.json)
-          COMBINATION=$(jq -r '.data[0].combination' data.json)
-          DATE=$(jq -r '.data[0].date' data.json)
-          TIME=$(jq -r '.data[0].time' data.json)
+          set +e
 
-          # 读取上次推送的期号（从缓存文件）
+          PERIOD=$(jq -r '.data[0].nbr' data.json 2>/dev/null || echo "")
+          NUMBER=$(jq -r '.data[0].number' data.json 2>/dev/null || echo "")
+          COMBINATION=$(jq -r '.data[0].combination' data.json 2>/dev/null || echo "")
+          DATE=$(jq -r '.data[0].date' data.json 2>/dev/null || echo "")
+          TIME=$(jq -r '.data[0].time' data.json 2>/dev/null || echo "")
+
+          if [ -z "$PERIOD" ] || [ "$PERIOD" == "null" ]; then
+            echo "❌ 数据无效，跳过"
+            exit 0
+          fi
+
+          echo "最新期号: $PERIOD"
+
           if [ -f last_period.txt ]; then
-            LAST_PERIOD=$(cat last_period.txt)
+            LAST_PERIOD=$(cat last_period.txt 2>/dev/null || echo "")
           else
             LAST_PERIOD=""
           fi
@@ -62,10 +70,10 @@ jobs:
 
           echo "🔄 新期号: $PERIOD"
 
-          BALL1=$(echo "$NUMBER" | cut -d'+' -f1)
-          BALL2=$(echo "$NUMBER" | cut -d'+' -f2)
-          BALL3=$(echo "$NUMBER" | cut -d'+' -f3)
-          SUM=$((BALL1 + BALL2 + BALL3))
+          BALL1=$(echo "$NUMBER" | cut -d'+' -f1 2>/dev/null || echo "0")
+          BALL2=$(echo "$NUMBER" | cut -d'+' -f2 2>/dev/null || echo "0")
+          BALL3=$(echo "$NUMBER" | cut -d'+' -f3 2>/dev/null || echo "0")
+          SUM=$((BALL1 + BALL2 + BALL3 2>/dev/null || echo 0))
           COMBO="$COMBINATION"
 
           if [ "$BALL1" == "$BALL2" ] && [ "$BALL2" == "$BALL3" ]; then
@@ -79,19 +87,20 @@ jobs:
           fi
 
           export PERIOD BALL1 BALL2 BALL3 SUM COMBO SHAPE DATE TIME
-          python3 << 'PYEOF'
+
+          python3 << 'PYEOF' || true
           from PIL import Image, ImageDraw, ImageFont
           import os
 
-          period = os.environ['PERIOD']
-          ball1 = os.environ['BALL1']
-          ball2 = os.environ['BALL2']
-          ball3 = os.environ['BALL3']
-          sum_val = os.environ['SUM']
-          combo = os.environ['COMBO']
-          shape = os.environ['SHAPE']
-          date = os.environ['DATE']
-          time = os.environ['TIME']
+          period = os.environ.get('PERIOD', '未知')
+          ball1 = os.environ.get('BALL1', '0')
+          ball2 = os.environ.get('BALL2', '0')
+          ball3 = os.environ.get('BALL3', '0')
+          sum_val = os.environ.get('SUM', '0')
+          combo = os.environ.get('COMBO', '')
+          shape = os.environ.get('SHAPE', '杂六')
+          date = os.environ.get('DATE', '')
+          time = os.environ.get('TIME', '')
 
           width, height = 800, 420
           img = Image.new('RGB', (width, height), color=(15, 31, 47))
@@ -144,13 +153,13 @@ jobs:
             -F "caption=$CAPTION" \
             -F "parse_mode=HTML" \
             "https://api.telegram.org/bot${TG_TOKEN}/sendPhoto" \
-            -o /tmp/channel_resp.json
+            -o /tmp/channel_resp.json || true
 
-          if grep -q '"ok":true' /tmp/channel_resp.json; then
+          if grep -q '"ok":true' /tmp/channel_resp.json 2>/dev/null; then
             echo "✅ 频道图片发送成功"
           else
             echo "❌ 频道图片发送失败:"
-            cat /tmp/channel_resp.json
+            cat /tmp/channel_resp.json 2>/dev/null || true
           fi
 
           GROUP_MSG="📢 最新开奖信息\n📅 最新期号: ${PERIOD}\n🔢 开奖结果: ${BALL1}+${BALL2}+${BALL3}=${SUM} ${COMBO}\n🎉 号码形式: ${SHAPE}|中\n⏰ 开奖时间: ${DATE} ${TIME}"
@@ -160,17 +169,19 @@ jobs:
             -H "Content-Type: application/json" \
             -d "{\"chat_id\":\"$GROUP_ID\",\"text\":\"$GROUP_MSG\",\"parse_mode\":\"HTML\",\"disable_web_page_preview\":true}" \
             "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
-            -o /tmp/group_resp.json
+            -o /tmp/group_resp.json || true
 
-          if grep -q '"ok":true' /tmp/group_resp.json; then
+          if grep -q '"ok":true' /tmp/group_resp.json 2>/dev/null; then
             echo "✅ 群组文字发送成功"
           else
             echo "❌ 群组文字发送失败:"
-            cat /tmp/group_resp.json
+            cat /tmp/group_resp.json 2>/dev/null || true
           fi
 
-          # 保存最新期号到缓存文件（用于下次运行）
           echo "$PERIOD" > last_period.txt
+          echo "✅ 已记录期号 $PERIOD"
+
+          exit 0
 
       - name: Save last period to cache
         uses: actions/cache@v4
