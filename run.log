@@ -1,7 +1,7 @@
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471495 结果: 7+3+8=18 大双 形态:杂六
-[去重] 上次已推送: '3471494', 本次: 3471495
+[数] 最新期号: 3471501 结果: 9+1+6=16 大双 形态:杂六
+[去重] 上次已推送: '3471495', 本次: 3471501
 [图] result.png 生成成功
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 46, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787144651, "photo": [{"file_id":
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 156745, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "万亿🇨🇦PC28🇨🇦", "username": "wyjtpc28a", "type": "supergroup"}, "date": 1787144652, "text": "📢 最新开奖信息\n📅 最新期号:
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 47, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787146046, "photo": [{"file_id":
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 156757, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "万亿🇨🇦PC28🇨🇦", "username": "wyjtpc28a", "type": "supergroup"}, "date": 1787146047, "text": "📢 最新开奖信息\n📅 最新期号:
 ✅ 推送完成
