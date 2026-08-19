@@ -9,10 +9,12 @@ jobs:
   fetch-and-push:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install dependencies
         run: |
@@ -20,28 +22,11 @@ jobs:
           sudo apt-get install -y jq
           pip install pillow
 
-      - name: Restore last period from cache
-        id: cache-last
-        uses: actions/cache@v4
-        with:
-          path: last_period.txt
-          key: last-period
-
       - name: Fetch data
         run: |
-          curl -sL -A "Mozilla/5.0" "https://pc28.help/api/kj.json" -o data.json || true
-          if [ ! -s data.json ] || ! grep -q '"data"' data.json; then
-            curl -sL -A "Mozilla/5.0" "https://yu28.top/api/kj.json" -o data.json || true
-          fi
-          echo "=== 完整 data.json ==="
-          cat data.json || true
-          echo ""
-          echo "=== 数据条数 ==="
-          jq '.data | length' data.json 2>/dev/null || echo "0"
-          echo "=== 第一条 ==="
-          jq '.data[0]' data.json 2>/dev/null || echo "无"
-          echo "=== 最后一条 ==="
-          jq '.data[-1]' data.json 2>/dev/null || echo "无"
+          curl -sL -A "Mozilla/5.0" "https://pc28.help/api/kj.json" -o data.json
+          echo "=== 拉取的数据 ==="
+          cat data.json
 
       - name: Generate card and push to Telegram
         env:
@@ -51,66 +36,27 @@ jobs:
         run: |
           set +e
 
-          # 取数组最后一个元素（最新数据）
-          PERIOD=$(jq -r '.data[-1].nbr' data.json 2>/dev/null || echo "")
-          NUMBER=$(jq -r '.data[-1].number' data.json 2>/dev/null || echo "")
-          COMBINATION=$(jq -r '.data[-1].combination' data.json 2>/dev/null || echo "")
-          DATE=$(jq -r '.data[-1].date' data.json 2>/dev/null || echo "")
-          TIME=$(jq -r '.data[-1].time' data.json 2>/dev/null || echo "")
-          NUM=$(jq -r '.data[-1].num' data.json 2>/dev/null || echo "")
+          PERIOD=$(jq -r '.data[0].nbr' data.json 2>/dev/null || echo "")
+          NUMBER=$(jq -r '.data[0].number' data.json 2>/dev/null || echo "")
+          COMBINATION=$(jq -r '.data[0].combination' data.json 2>/dev/null || echo "")
+          DATE=$(jq -r '.data[0].date' data.json 2>/dev/null || echo "")
+          TIME=$(jq -r '.data[0].time' data.json 2>/dev/null || echo "")
 
-          # 如果 combination 为空，尝试用 num 字段
-          if [ -z "$COMBINATION" ] || [ "$COMBINATION" == "null" ]; then
-            COMBINATION=""
-          fi
+          echo "最新期号: $PERIOD"
+          echo "号码: $NUMBER"
+          echo "组合: $COMBINATION"
 
-          echo "提取的最新数据:"
-          echo "  期号: $PERIOD"
-          echo "  number: $NUMBER"
-          echo "  combination: $COMBINATION"
-          echo "  num: $NUM"
-          echo "  date: $DATE"
-          echo "  time: $TIME"
-
+          # 如果数据无效则退出
           if [ -z "$PERIOD" ] || [ "$PERIOD" == "null" ]; then
             echo "❌ 数据无效，跳过"
             exit 0
           fi
 
-          if [ -f last_period.txt ]; then
-            LAST_PERIOD=$(cat last_period.txt 2>/dev/null || echo "")
-          else
-            LAST_PERIOD=""
-          fi
-
-          if [ "$PERIOD" == "$LAST_PERIOD" ]; then
-            echo "⏭️ 期号未变化 ($PERIOD)，跳过推送"
-            exit 0
-          fi
-
-          echo "🔄 新期号: $PERIOD"
-
-          # 解析三个球
-          BALL1=$(echo "$NUMBER" | cut -d'+' -f1 2>/dev/null | tr -d ' ' || echo "0")
-          BALL2=$(echo "$NUMBER" | cut -d'+' -f2 2>/dev/null | tr -d ' ' || echo "0")
-          BALL3=$(echo "$NUMBER" | cut -d'+' -f3 2>/dev/null | tr -d ' ' || echo "0")
-          SUM=$((BALL1 + BALL2 + BALL3 2>/dev/null || echo 0))
+          BALL1=$(echo "$NUMBER" | cut -d'+' -f1 | tr -d ' ')
+          BALL2=$(echo "$NUMBER" | cut -d'+' -f2 | tr -d ' ')
+          BALL3=$(echo "$NUMBER" | cut -d'+' -f3 | tr -d ' ')
+          SUM=$((BALL1 + BALL2 + BALL3))
           COMBO="$COMBINATION"
-
-          # 如果 combination 为空，根据和值和大小判断
-          if [ -z "$COMBO" ]; then
-            if [ $SUM -le 13 ]; then
-              BIG_SMALL="小"
-            else
-              BIG_SMALL="大"
-            fi
-            if [ $((SUM % 2)) -eq 0 ]; then
-              ODD_EVEN="双"
-            else
-              ODD_EVEN="单"
-            fi
-            COMBO="${BIG_SMALL}${ODD_EVEN}"
-          fi
 
           # 判断形态
           if [ "$BALL1" == "$BALL2" ] && [ "$BALL2" == "$BALL3" ]; then
@@ -216,13 +162,14 @@ jobs:
             cat /tmp/group_resp.json 2>/dev/null || true
           fi
 
-          echo "$PERIOD" > last_period.txt
-          echo "✅ 已记录期号 $PERIOD"
+          echo "✅ 推送完成，期号: $PERIOD"
 
           exit 0
 
-      - name: Save last period to cache
-        uses: actions/cache@v4
-        with:
-          path: last_period.txt
-          key: last-period
+      - name: Commit and push data.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git diff --staged --quiet || git commit -m "Update data.json"
+          git push || true
