@@ -2,7 +2,7 @@ name: Fetch PC28 Data + Push to Telegram
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/3 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -15,7 +15,7 @@ concurrency:
 jobs:
   fetch-and-push:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --quiet --no-cache-dir pillow requests || pip install --quiet pillow requests
+          pip install --quiet --no-cache-dir pillow requests 2>&1 | tail -1 || true
           if fc-list 2>/dev/null | grep -qi "noto\|wqy\|uming"; then
             echo "字体已存在"
           else
@@ -32,14 +32,14 @@ jobs:
             sudo apt-get install -y -qq fonts-noto-cjk >/dev/null 2>&1 || true
           fi
 
-      - name: Fetch & validate & push to Telegram (loop 25min)
+      - name: Fetch & validate & push to Telegram (loop 55min)
         env:
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHANNEL_ID: ${{ secrets.TG_CHANNEL_ID }}
           TG_GROUP_ID: ${{ secrets.TG_GROUP_ID }}
           YU28_API_KEY: ${{ secrets.YU28_API_KEY }}
         run: |
-          python3 fetch_and_push.py --minutes 25 > run.log 2>&1 || { echo "EXIT_CODE=$?" >> run.log; }
+          python3 fetch_and_push.py --minutes 55 > run.log 2>&1 || { echo "EXIT_CODE=$?" >> run.log; }
           cat run.log
           if grep -q "^EXIT_CODE=" run.log; then exit 1; fi
 
