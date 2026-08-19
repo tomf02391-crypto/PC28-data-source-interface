@@ -175,8 +175,10 @@ def save_data(item):
 
 # ================= 图片 =================
 def find_font(size, bold=False, cjk=False):
+    base = os.path.dirname(os.path.abspath(__file__))
     if cjk:
         candidates = [
+            os.path.join(base, "fonts", "wqy-microhei.ttc"),
             "/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc",
             "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
             "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
@@ -250,7 +252,7 @@ def gen_image(period, date, time_str, balls, s, combo, shape):
     summer = is_summer()
     tpl = TPL_SUMMER if summer else TPL_WINTER
     img = Image.open(tpl).convert("RGB")
-    img = erase_top_text(img, summer)
+    # 模板为已擦除期号的干净版（templates/ 由离线 inpaint 预处理），无需运行时擦除
     img = repaint_balls(img, BALLS, b1, b2, b3, s)
 
     draw = ImageDraw.Draw(img)
