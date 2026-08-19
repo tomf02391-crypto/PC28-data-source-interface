@@ -253,21 +253,19 @@ def send_message(period, date, time_str, balls, s, combo, shape):
     return ok
 
 
-# ================= 主流程 =================
-def main():
-    if not TG_TOKEN:
-        raise SystemExit("缺少 TG_BOT_TOKEN（secrets 未配置）")
-
+# ================= 单次抓取推送 =================
+def run_once(force=False):
+    """抓取最新一期并推送。返回 True 表示本次有推送动作。"""
     item, src = fetch_latest()
     period, date, time_str, balls, s, combo, shape = validate(item)
     print(f"[数] 最新期号: {period} 结果: {'+'.join(map(str, balls))}={s} {combo} 形态:{shape}")
 
     last = read_last_sent()
     print(f"[去重] 上次已推送: {last!r}, 本次: {period}")
-    if last and period <= last:
+    if last and period <= last and not force:
         print("已推送过该期，跳过推送（仅更新数据文件）")
         save_data(item)
-        return 0
+        return False
 
     gen_image(period, date, time_str, balls, s, combo, shape)
     ok_channel = send_photo(period, balls, s, combo)
@@ -277,9 +275,61 @@ def main():
         write_last_sent(period)
         save_data(item)
         print("✅ 推送完成")
-        return 0
+        return True
 
     raise SystemExit("❌ 推送失败（频道与群组均未成功）")
+
+
+# ================= 主流程 =================
+def main():
+    if not TG_TOKEN:
+        raise SystemExit("缺少 TG_BOT_TOKEN（secrets 未配置）")
+
+    # 循环模式：--minutes N 表示连续运行 N 分钟，每 3 分钟抓取推送一次
+    # 默认单次模式，保持向后兼容
+    minutes = None
+    args = sys.argv[1:]
+    if "--minutes" in args:
+        idx = args.index("--minutes")
+        if idx + 1 < len(args):
+            minutes = max(1, int(args[idx + 1]))
+
+    if not minutes:
+        run_once()
+        return 0
+
+    start = time.time()
+    deadline = start + minutes * 60
+    attempts = 0
+    pushed = 0
+    print(f"[循环] 循环模式启动，计划运行 {minutes} 分钟（每 3 分钟抓取一次）")
+
+    while True:
+        now = time.time()
+        if now >= deadline:
+            break
+        attempts += 1
+        try:
+            did_push = run_once()
+            if did_push:
+                pushed += 1
+        except SystemExit as e:
+            print(f"[循环] 第 {attempts} 次异常退出: {e}")
+        except Exception as e:
+            import traceback
+            print(f"[循环] 第 {attempts} 次异常: {e}")
+            traceback.print_exc()
+
+        # 等待到下一个 3 分钟边界，或直到截止时间
+        remaining = deadline - time.time()
+        if remaining <= 0:
+            break
+        wait = min(180, remaining)
+        print(f"[循环] 等待 {wait:.0f}s 后继续...")
+        time.sleep(wait)
+
+    print(f"[循环] 结束：共尝试 {attempts} 次，成功推送 {pushed} 期")
+    return 0
 
 
 if __name__ == "__main__":
