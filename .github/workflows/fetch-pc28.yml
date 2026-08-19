@@ -2,7 +2,7 @@ name: Fetch PC28 Data + Push to Telegram
 
 on:
   schedule:
-    - cron: '*/3 * * * *'
+    - cron: '*/3 * * * *'   # 每3分钟运行一次（适配3.5分钟开奖周期）
   workflow_dispatch:
 
 jobs:
@@ -37,28 +37,70 @@ jobs:
           set +e
 
           PERIOD=$(jq -r '.data[0].nbr' data.json 2>/dev/null || echo "")
-          NUMBER=$(jq -r '.data[0].number' data.json 2>/dev/null || echo "")
-          COMBINATION=$(jq -r '.data[0].combination' data.json 2>/dev/null || echo "")
+          NBRS=$(jq -r '.data[0].nbrs' data.json 2>/dev/null || echo "")
           DATE=$(jq -r '.data[0].date' data.json 2>/dev/null || echo "")
           TIME=$(jq -r '.data[0].time' data.json 2>/dev/null || echo "")
 
-          echo "最新期号: $PERIOD"
-          echo "号码: $NUMBER"
-          echo "组合: $COMBINATION"
+          echo "期号: $PERIOD"
+          echo "原始号码: $NBRS"
 
-          # 如果数据无效则退出
           if [ -z "$PERIOD" ] || [ "$PERIOD" == "null" ]; then
             echo "❌ 数据无效，跳过"
             exit 0
           fi
 
-          BALL1=$(echo "$NUMBER" | cut -d'+' -f1 | tr -d ' ')
-          BALL2=$(echo "$NUMBER" | cut -d'+' -f2 | tr -d ' ')
-          BALL3=$(echo "$NUMBER" | cut -d'+' -f3 | tr -d ' ')
-          SUM=$((BALL1 + BALL2 + BALL3))
-          COMBO="$COMBINATION"
+          if [ -z "$NBRS" ] || [ "$NBRS" == "null" ]; then
+            # 备用格式：直接使用 number
+            NUMBER=$(jq -r '.data[0].number' data.json 2>/dev/null || echo "")
+            if [ -n "$NUMBER" ] && [ "$NUMBER" != "null" ]; then
+              BALL1=$(echo "$NUMBER" | cut -d'+' -f1 | tr -d ' ')
+              BALL2=$(echo "$NUMBER" | cut -d'+' -f2 | tr -d ' ')
+              BALL3=$(echo "$NUMBER" | cut -d'+' -f3 | tr -d ' ')
+            else
+              echo "❌ 无法解析号码，跳过"
+              exit 0
+            fi
+          else
+            # 从20个号码中计算
+            IFS=',' read -ra ARR <<< "$NBRS"
+            IDX1=(1 4 7 10 13 16)
+            SUM1=0
+            for i in "${IDX1[@]}"; do
+              SUM1=$((SUM1 + ARR[i]))
+            done
+            BALL1=$((SUM1 % 10))
 
-          # 判断形态
+            IDX2=(2 5 8 11 14 17)
+            SUM2=0
+            for i in "${IDX2[@]}"; do
+              SUM2=$((SUM2 + ARR[i]))
+            done
+            BALL2=$((SUM2 % 10))
+
+            IDX3=(3 6 9 12 15 18)
+            SUM3=0
+            for i in "${IDX3[@]}"; do
+              SUM3=$((SUM3 + ARR[i]))
+            done
+            BALL3=$((SUM3 % 10))
+          fi
+
+          SUM=$((BALL1 + BALL2 + BALL3))
+          SPECIAL=$((SUM % 10))
+
+          if [ $SUM -le 13 ]; then
+            BIG_SMALL="小"
+          else
+            BIG_SMALL="大"
+          fi
+          if [ $((SUM % 2)) -eq 0 ]; then
+            ODD_EVEN="双"
+          else
+            ODD_EVEN="单"
+          fi
+          COMBO="${BIG_SMALL}${ODD_EVEN}"
+
+          # 形态判断
           if [ "$BALL1" == "$BALL2" ] && [ "$BALL2" == "$BALL3" ]; then
             SHAPE="豹子"
           elif [ "$BALL1" == "$BALL2" ] || [ "$BALL2" == "$BALL3" ] || [ "$BALL1" == "$BALL3" ]; then
@@ -69,9 +111,10 @@ jobs:
             SHAPE="杂六"
           fi
 
+          echo "计算结果: $BALL1+$BALL2+$BALL3=$SUM ($COMBO) 形态:$SHAPE"
+
           export PERIOD BALL1 BALL2 BALL3 SUM COMBO SHAPE DATE TIME
 
-          # 生成图片
           python3 << 'PYEOF' || true
           from PIL import Image, ImageDraw, ImageFont
           import os
@@ -163,7 +206,6 @@ jobs:
           fi
 
           echo "✅ 推送完成，期号: $PERIOD"
-
           exit 0
 
       - name: Commit and push data.json
@@ -171,5 +213,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json
-          git diff --staged --quiet || git commit -m "Update data.json"
+          git diff --staged --quiet || git commit -m "Update data.json ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
           git push || true
