@@ -1,8 +1,14 @@
 {
-  "nbr": "3471398",
-  "date": "2026-08-19",
-  "time": "14:51:30",
-  "number": "2+6+6",
-  "num": "14",
-  "combination": "大双"
+  "countdown": "",
+  "data": [
+    {
+      "nbr": "3471399",
+      "date": "2026-08-19",
+      "time": "14:55:00",
+      "number": "2+0+3",
+      "num": "5",
+      "combination": "小单"
+    }
+  ],
+  "message": "success"
 }
