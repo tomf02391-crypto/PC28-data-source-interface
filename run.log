@@ -1,2 +1,9 @@
-缺少 TG_BOT_TOKEN（secrets 未配置）
-EXIT_CODE=1
+/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py:106: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  now_bj = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471389 结果: 1+8+7=16 大双 形态:杂六
+[去重] 上次已推送: '', 本次: 3471389
+[图] result.png 生成成功
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 31, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787120465, "photo": [{"file_id":
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 156427, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "万亿🇨🇦PC28🇨🇦", "username": "wyjtpc28a", "type": "supergroup"}, "date": 1787120465, "text": "📢 最新开奖信息\n📅 最新期号:
+✅ 推送完成
