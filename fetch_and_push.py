@@ -43,14 +43,16 @@ HEADERS = {
 def fetch_latest():
     """多数据源轮询：按顺序尝试，返回第一个成功的结果 (item, source_name)"""
     t = int(time.time())
-    sources = [("pc28.help", f"https://pc28.help/api/kj.json?t={t}")]
+    sources = [("pc28.help", f"https://pc28.help/api/kj.json?t={t}", {})]
     if YU28_API_KEY:
-        sources.append(("yu28.top", f"https://yu28.top/api/kj.json?t={t}&key={YU28_API_KEY}"))
+        sources.append(("yu28.top", f"https://yu28.top/api/kj.json?t={t}", {"X-Api-Key": YU28_API_KEY}))
 
     errors = []
-    for name, url in sources:
+    for name, url, extra_headers in sources:
         try:
-            req = urllib.request.Request(url, headers=HEADERS)
+            headers = dict(HEADERS)
+            headers.update(extra_headers)
+            req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=12) as resp:
                 raw = resp.read().decode("utf-8", errors="replace")
             data = json.loads(raw)
