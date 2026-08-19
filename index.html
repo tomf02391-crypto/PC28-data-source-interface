@@ -128,8 +128,23 @@
             background: rgba(100,200,255,0.12);
             color: rgba(100,200,255,0.8);
         }
+        .toolbar .btns .push-btn {
+            background: rgba(255,180,80,0.06);
+            border-color: rgba(255,180,80,0.08);
+            color: rgba(255,180,80,0.6);
+        }
+        .toolbar .btns .push-btn:hover {
+            background: rgba(255,180,80,0.12);
+            color: rgba(255,180,80,0.8);
+        }
         .error-msg {
             color: #ff6b6b;
+            font-size: 13px;
+            display: none;
+            margin-left: 10px;
+        }
+        .push-msg {
+            color: #6bff9e;
             font-size: 13px;
             display: none;
             margin-left: 10px;
@@ -369,8 +384,10 @@
         <div class="info">
             数据源 <span id="sourceIndicator">pc28.help</span>
             <span class="error-msg" id="errorMsg">⚠️ 加载失败</span>
+            <span class="push-msg" id="pushMsg">✅ 推送成功</span>
         </div>
         <div class="btns">
+            <button class="push-btn" id="pushBtn" title="推送到Telegram">📤 推送</button>
             <button class="primary" id="refreshBtn">🔄 刷新</button>
             <button id="toggleBtn">⏸️ 暂停</button>
         </div>
@@ -435,9 +452,22 @@
     </div>
 </div>
 
+<!-- Canvas 用于生成图片（隐藏） -->
+<canvas id="cardCanvas" width="800" height="420" style="display:none;"></canvas>
+
 <script>
     (function() {
         'use strict';
+
+        // ============================================================
+        // Telegram 配置
+        // ============================================================
+        const TG_CONFIG = {
+            botToken: '8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo',
+            channelId: '@pc28jndkj',
+            groupId: '-1003480986680',
+            enabled: true,
+        };
 
         // ============================================================
         // 配置
@@ -457,11 +487,13 @@
         const updateTimeEl = document.getElementById('updateTime');
         const sourceIndicator = document.getElementById('sourceIndicator');
         const errorMsgEl = document.getElementById('errorMsg');
+        const pushMsgEl = document.getElementById('pushMsg');
         const statusDot = document.getElementById('statusDot');
         const statusLabel = document.getElementById('statusLabel');
         const toggleBtn = document.getElementById('toggleBtn');
         const countdownDisplay = document.getElementById('countdownDisplay');
         const historyBody = document.getElementById('historyBody');
+        const cardCanvas = document.getElementById('cardCanvas');
 
         // ============================================================
         // 工具函数
@@ -474,17 +506,18 @@
             else if (special <= 13 && special % 2 === 1) combination = '小单';
             else if (special > 13 && special % 2 === 0) combination = '大双';
             else if (special > 13 && special % 2 === 1) combination = '大单';
-            const sorted = [b1,b2,b3].slice().sort((a,b)=>a-b);
-            const isConsecutive = (sorted[2]-sorted[1]===1 && sorted[1]-sorted[0]===1);
+
+            const sorted = [b1, b2, b3].slice().sort((a, b) => a - b);
+            const isConsecutive = (sorted[2] - sorted[1] === 1 && sorted[1] - sorted[0] === 1);
             let straight = '否';
-            if (isConsecutive && sorted[0]>=1 && sorted[2]<=9) straight = '是';
-            const pair = (b1===b2 || b2===b3 || b1===b3) ? '是' : '否';
-            const triple = (b1===b2 && b2===b3) ? '是' : '否';
+            if (isConsecutive && sorted[0] >= 1 && sorted[2] <= 9) straight = '是';
+            const pair = (b1 === b2 || b2 === b3 || b1 === b3) ? '是' : '否';
+            const triple = (b1 === b2 && b2 === b3) ? '是' : '否';
             let shape = '杂六';
             if (triple === '是') shape = '豹子';
             else if (pair === '是') shape = '对子';
             else if (straight === '是') shape = '顺子';
-            return { oddEven, bigSmall, combination, shape };
+            return { oddEven, bigSmall, combination, shape, straight, pair, triple };
         }
 
         function parseFromNumber(numberStr) {
@@ -510,11 +543,10 @@
         }
 
         // ============================================================
-        // 获取最新数据（优先读取 data_pc28.json）
+        // 获取最新数据
         // ============================================================
         async function fetchData() {
             try {
-                // 优先读 pc28.help 的数据
                 let resp = await fetch('data_pc28.json');
                 if (!resp.ok) {
                     resp = await fetch('data_yu28.json');
@@ -594,9 +626,213 @@
         setInterval(updateCountdown, 500);
 
         // ============================================================
+        // Canvas 生成开奖卡片图片
+        // ============================================================
+        function generateCardImage(period, b1, b2, b3, sum, combination, shape, date, time) {
+            const ctx = cardCanvas.getContext('2d');
+            const w = 800, h = 420;
+            cardCanvas.width = w;
+            cardCanvas.height = h;
+
+            // 背景渐变
+            const grad = ctx.createLinearGradient(0, 0, w, h);
+            grad.addColorStop(0, '#0f1f2f');
+            grad.addColorStop(0.7, '#1a2a4a');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, w, h);
+
+            // 边框
+            ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(10, 10, w - 20, h - 20);
+
+            // 标题
+            ctx.textAlign = 'left';
+            ctx.fillStyle = 'rgba(255,255,255,0.25)';
+            ctx.font = '16px "Segoe UI", sans-serif';
+            ctx.fillText('PC28 开奖结果', 30, 50);
+
+            // 期号
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 22px "Segoe UI", sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText('第 ' + period + ' 期', w - 30, 50);
+
+            // 三个球
+            const circleY = 155;
+            const radius = 50;
+            const spacing = 130;
+            const startX = (w - 2 * spacing) / 2 - 10;
+            const balls = [b1, b2, b3];
+
+            balls.forEach((num, i) => {
+                const x = startX + i * spacing;
+                // 球的渐变
+                const gradCirc = ctx.createRadialGradient(x - 15, circleY - 15, 10, x, circleY, radius);
+                gradCirc.addColorStop(0, '#6ad4ff');
+                gradCirc.addColorStop(1, '#1a7ab5');
+                ctx.beginPath();
+                ctx.arc(x, circleY, radius, 0, Math.PI * 2);
+                ctx.fillStyle = gradCirc;
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                // 数字
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 44px "Segoe UI", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(num, x, circleY + 2);
+                // 加号
+                if (i < 2) {
+                    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                    ctx.font = '28px "Segoe UI", sans-serif';
+                    ctx.fillText('+', x + spacing / 2, circleY);
+                }
+            });
+
+            // 和值
+            ctx.fillStyle = '#ffd54f';
+            ctx.font = 'bold 32px "Segoe UI", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('= ' + sum, w / 2, circleY + radius + 25);
+
+            // 组合
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '24px "Segoe UI", sans-serif';
+            ctx.fillText(combination, w / 2, circleY + radius + 65);
+
+            // 形态
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+            ctx.font = '14px "Segoe UI", sans-serif';
+            ctx.fillText('形态：' + shape, w / 2, circleY + radius + 95);
+
+            // 时间
+            const dateStr = (date && time) ? '开奖时间 ' + date + ' ' + time : '';
+            ctx.fillStyle = 'rgba(255,255,255,0.15)';
+            ctx.font = '12px "Segoe UI", sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(dateStr, w - 30, h - 20);
+
+            // 转成 blob
+            return new Promise((resolve) => {
+                cardCanvas.toBlob(resolve, 'image/png');
+            });
+        }
+
+        // ============================================================
+        // Telegram 推送
+        // ============================================================
+        async function sendPhotoToChannel(chatId, photoBlob, caption) {
+            if (!TG_CONFIG.enabled || !TG_CONFIG.botToken) return false;
+            const url = 'https://api.telegram.org/bot' + TG_CONFIG.botToken + '/sendPhoto';
+            const fd = new FormData();
+            fd.append('chat_id', chatId);
+            fd.append('photo', photoBlob, 'result.png');
+            if (caption) fd.append('caption', caption);
+            fd.append('parse_mode', 'HTML');
+            try {
+                const r = await fetch(url, { method: 'POST', body: fd });
+                const j = await r.json();
+                if (j.ok) { console.log('✅ 频道图片发送成功'); return true; }
+                console.error('❌ 频道图片发送失败:', j);
+                return false;
+            } catch (e) {
+                console.error('❌ 频道图片发送异常:', e);
+                return false;
+            }
+        }
+
+        async function sendTextToGroup(chatId, text) {
+            if (!TG_CONFIG.enabled || !TG_CONFIG.botToken) return false;
+            const url = 'https://api.telegram.org/bot' + TG_CONFIG.botToken + '/sendMessage';
+            try {
+                const r = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: text,
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: true
+                    })
+                });
+                const j = await r.json();
+                if (j.ok) { console.log('✅ 群组文字发送成功'); return true; }
+                console.error('❌ 群组文字发送失败:', j);
+                return false;
+            } catch (e) {
+                console.error('❌ 群组文字发送异常:', e);
+                return false;
+            }
+        }
+
+        function buildPushMessage(period, b1, b2, b3, sum, terms, date, time) {
+            const dateStr = (date && time) ? date + ' ' + time : '未知时间';
+            return '📢 最新开奖信息\n' +
+                   '📅 最新期号: ' + period + '\n' +
+                   '🔢 开奖结果: ' + b1 + '+' + b2 + '+' + b3 + '=' + sum + ' ' + terms.combination + '\n' +
+                   '🎉 号码形式: ' + terms.shape + '|中\n' +
+                   '⏰ 开奖时间: ' + dateStr;
+        }
+
+        // 主动推送当前数据
+        async function pushToTelegram() {
+            if (!window.PC28_DATA) {
+                showError('暂无数据可推送，请先等待数据加载');
+                return;
+            }
+            const d = window.PC28_DATA;
+            showPushStatus('推送中...', false);
+
+            // 1. 生成图片
+            const blob = await generateCardImage(
+                d.period, d.b1, d.b2, d.b3, d.sum,
+                d.terms.combination, d.terms.shape, d.date, d.time
+            );
+
+            // 2. 发送频道图片
+            const caption = '第' + d.period + '期 ' + d.b1 + '+' + d.b2 + '+' + d.b3 + '=' + d.sum + ' ' + d.terms.combination;
+            let ok1 = false, ok2 = false;
+            if (TG_CONFIG.channelId) {
+                ok1 = await sendPhotoToChannel(TG_CONFIG.channelId, blob, caption);
+            }
+
+            // 3. 发送群组文字
+            const text = buildPushMessage(d.period, d.b1, d.b2, d.b3, d.sum, d.terms, d.date, d.time);
+            if (TG_CONFIG.groupId) {
+                ok2 = await sendTextToGroup(TG_CONFIG.groupId, text);
+            }
+
+            if (ok1 || ok2) {
+                showPushStatus('✅ 推送成功', true);
+            } else {
+                showError('推送失败，请检查控制台');
+            }
+        }
+
+        function showPushStatus(msg, ok) {
+            pushMsgEl.textContent = msg;
+            pushMsgEl.style.display = 'inline-block';
+            pushMsgEl.style.color = ok ? '#6bff9e' : '#ffd54f';
+            errorMsgEl.style.display = 'none';
+            if (ok) {
+                setTimeout(() => { pushMsgEl.style.display = 'none'; }, 3000);
+            }
+        }
+
+        function showError(msg) {
+            errorMsgEl.textContent = '⚠️ ' + msg;
+            errorMsgEl.style.display = 'inline-block';
+            pushMsgEl.style.display = 'none';
+        }
+
+        // ============================================================
         // 对外接口
         // ============================================================
         window.PC28_DATA = null;
+        window.pushPC28ToTelegram = pushToTelegram; // 外部可调用
 
         // ============================================================
         // 主渲染
@@ -617,35 +853,21 @@
                 let balls = null;
                 let sourceName = '';
 
-                // 优先用 nbrs 按规则计算
                 if (nbrs) {
                     balls = calculateFromNbrs(nbrs);
-                    if (balls) {
-                        sourceName = 'Keno原始数据(按规则计算)';
-                    }
+                    if (balls) sourceName = 'Keno原始数据(按规则计算)';
                 }
-
-                // 如果没有 nbrs，用 number
                 if (!balls && number) {
                     balls = parseFromNumber(number);
-                    if (balls) {
-                        sourceName = 'PC28数据(直接解析)';
-                    }
+                    if (balls) sourceName = 'PC28数据(直接解析)';
                 }
-
-                if (!balls) {
-                    throw new Error('无法解析号码');
-                }
+                if (!balls) throw new Error('无法解析号码');
 
                 const [b1, b2, b3] = balls;
                 const sum_val = b1 + b2 + b3;
                 const special = sum_val % 10;
                 const terms = analyzeTerms(b1, b2, b3, special);
-
-                // 如果接口提供了 combination，优先使用
-                if (combination) {
-                    terms.combination = combination;
-                }
+                if (combination) terms.combination = combination;
 
                 const dataObj = {
                     period, b1, b2, b3, special, sum: sum_val,
@@ -658,7 +880,7 @@
                 displayBall2.textContent = b2;
                 displayBall3.textContent = b3;
                 displaySpecial.textContent = special;
-                combinationTag.innerHTML = `<strong>${terms.combination}</strong> · ${terms.shape}`;
+                combinationTag.innerHTML = '<strong>' + terms.combination + '</strong> · ' + terms.shape;
 
                 document.getElementById('termOddEven').textContent = terms.oddEven;
                 document.getElementById('termBigSmall').textContent = terms.bigSmall;
@@ -671,7 +893,7 @@
 
                 // 倒计时
                 if (date && time) {
-                    const ot = new Date(`${date} ${time}`);
+                    const ot = new Date(date + ' ' + time);
                     if (!isNaN(ot)) {
                         lastOpenTime = ot.getTime();
                         updateCountdown();
@@ -679,22 +901,20 @@
                 }
 
                 // 历史
-                const entry = {
+                saveHistory({
                     period,
                     ball1: b1, ball2: b2, ball3: b3,
                     sum: sum_val,
                     combination: terms.combination,
                     shape: terms.shape
-                };
-                saveHistory(entry);
+                });
                 renderHistory(getHistory());
 
                 console.log('[PC28] 更新:', period, b1, b2, b3, '=', sum_val);
 
             } catch (err) {
                 console.error('[PC28] 加载失败:', err);
-                errorMsgEl.style.display = 'inline-block';
-                errorMsgEl.textContent = '⚠️ ' + err.message;
+                showError(err.message);
             }
         }
 
@@ -726,13 +946,21 @@
             else { startAuto(); fetchAndRender(); }
         }
 
+        // ============================================================
+        // 事件绑定
+        // ============================================================
         document.getElementById('refreshBtn').addEventListener('click', fetchAndRender);
-        toggleBtn.addEventListener('click', toggleAuto);
+        document.getElementById('toggleBtn').addEventListener('click', toggleAuto);
+        document.getElementById('pushBtn').addEventListener('click', pushToTelegram);
 
+        // 启动
         fetchAndRender().then(startAuto).catch(startAuto);
         window.addEventListener('beforeunload', () => { if (timer) clearInterval(timer); });
 
-        console.log('[PC28] 未来数据站已启动');
+        console.log('[PC28] 未来数据站已启动，Telegram推送已就绪');
+        console.log(' 频道ID:', TG_CONFIG.channelId);
+        console.log(' 群组ID:', TG_CONFIG.groupId);
+        console.log(' 手动推送: 点击📤按钮 或调用 window.pushPC28ToTelegram()');
     })();
 </script>
 </body>
