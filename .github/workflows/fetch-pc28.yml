@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install dependencies
         run: |
@@ -33,22 +35,27 @@ jobs:
           cat data_pc28.json
           echo ""
 
-          # 提取期号
+          # 提取期号并保存到环境变量
           PERIOD=$(jq -r '.data[0].nbr' data_pc28.json 2>/dev/null || echo "")
           echo "最新期号: $PERIOD"
+          echo "PERIOD=$PERIOD" >> $GITHUB_ENV
 
       - name: Generate card and push to Telegram
+        env:
+          TG_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          CHANNEL_ID: ${{ secrets.TG_CHANNEL_ID }}
+          GROUP_ID: ${{ secrets.TG_GROUP_ID }}
         run: |
           python3 << 'PYEOF'
           import json, os, sys, subprocess, time
           from PIL import Image, ImageDraw, ImageFont
 
           # ==========================================
-          # 硬编码 Telegram 配置
+          # 硬编码 Telegram 配置（备用）
           # ==========================================
-          TG_TOKEN = "8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo"
-          CHANNEL_ID = "@pc28jndkj"
-          GROUP_ID = "-1003480986680"
+          TG_TOKEN = os.environ.get('TG_TOKEN') or "8415517129:AAGWygn6B9lgvvktbGed1nV-9aebZFIFLwo"
+          CHANNEL_ID = os.environ.get('CHANNEL_ID') or "@pc28jndkj"
+          GROUP_ID = os.environ.get('GROUP_ID') or "-1003480986680"
 
           def parse_from_number(number_str):
               if not number_str:
@@ -171,7 +178,7 @@ jobs:
               cmd2 = [
                   'curl', '-s', '-X', 'POST',
                   f'https://api.telegram.org/bot{TG_TOKEN}/sendMessage',
-                  '-H', 'Content-Type: application/json',
+                  '-H', 'Content-Type': 'application/json',
                   '-d', json.dumps({
                       'chat_id': GROUP_ID,
                       'text': group_msg,
@@ -188,10 +195,16 @@ jobs:
           print("✅ 推送完成")
           PYEOF
 
-      - name: Commit and push files
+      - name: Commit and push files (FORCE overwrite)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data_pc28.json result.png
-          git diff --staged --quiet || git commit -m "Update data ($(date -u +%Y-%m-%dT%H:%M:%SZ))" || true
-          git push || true
+
+          # 强制添加并提交
+          git add -f data_pc28.json result.png
+          git commit -m "Update data to $(jq -r '.data[0].nbr' data_pc28.json) ($(date -u +%Y-%m-%dT%H:%M:%SZ))" || true
+
+          # 强制推送（覆盖远程）
+          git push origin main --force || true
+
+          echo "✅ 提交完成，期号: $(jq -r '.data[0].nbr' data_pc28.json)"
