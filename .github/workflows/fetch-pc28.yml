@@ -19,9 +19,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y jq fonts-noto-cjk
-          pip install --quiet pillow requests
+          sudo apt-get install -y fonts-noto-cjk || { sudo apt-get update -y && sudo apt-get install -y fonts-noto-cjk; }
+          pip install --quiet --no-cache-dir pillow requests
 
       - name: Fetch & validate & push to Telegram
         env:
