@@ -3,7 +3,8 @@
 """
 PC28 开奖数据自动抓取 → 校验 → 去重 → 推送 Telegram
 数据源: pc28.help 为主，yu28.top 可选备用
-依赖: pillow requests (GitHub Actions ubuntu-latest 已预装)
+依赖: pillow requests numpy (GitHub Actions ubuntu-latest 已预装)
+图片: 夏时令/冬时令模板图重绘，自动随时令切换
 """
 
 import datetime
@@ -19,7 +20,12 @@ try:
 except ImportError:
     requests = None
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
+
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 # ================= 配置 =================
 TG_TOKEN = os.environ.get("TG_BOT_TOKEN", "")
@@ -30,6 +36,18 @@ YU28_API_KEY = os.environ.get("YU28_API_KEY", "")
 DATA_FILE = "data_pc28.json"
 LAST_SENT_FILE = "last_sent.txt"
 IMG_FILE = "result.png"
+
+# 图片模板（与 fetch_and_push.py 同目录 templates/ 下）
+TPL_SUMMER = os.environ.get("TPL_SUMMER", "templates/summer_template.jpg")
+TPL_WINTER = os.environ.get("TPL_WINTER", "templates/winter_template.jpg")
+
+# 模板尺寸 1808x608，四球配置 (cx, cy, r, 顶部色, 底部色, 数字色)
+BALLS = [
+    (230, 377, 90, (0, 191, 255), (0, 85, 204), (35, 35, 45)),      # 蓝
+    (677, 377, 90, (255, 0, 255), (139, 0, 139), (45, 12, 70)),     # 紫
+    (1122, 377, 90, (0, 206, 209), (0, 102, 102), (255, 215, 0)),   # 青
+    (1572, 377, 90, (255, 215, 0), (255, 69, 0), (255, 215, 0)),    # 金
+]
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36",
@@ -156,53 +174,101 @@ def save_data(item):
 
 
 # ================= 图片 =================
-def find_font(size):
-    candidates = [
-        "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
-        "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
-        "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
-        "/usr/share/fonts/truetype/arphic/uming.ttc",
-    ]
+def find_font(size, bold=False, cjk=False):
+    if cjk:
+        candidates = [
+            "/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc",
+            "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+            "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
+            "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+            os.path.expanduser("~/.fonts/wqy-microhei.ttc"),
+            "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+            "/usr/share/fonts/truetype/arphic/uming.ttc",
+        ]
+    elif bold:
+        candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"]
+    else:
+        candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"]
     for p in candidates:
         if os.path.exists(p):
             return ImageFont.truetype(p, size)
     return ImageFont.load_default()
 
 
+def is_summer():
+    """时令判断：美国夏令时（3月第二个周日~11月第一个周日）→ True 夏图 / False 冬图"""
+    try:
+        from zoneinfo import ZoneInfo
+        now_ny = datetime.datetime.now(ZoneInfo("America/New_York"))
+        return now_ny.utcoffset().total_seconds() == -4 * 3600
+    except Exception:
+        m = datetime.datetime.now().month
+        return 4 <= m <= 10
+
+
+def erase_top_text(img, summer):
+    """擦除顶部旧期号文字（夏=金色 / 冬=红色），用中值滤波背景填充"""
+    a = np.array(img).astype(int)
+    r, g, b = a[:, :, 0], a[:, :, 1], a[:, :, 2]
+    if summer:
+        mask = (r > 150) & (g > 100) & (b < 130) & (r > g)
+    else:
+        mask = (r > 165) & (g < 100) & (b < 110)
+    mask[240:, :] = False
+    if mask.sum() < 50:
+        print("[擦除] 顶部未检测到文字，跳过")
+        return img
+    blur = img.filter(ImageFilter.MedianFilter(9))
+    b_arr = np.array(blur).astype(int)
+    b_arr[mask] = a[mask]
+    b_arr[~mask] = a[~mask]
+    print(f"[擦除] 已擦除顶部文字 {mask.sum()} 像素")
+    return Image.fromarray(b_arr.astype(np.uint8))
+
+
+def repaint_balls(img, balls, b1, b2, b3, s):
+    """重绘四球：渐变圆 + 白色内环 + 新数字（覆盖旧数字）"""
+    a = np.array(img).astype(int)
+    h, w, _ = a.shape
+    yy, xx = np.mgrid[0:h, 0:w]
+    vals = [str(b1), str(b2), str(b3), str(s)]
+    for idx, (cx, cy, R, c_top, c_bot, num_color) in enumerate(balls):
+        dist = np.sqrt((xx - cx) ** 2 + (yy - cy) ** 2)
+        t = np.clip(dist / R, 0, 1) ** 1.2
+        grad = np.array(c_top)[None, None, :] * (1 - t[..., None]) + np.array(c_bot)[None, None, :] * t[..., None]
+        feather = np.clip((R - dist) / 6, 0, 1)
+        for c in range(3):
+            a[:, :, c] = np.where(dist <= R, grad[:, :, c] * feather + a[:, :, c] * (1 - feather), a[:, :, c])
+        ring = (dist >= R * 0.32) & (dist <= R * 0.44)
+        for c in range(3):
+            a[:, :, c] = np.where(ring, a[:, :, c] * 0.2 + 245 * 0.8, a[:, :, c])
+    img2 = Image.fromarray(a.astype(np.uint8))
+    draw = ImageDraw.Draw(img2)
+    for idx, (cx, cy, R, c_top, c_bot, num_color) in enumerate(balls):
+        font = find_font(72, bold=True) if idx == 3 else find_font(64, bold=True)
+        if idx == 3:
+            draw.text((cx, cy), vals[idx], fill=num_color, font=font, anchor="mm",
+                      stroke_width=5, stroke_fill=(70, 15, 5))
+        else:
+            draw.text((cx, cy), vals[idx], fill=num_color, font=font, anchor="mm")
+    return img2
+
+
 def gen_image(period, date, time_str, balls, s, combo, shape):
     b1, b2, b3 = balls
-    width, height = 800, 420
-    img = Image.new("RGB", (width, height), color=(15, 31, 47))
+    summer = is_summer()
+    tpl = TPL_SUMMER if summer else TPL_WINTER
+    img = Image.open(tpl).convert("RGB")
+    img = erase_top_text(img, summer)
+    img = repaint_balls(img, BALLS, b1, b2, b3, s)
+
     draw = ImageDraw.Draw(img)
-    draw.rectangle((10, 10, width - 10, height - 10), outline=(60, 80, 100), width=2)
-
-    font_title = find_font(18)
-    font_big = find_font(40)
-    font_medium = find_font(28)
-    font_small = find_font(16)
-
-    draw.text((30, 30), "PC28 开奖结果", fill=(200, 200, 200), font=font_title)
-    draw.text((width - 30, 30), f"第 {period} 期", fill=(255, 255, 255), font=font_title, anchor="rt")
-
-    circle_y = 160
-    radius = 52
-    spacing = 140
-    start_x = (width - 2 * spacing) // 2 - 10
-    for i, num in enumerate([str(b1), str(b2), str(b3)]):
-        x = start_x + i * spacing
-        draw.ellipse((x - radius, circle_y - radius, x + radius, circle_y + radius),
-                     fill=(20, 80, 140), outline=(100, 200, 255), width=2)
-        draw.text((x, circle_y), num, fill=(255, 255, 255), font=font_big, anchor="mm")
-        if i < 2:
-            draw.text((x + spacing // 2, circle_y), "+", fill=(100, 150, 200), font=font_big, anchor="mm")
-
-    draw.text((width // 2, circle_y + radius + 15), f"= {s}", fill=(255, 213, 79), font=font_medium, anchor="ma")
-    draw.text((width // 2, circle_y + radius + 60), combo, fill=(255, 255, 255), font=font_medium, anchor="ma")
-    draw.text((width // 2, circle_y + radius + 100), f"形态：{shape}", fill=(180, 180, 180), font=font_small, anchor="ma")
-    draw.text((width - 30, height - 20), f"开奖时间 {date} {time_str}", fill=(120, 140, 160), font=font_small, anchor="rb")
+    color = (255, 190, 0) if summer else (255, 70, 70)
+    font = find_font(86, cjk=True)
+    draw.text((904, 108), f"第 {period} 期", fill=color, font=font, anchor="mm")
 
     img.save(IMG_FILE)
-    print("[图] result.png 生成成功")
+    print(f"[图] {IMG_FILE} 生成成功（{'夏时令' if summer else '冬时令'}模板）")
 
 
 # ================= Telegram =================
@@ -220,7 +286,7 @@ def tg_post(method, **kwargs):
 
 def send_photo(period, balls, s, combo):
     b1, b2, b3 = balls
-    caption = f"<b>第{period}期</b> {b1}+{b2}+{b3}={s} {combo}"
+    caption = f"🎯 <b>第{period}期</b> {b1}+{b2}+{b3}={s} {combo}"
     with open(IMG_FILE, "rb") as f:
         status, body = tg_post(
             "sendPhoto",
