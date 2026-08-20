@@ -37,8 +37,8 @@ print(f"[字体] 使用: {FONT}")
 
 def validate_input(title_str, b1, b2, b3, b4):
     """业务数据校验，出错抛出异常，阻止生成错误图片"""
-    if not (isinstance(title_str, str) and len(title_str)==8 and title_str.isdigit()):
-        raise ValueError(f"期号必须8位数字字符串，输入:{title_str}")
+    if not (isinstance(title_str, str) and len(title_str) >= 5 and title_str.isdigit()):
+        raise ValueError(f"期号必须至少5位数字字符串，输入:{title_str}")
     for name,val in [("球1",b1),("球2",b2),("球3",b3)]:
         if not isinstance(val,str) or len(val)!=1 or (not val.isdigit()):
             raise ValueError(f"{name}必须0‑9的字符串，输入:{val}")
@@ -97,6 +97,8 @@ def draw_title_text(base, num_color_tuple, period_str):
     d = ImageDraw.Draw(base)
     SLOT_X = [497, 561, 625, 689, 753, 817, 881, 945]
     SLOT_Y = 132
+    # 期号不足8位左补零，保证8槽位布局完整
+    period_str = period_str.zfill(8)
     f_big = ImageFont.truetype(FONT, 120)
     d.text((350, SLOT_Y - 70), "第", font=f_big, fill=(0, 0, 0))
     d.text((1000, SLOT_Y - 70), "期", font=f_big, fill=(0, 0, 0))
