@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-严格规格渲染 v4：输出固定 2855x960（比例113:38），等比缩放底图，只叠加数字。
+严格规格渲染 v7：输出固定 2855x960（比例113:38），等比缩放底图，只叠加数字。
+- v7修复：球心坐标修正为底图Hough实测球心（解决数字不居中）；金色增饱和提亮（解决掉色）
 - 字体：思源黑体 Noto Sans SC Bold(700)
 - 顶部期号：与"第/期"严格等高（夏172px / 冬173px）；夏橙红渐变金+细金发光，冬大红+微红发光
 - 球号：个位数 220px、两位数 170px（固定字号）；白色内环质心居中，四周留40px边距，不碰圆环边框
@@ -33,10 +34,10 @@ SUMMER = {
     "title_center": (1641, 297),   # 原图坐标，等比缩放
     "title_h": 173,                 # 缩放后第/期高度(实测)
     "balls": [
-        (546, 811, 170),
-        (1410, 818, 170),
-        (2268, 812, 170),
-        (3451, 803, 170),
+        (550, 839, 170),
+        (1409, 841, 170),
+        (2274, 838, 170),
+        (3477, 837, 170),
     ],
 }
 WINTER = {
@@ -44,10 +45,10 @@ WINTER = {
     "title_center": (1645, 295),
     "title_h": 173,
     "balls": [
-        (555, 832, 170),
-        (1421, 843, 170),
-        (2272, 834, 170),
-        (3473, 840, 170),
+        (559, 838, 170),
+        (1420, 839, 170),
+        (2281, 840, 170),
+        (3469, 839, 170),
     ],
 }
 
@@ -184,13 +185,13 @@ def draw_ball_fixed(base, cx, cy, r, num, fs, gold=False):
         sc = min(maxd / char.width, maxd / char.height)
         char = char.resize((int(char.width * sc), int(char.height * sc)), Image.LANCZOS)
     if gold:
-        grad = vgrad_layer(char, (255, 236, 150), (236, 164, 22))
+        grad = vgrad_layer(char, (255, 235, 130), (235, 150, 15))
         a = np.array(char.convert("L"))
         hi_h = max(2, int(a.shape[0] * 0.26))
         hi_mask = np.zeros_like(a)
         hi_mask[:hi_h, :] = a[:hi_h, :]
         hi_img = Image.fromarray(hi_mask, "L")
-        hi_layer = layer_from_mask(hi_img, (255, 255, 225))
+        hi_layer = layer_from_mask(hi_img, (255, 248, 210))
         paste_center(base, grad, (cx, cy))
         paste_center(base, hi_layer, (cx, cy))
     else:
