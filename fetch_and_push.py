@@ -4,7 +4,7 @@
 PC28 开奖数据自动抓取 → 校验 → 去重 → 推送 Telegram
 数据源: pc28.help 为主，yu28.top 可选备用
 依赖: pillow requests numpy (GitHub Actions ubuntu-latest 已预装)
-图片: 夏时令/冬时令模板图重绘，自动随时令切换
+图片: poster_render 纯代码绘制（冰雪版/夏日海滩版），自动随时令切换
 """
 
 import datetime
@@ -361,50 +361,7 @@ def main():
     if not TG_TOKEN:
         raise SystemExit("缺少 TG_BOT_TOKEN（secrets 未配置）")
 
-    # 循环模式：--minutes N 表示连续运行 N 分钟，每 3 分钟抓取推送一次
-    # 默认单次模式，保持向后兼容
-    minutes = None
-    args = sys.argv[1:]
-    if "--minutes" in args:
-        idx = args.index("--minutes")
-        if idx + 1 < len(args):
-            minutes = max(1, int(args[idx + 1]))
-
-    if not minutes:
-        run_once()
-        return 0
-
-    start = time.time()
-    deadline = start + minutes * 60
-    attempts = 0
-    pushed = 0
-    print(f"[循环] 循环模式启动，计划运行 {minutes} 分钟（每 3 分钟抓取一次）")
-
-    while True:
-        now = time.time()
-        if now >= deadline:
-            break
-        attempts += 1
-        try:
-            did_push = run_once()
-            if did_push:
-                pushed += 1
-        except SystemExit as e:
-            print(f"[循环] 第 {attempts} 次异常退出: {e}")
-        except Exception as e:
-            import traceback
-            print(f"[循环] 第 {attempts} 次异常: {e}")
-            traceback.print_exc()
-
-        # 等待到下一个 30 秒边界，或直到截止时间
-        remaining = deadline - time.time()
-        if remaining <= 0:
-            break
-        wait = min(30, remaining)
-        print(f"[循环] 等待 {wait:.0f}s 后继续...")
-        time.sleep(wait)
-
-    print(f"[循环] 结束：共尝试 {attempts} 次，成功推送 {pushed} 期")
+    run_once()
     return 0
 
 
