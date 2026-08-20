@@ -1,21 +1,11 @@
-Traceback (most recent call last):
-  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 413, in <module>
-    sys.exit(main())
-             ^^^^^^
-  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 374, in main
-    run_once()
-  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 345, in run_once
-    gen_image(period, date, time_str, balls, s, combo, shape)
-  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 255, in gen_image
-    poster_render.render_season(period, str(b1), str(b2), str(b3), str(s), IMG_FILE)
-  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/poster_render.py", line 417, in render_season
-    validate_input(title_str, b1, b2, b3, b4)
-  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/poster_render.py", line 41, in validate_input
-    raise ValueError(f"期号必须8位数字字符串，输入:{title_str}")
-ValueError: 期号必须8位数字字符串，输入:3471921
-
 [字体] 使用: /usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc
 [源] pc28.help 返回 1 条，使用该源
 [数] 最新期号: 3471921 结果: 3+2+1=6 小双 形态:顺子
 [去重] 上次已推送: '3471892', 本次: 3471921
-EXIT_CODE=1
+✅数据校验通过 | 期号:3471921 | 球:[3,2,1,6] | 3+2+1=6
+✅夏日海报输出:result.png
+[图] result.png 生成成功（当前季节: 夏）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 437, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787236128, "photo": [{"file_id"
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 159510, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787236128, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[git] 数据已实时提交并推送
+✅ 推送完成
