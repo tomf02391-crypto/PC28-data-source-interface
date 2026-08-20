@@ -12,10 +12,10 @@ Traceback (most recent call last):
     validate_input(title_str, b1, b2, b3, b4)
   File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/poster_render.py", line 41, in validate_input
     raise ValueError(f"期号必须8位数字字符串，输入:{title_str}")
-ValueError: 期号必须8位数字字符串，输入:3471920
+ValueError: 期号必须8位数字字符串，输入:3471921
 
 [字体] 使用: /usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471920 结果: 5+1+4=10 小双 形态:杂六
-[去重] 上次已推送: '3471892', 本次: 3471920
+[数] 最新期号: 3471921 结果: 3+2+1=6 小双 形态:顺子
+[去重] 上次已推送: '3471892', 本次: 3471921
 EXIT_CODE=1
