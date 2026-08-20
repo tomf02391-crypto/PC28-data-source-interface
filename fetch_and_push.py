@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-PC28 推送脚本 v3（原图版）
-基于用户原图模板，期号/球数字全部来自原图字符，按数据动态渲染
+PC28 推送脚本 v4（高清版 3616x1216）
+基于原图满分辨率底图，期号/球数字全部来自原图高清字符，按数据动态渲染
 """
 import datetime, json, os, re, sys, time, urllib.request
 try:
     import requests
 except ImportError:
     requests = None
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from PIL import Image, ImageDraw, ImageFont
 try:
     import numpy as np
 except ImportError:
@@ -24,20 +24,20 @@ DATA_FILE = "data_pc28.json"
 LAST_SENT_FILE = "last_sent.txt"
 IMG_FILE = "result.png"
 
-# 资源目录（模板 + 字符）
+# 高清资源目录
 ASSETS = os.environ.get("ASSETS_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets"))
-TPL_SUMMER = os.path.join(ASSETS, "tpl_夏_v26.jpg")
-TPL_WINTER = os.path.join(ASSETS, "tpl_冬_v26.jpg")
-CHAR_DIR = os.path.join(ASSETS, "chars")
+TPL_SUMMER = os.path.join(ASSETS, "base_夏_clean.png")
+TPL_WINTER = os.path.join(ASSETS, "base_冬_clean.png")
+CHAR_DIR = os.path.join(ASSETS, "chars_hd")
 
-# 球心（模板坐标 1808x608）
-BALL_CENTERS = [(243, 369), (623, 369), (1004, 371), (1537, 367)]
-# 期号槽位中心（7位数字）
-SLOT_X = [502, 576, 650, 708, 775, 845, 922]
-SLOT_Y = 133
-# 数字 -> 期号字符文件名
-DIGIT_SLOT = {"3": "3", "4": "4", "7": "7", "1": "1", "5": "5a", "8": "8"}
-# 目标颜色 (暗部, 亮部)
+# 球心（高清 3616x1216 坐标）
+BALL_CENTERS = [(486, 738), (1246, 738), (2008, 742), (3074, 734)]
+# 期号槽位（8位数字，x0=860 x1=2040 均匀8等分）
+SLOT_X = [994, 1122, 1250, 1378, 1506, 1634, 1762, 1890]
+SLOT_Y = 264
+# 期号数字->字符文件名（按原图数字重命名）
+DIGIT_SLOT = {"1": "1", "3": "3", "4": "4", "5": "5", "7": "7", "8": "8"}
+# 球数字颜色 (暗部, 亮部)
 COLOR = {
     "红": ((180, 15, 15), (255, 120, 120)),
     "橙金": ((190, 110, 0), (255, 218, 90)),
@@ -147,7 +147,9 @@ def save_data(item):
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
 
-# ================= 图片渲染（v3 原图版） =================
+# ================= 图片渲染（v4 高清版 3616x1216） =================
+FONT_FALLBACK = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+
 def is_summer():
     try:
         from zoneinfo import ZoneInfo
@@ -176,18 +178,19 @@ def _recolor(rgba, dark, light):
     return new.astype(np.uint8)
 
 def _ensure_fallback(ch):
-    """原图没有的数字字符（0,2,6,9）用粗体字体生成"""
-    fnt = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 104)
+    """高清版缺失字符用大号粗体字体生成（208px 对应高清 2x 缩放）"""
     for s in ["冬", "夏"]:
         p = os.path.join(CHAR_DIR, f"{s}_期_{ch}.png")
         if os.path.exists(p):
             continue
-        tmp = Image.new("RGBA", (120, 150), (0, 0, 0, 0))
+        fnt = ImageFont.truetype(FONT_FALLBACK, 208)
+        tmp = Image.new("RGBA", (240, 300), (0, 0, 0, 0))
         dr = ImageDraw.Draw(tmp)
         bb = dr.textbbox((0, 0), ch, font=fnt)
         w, h = bb[2] - bb[0], bb[3] - bb[1]
-        dr.text((60 - w / 2 - bb[0], 75 - h / 2 - bb[1]), ch, font=fnt, fill=(128, 128, 128, 255))
+        dr.text((120 - w / 2 - bb[0], 150 - h / 2 - bb[1]), ch, font=fnt, fill=(128, 128, 128, 255))
         tmp.save(p)
+        print(f"  [fallback] 生成 {s}_期_{ch}.png")
 
 def gen_image(period, date, time_str, balls, s, combo, shape):
     b1, b2, b3 = balls
@@ -197,7 +200,7 @@ def gen_image(period, date, time_str, balls, s, combo, shape):
     canvas = Image.open(tpl).convert("RGB").copy()
     color_key = "橙金" if summer else "红"
 
-    # 期号数字
+    # 期号数字（8位）
     for i, ch in enumerate(period):
         _ensure_fallback(ch)
         slot = DIGIT_SLOT.get(ch, ch)
@@ -213,10 +216,16 @@ def gen_image(period, date, time_str, balls, s, combo, shape):
     ball_nums = [str(b1), str(b2), str(b3), str(s)]
     for i, (cx, cy) in enumerate(BALL_CENTERS):
         d = ball_nums[i]
-        src = os.path.join(CHAR_DIR, f"冬_球_{d}.png")
+        # 先找冬版球字符（原图黑色），再找夏版
+        src = os.path.join(CHAR_DIR, f"冬_球_{d}_hd.png")
+        if not os.path.exists(src):
+            src = os.path.join(CHAR_DIR, f"冬_球_{d}.png")
         if not os.path.exists(src):
             src = os.path.join(CHAR_DIR, f"夏_球_{d}.png")
-        ck = "黑" if not summer or i in (0, 1) else "金"
+        # 球颜色：冬全黑；夏球1黑、球2黑、球3金、球4金
+        ck = "黑"
+        if summer and i >= 2:
+            ck = "金"
         if not os.path.exists(src):
             continue
         rgba = _recolor(np.array(Image.open(src).convert("RGBA")), *COLOR[ck])
@@ -224,8 +233,8 @@ def gen_image(period, date, time_str, balls, s, combo, shape):
         x0, y0 = int(cx - w / 2), int(cy - h / 2)
         canvas.paste(Image.fromarray(rgba), (x0, y0), Image.fromarray(rgba))
 
-    canvas.save(IMG_FILE, quality=95)
-    print(f"[图] {IMG_FILE} 生成成功（{'夏时令' if summer else '冬时令'}模板，期号{period}）")
+    canvas.save(IMG_FILE, quality=97)
+    print(f"[图] {IMG_FILE} 生成成功（{'夏时令' if summer else '冬时令'} 高清版，期号{period}）")
 
 
 # ================= Telegram =================
