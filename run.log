@@ -1,11 +1,11 @@
 [字体] 使用: /usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471971 结果: 3+0+8=11 小单 形态:杂六
-[去重] 上次已推送: '3471970', 本次: 3471971
-✅数据校验通过 | 期号:3471971 | 球:[3,0,8,11] | 3+0+8=11
+[数] 最新期号: 3471972 结果: 8+4+9=21 大单 形态:杂六
+[去重] 上次已推送: '3471971', 本次: 3471972
+✅数据校验通过 | 期号:3471972 | 球:[8,4,9,21] | 8+4+9=21
 ✅夏日海报输出:result.png
 [图] result.png 生成成功（当前季节: 夏）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 494, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787246722, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 159624, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787246723, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 495, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787246888, "photo": [{"file_id"
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 159626, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787246889, "text": "📢 最新开奖信息\n📅 最新期号: 34
 [git] 数据已实时提交并推送
 ✅ 推送完成
