@@ -43,10 +43,10 @@ TPL_WINTER = os.environ.get("TPL_WINTER", "templates/winter_template.jpg")
 
 # 模板尺寸 1808x608，四球配置 (cx, cy, r, 顶部色, 底部色, 数字色)
 BALLS = [
-    (230, 377, 90, (0, 191, 255), (0, 85, 204), (35, 35, 45)),      # 蓝
-    (677, 377, 90, (255, 0, 255), (139, 0, 139), (45, 12, 70)),     # 紫
-    (1122, 377, 90, (0, 206, 209), (0, 102, 102), (255, 215, 0)),   # 青
-    (1572, 377, 90, (255, 215, 0), (255, 69, 0), (255, 215, 0)),    # 金
+    (243, 369, 90, (0, 191, 255), (0, 85, 204), (35, 35, 45)),      # 蓝
+    (623, 369, 90, (255, 0, 255), (139, 0, 139), (45, 12, 70)),     # 紫
+    (1004, 371, 90, (0, 206, 209), (0, 102, 102), (255, 215, 0)),   # 青
+    (1537, 367, 90, (255, 215, 0), (255, 69, 0), (255, 215, 0)),    # 金
 ]
 
 HEADERS = {
@@ -258,7 +258,7 @@ def gen_image(period, date, time_str, balls, s, combo, shape):
     draw = ImageDraw.Draw(img)
     color = (255, 190, 0) if summer else (255, 70, 70)
     font = find_font(86, cjk=True)
-    draw.text((904, 108), f"第 {period} 期", fill=color, font=font, anchor="mm")
+    draw.text((708, 132), f"第 {period} 期", fill=color, font=font, anchor="mm")
 
     img.save(IMG_FILE)
     print(f"[图] {IMG_FILE} 生成成功（{'夏时令' if summer else '冬时令'}模板）")
