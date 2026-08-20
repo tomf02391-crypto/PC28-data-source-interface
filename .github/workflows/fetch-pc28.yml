@@ -8,14 +8,9 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: fetch-pc28
-  cancel-in-progress: false
-
 jobs:
   fetch-and-push:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,22 +19,17 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --quiet --no-cache-dir pillow requests numpy 2>&1 | tail -1 || true
-          if fc-list 2>/dev/null | grep -qi "noto\|wqy\|uming"; then
-            echo "字体已存在"
-          else
-            sudo apt-get update -y -qq >/dev/null 2>&1 || true
-            sudo apt-get install -y -qq fonts-noto-cjk >/dev/null 2>&1 || true
-          fi
+          sudo apt-get install -y fonts-noto-cjk || { sudo apt-get update -y && sudo apt-get install -y fonts-noto-cjk; }
+          pip install --quiet --no-cache-dir pillow requests numpy
 
-      - name: Fetch & validate & push to Telegram (loop 55min)
+      - name: Fetch & validate & push to Telegram
         env:
           TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
           TG_CHANNEL_ID: ${{ secrets.TG_CHANNEL_ID }}
           TG_GROUP_ID: ${{ secrets.TG_GROUP_ID }}
           YU28_API_KEY: ${{ secrets.YU28_API_KEY }}
         run: |
-          python3 fetch_and_push.py --minutes 110 > run.log 2>&1 || { echo "EXIT_CODE=$?" >> run.log; }
+          python3 fetch_and_push.py > run.log 2>&1 || { echo "EXIT_CODE=$?" >> run.log; }
           cat run.log
           if grep -q "^EXIT_CODE=" run.log; then exit 1; fi
 
