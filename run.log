@@ -1,1180 +1,978 @@
-[循环] 循环模式启动，计划运行 110 分钟（每 3 分钟抓取一次）
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 20 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 21 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 21 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 22 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 22 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 23 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 24 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 24 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 25 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 25 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 26 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 26 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 27 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 27 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 28 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 28 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 29 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 29 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 30 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 30 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 31 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 31 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 32 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 32 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 33 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 33 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 34 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 34 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 35 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 35 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 36 分钟)
+Traceback (most recent call last):
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 349, in main
+    if run_once():
+       ^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 311, in run_once
+    period, date, time_str, balls, s, combo, shape = validate(item)
+                                                     ^^^^^^^^^^^^^^
+  File "/home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fetch_and_push.py", line 116, in validate
+    raise ValueError(f"开奖时间异常陈旧: {date} {time_str} (相差 {diff/60:.0f} 分钟)")
+ValueError: 开奖时间异常陈旧: 2026-08-20 18:56:30 (相差 36 分钟)
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471713 结果: 9+3+6=18 大双 形态:杂六
-[去重] 上次已推送: '3471681', 本次: 3471713
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 225, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787190553, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158062, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787190553, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471870）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 385, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787223627, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471713 结果: 9+3+6=18 大双 形态:杂六
-[去重] 上次已推送: '3471713', 本次: 3471713
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471713 结果: 9+3+6=18 大双 形态:杂六
-[去重] 上次已推送: '3471713', 本次: 3471713
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471714 结果: 1+5+9=15 大单 形态:杂六
-[去重] 上次已推送: '3471713', 本次: 3471714
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 226, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787190650, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158070, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787190650, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471870 结果: 3+7+6=16 大双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471871 结果: 5+1+4=10 小双 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471871）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 386, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787225608, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471714 结果: 1+5+9=15 大单 形态:杂六
-[去重] 上次已推送: '3471714', 本次: 3471714
+[数] 最新期号: 3471871 结果: 5+1+4=10 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471714 结果: 1+5+9=15 大单 形态:杂六
-[去重] 上次已推送: '3471714', 本次: 3471714
+[数] 最新期号: 3471871 结果: 5+1+4=10 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471714 结果: 1+5+9=15 大单 形态:杂六
-[去重] 上次已推送: '3471714', 本次: 3471714
+[数] 最新期号: 3471871 结果: 5+1+4=10 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471714 结果: 1+5+9=15 大单 形态:杂六
-[去重] 上次已推送: '3471714', 本次: 3471714
+[数] 最新期号: 3471871 结果: 5+1+4=10 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471714 结果: 1+5+9=15 大单 形态:杂六
-[去重] 上次已推送: '3471714', 本次: 3471714
+[数] 最新期号: 3471871 结果: 5+1+4=10 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471714 结果: 1+5+9=15 大单 形态:杂六
-[去重] 上次已推送: '3471714', 本次: 3471714
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471715 结果: 4+4+6=14 大双 形态:对子
-[去重] 上次已推送: '3471714', 本次: 3471715
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 227, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787190869, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158079, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787190870, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471872 结果: 4+9+5=18 大双 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471872）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 387, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787225801, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471715 结果: 4+4+6=14 大双 形态:对子
-[去重] 上次已推送: '3471715', 本次: 3471715
+[数] 最新期号: 3471872 结果: 4+9+5=18 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471715 结果: 4+4+6=14 大双 形态:对子
-[去重] 上次已推送: '3471715', 本次: 3471715
+[数] 最新期号: 3471872 结果: 4+9+5=18 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471715 结果: 4+4+6=14 大双 形态:对子
-[去重] 上次已推送: '3471715', 本次: 3471715
+[数] 最新期号: 3471872 结果: 4+9+5=18 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471715 结果: 4+4+6=14 大双 形态:对子
-[去重] 上次已推送: '3471715', 本次: 3471715
+[数] 最新期号: 3471872 结果: 4+9+5=18 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471715 结果: 4+4+6=14 大双 形态:对子
-[去重] 上次已推送: '3471715', 本次: 3471715
+[数] 最新期号: 3471872 结果: 4+9+5=18 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471715 结果: 4+4+6=14 大双 形态:对子
-[去重] 上次已推送: '3471715', 本次: 3471715
+[数] 最新期号: 3471872 结果: 4+9+5=18 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471716 结果: 7+9+6=22 大双 形态:杂六
-[去重] 上次已推送: '3471715', 本次: 3471716
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 228, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787191088, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158087, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787191089, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471873 结果: 7+0+5=12 小双 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471873）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 388, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787226025, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471716 结果: 7+9+6=22 大双 形态:杂六
-[去重] 上次已推送: '3471716', 本次: 3471716
+[数] 最新期号: 3471873 结果: 7+0+5=12 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471716 结果: 7+9+6=22 大双 形态:杂六
-[去重] 上次已推送: '3471716', 本次: 3471716
+[数] 最新期号: 3471873 结果: 7+0+5=12 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471716 结果: 7+9+6=22 大双 形态:杂六
-[去重] 上次已推送: '3471716', 本次: 3471716
+[数] 最新期号: 3471873 结果: 7+0+5=12 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471716 结果: 7+9+6=22 大双 形态:杂六
-[去重] 上次已推送: '3471716', 本次: 3471716
+[数] 最新期号: 3471873 结果: 7+0+5=12 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471716 结果: 7+9+6=22 大双 形态:杂六
-[去重] 上次已推送: '3471716', 本次: 3471716
+[数] 最新期号: 3471873 结果: 7+0+5=12 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471717 结果: 2+4+3=9 小单 形态:杂六
-[去重] 上次已推送: '3471716', 本次: 3471717
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 229, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787191277, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158093, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787191278, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471873 结果: 7+0+5=12 小双 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471874 结果: 0+6+0=6 小双 形态:对子
+[图] result.png 生成成功（夏时令 高清版，期号3471874）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 389, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787226247, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471717 结果: 2+4+3=9 小单 形态:杂六
-[去重] 上次已推送: '3471717', 本次: 3471717
+[数] 最新期号: 3471874 结果: 0+6+0=6 小双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471717 结果: 2+4+3=9 小单 形态:杂六
-[去重] 上次已推送: '3471717', 本次: 3471717
+[数] 最新期号: 3471874 结果: 0+6+0=6 小双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471717 结果: 2+4+3=9 小单 形态:杂六
-[去重] 上次已推送: '3471717', 本次: 3471717
+[数] 最新期号: 3471874 结果: 0+6+0=6 小双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471717 结果: 2+4+3=9 小单 形态:杂六
-[去重] 上次已推送: '3471717', 本次: 3471717
+[数] 最新期号: 3471874 结果: 0+6+0=6 小双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471717 结果: 2+4+3=9 小单 形态:杂六
-[去重] 上次已推送: '3471717', 本次: 3471717
+[数] 最新期号: 3471874 结果: 0+6+0=6 小双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471717 结果: 2+4+3=9 小单 形态:杂六
-[去重] 上次已推送: '3471717', 本次: 3471717
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471718 结果: 7+1+1=9 小单 形态:对子
-[去重] 上次已推送: '3471717', 本次: 3471718
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 230, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787191497, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158102, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787191497, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471875 结果: 1+7+8=16 大双 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471875）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 390, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787226440, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471718 结果: 7+1+1=9 小单 形态:对子
-[去重] 上次已推送: '3471718', 本次: 3471718
+[数] 最新期号: 3471875 结果: 1+7+8=16 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471718 结果: 7+1+1=9 小单 形态:对子
-[去重] 上次已推送: '3471718', 本次: 3471718
+[数] 最新期号: 3471875 结果: 1+7+8=16 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471718 结果: 7+1+1=9 小单 形态:对子
-[去重] 上次已推送: '3471718', 本次: 3471718
+[数] 最新期号: 3471875 结果: 1+7+8=16 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471718 结果: 7+1+1=9 小单 形态:对子
-[去重] 上次已推送: '3471718', 本次: 3471718
+[数] 最新期号: 3471875 结果: 1+7+8=16 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471718 结果: 7+1+1=9 小单 形态:对子
-[去重] 上次已推送: '3471718', 本次: 3471718
+[数] 最新期号: 3471875 结果: 1+7+8=16 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471718 结果: 7+1+1=9 小单 形态:对子
-[去重] 上次已推送: '3471718', 本次: 3471718
+[数] 最新期号: 3471875 结果: 1+7+8=16 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471719 结果: 6+7+2=15 大单 形态:杂六
-[去重] 上次已推送: '3471718', 本次: 3471719
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 231, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787191717, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158111, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787191717, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471876 结果: 5+0+3=8 小双 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471876）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 391, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787226662, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471719 结果: 6+7+2=15 大单 形态:杂六
-[去重] 上次已推送: '3471719', 本次: 3471719
+[数] 最新期号: 3471876 结果: 5+0+3=8 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471719 结果: 6+7+2=15 大单 形态:杂六
-[去重] 上次已推送: '3471719', 本次: 3471719
+[数] 最新期号: 3471876 结果: 5+0+3=8 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471719 结果: 6+7+2=15 大单 形态:杂六
-[去重] 上次已推送: '3471719', 本次: 3471719
+[数] 最新期号: 3471876 结果: 5+0+3=8 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471719 结果: 6+7+2=15 大单 形态:杂六
-[去重] 上次已推送: '3471719', 本次: 3471719
+[数] 最新期号: 3471876 结果: 5+0+3=8 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471719 结果: 6+7+2=15 大单 形态:杂六
-[去重] 上次已推送: '3471719', 本次: 3471719
+[数] 最新期号: 3471876 结果: 5+0+3=8 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471720 结果: 9+9+0=18 大双 形态:对子
-[去重] 上次已推送: '3471719', 本次: 3471720
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 232, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787191906, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158118, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787191907, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471877 结果: 9+4+6=19 大单 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471877）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 392, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787226856, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471720 结果: 9+9+0=18 大双 形态:对子
-[去重] 上次已推送: '3471720', 本次: 3471720
+[数] 最新期号: 3471877 结果: 9+4+6=19 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471720 结果: 9+9+0=18 大双 形态:对子
-[去重] 上次已推送: '3471720', 本次: 3471720
+[数] 最新期号: 3471877 结果: 9+4+6=19 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471720 结果: 9+9+0=18 大双 形态:对子
-[去重] 上次已推送: '3471720', 本次: 3471720
+[数] 最新期号: 3471877 结果: 9+4+6=19 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471720 结果: 9+9+0=18 大双 形态:对子
-[去重] 上次已推送: '3471720', 本次: 3471720
+[数] 最新期号: 3471877 结果: 9+4+6=19 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471720 结果: 9+9+0=18 大双 形态:对子
-[去重] 上次已推送: '3471720', 本次: 3471720
+[数] 最新期号: 3471877 结果: 9+4+6=19 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471720 结果: 9+9+0=18 大双 形态:对子
-[去重] 上次已推送: '3471720', 本次: 3471720
+[数] 最新期号: 3471877 结果: 9+4+6=19 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471721 结果: 5+1+0=6 小双 形态:杂六
-[去重] 上次已推送: '3471720', 本次: 3471721
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 233, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787192127, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158126, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787192128, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471878 结果: 4+2+4=10 小双 形态:对子
+[图] result.png 生成成功（夏时令 高清版，期号3471878）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 393, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787227080, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471721 结果: 5+1+0=6 小双 形态:杂六
-[去重] 上次已推送: '3471721', 本次: 3471721
+[数] 最新期号: 3471878 结果: 4+2+4=10 小双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471721 结果: 5+1+0=6 小双 形态:杂六
-[去重] 上次已推送: '3471721', 本次: 3471721
+[数] 最新期号: 3471878 结果: 4+2+4=10 小双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471721 结果: 5+1+0=6 小双 形态:杂六
-[去重] 上次已推送: '3471721', 本次: 3471721
+[数] 最新期号: 3471878 结果: 4+2+4=10 小双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471721 结果: 5+1+0=6 小双 形态:杂六
-[去重] 上次已推送: '3471721', 本次: 3471721
+[数] 最新期号: 3471878 结果: 4+2+4=10 小双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471721 结果: 5+1+0=6 小双 形态:杂六
-[去重] 上次已推送: '3471721', 本次: 3471721
+[数] 最新期号: 3471878 结果: 4+2+4=10 小双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471721 结果: 5+1+0=6 小双 形态:杂六
-[去重] 上次已推送: '3471721', 本次: 3471721
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471722 结果: 8+7+5=20 大双 形态:杂六
-[去重] 上次已推送: '3471721', 本次: 3471722
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 234, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787192347, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158135, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787192348, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471879 结果: 4+9+4=17 大单 形态:对子
+  [fallback] 生成 冬_期_9.png
+  [fallback] 生成 夏_期_9.png
+[图] result.png 生成成功（夏时令 高清版，期号3471879）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 394, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787227272, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471722 结果: 8+7+5=20 大双 形态:杂六
-[去重] 上次已推送: '3471722', 本次: 3471722
+[数] 最新期号: 3471879 结果: 4+9+4=17 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471722 结果: 8+7+5=20 大双 形态:杂六
-[去重] 上次已推送: '3471722', 本次: 3471722
+[数] 最新期号: 3471879 结果: 4+9+4=17 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471722 结果: 8+7+5=20 大双 形态:杂六
-[去重] 上次已推送: '3471722', 本次: 3471722
+[数] 最新期号: 3471879 结果: 4+9+4=17 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471722 结果: 8+7+5=20 大双 形态:杂六
-[去重] 上次已推送: '3471722', 本次: 3471722
+[数] 最新期号: 3471879 结果: 4+9+4=17 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471722 结果: 8+7+5=20 大双 形态:杂六
-[去重] 上次已推送: '3471722', 本次: 3471722
+[数] 最新期号: 3471879 结果: 4+9+4=17 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471723 结果: 6+3+4=13 小单 形态:杂六
-[去重] 上次已推送: '3471722', 本次: 3471723
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 235, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787192538, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158143, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787192538, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471879 结果: 4+9+4=17 大单 形态:对子
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471880 结果: 2+0+3=5 小单 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471880）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 395, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787227493, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471723 结果: 6+3+4=13 小单 形态:杂六
-[去重] 上次已推送: '3471723', 本次: 3471723
+[数] 最新期号: 3471880 结果: 2+0+3=5 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471723 结果: 6+3+4=13 小单 形态:杂六
-[去重] 上次已推送: '3471723', 本次: 3471723
+[数] 最新期号: 3471880 结果: 2+0+3=5 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471723 结果: 6+3+4=13 小单 形态:杂六
-[去重] 上次已推送: '3471723', 本次: 3471723
+[数] 最新期号: 3471880 结果: 2+0+3=5 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471723 结果: 6+3+4=13 小单 形态:杂六
-[去重] 上次已推送: '3471723', 本次: 3471723
+[数] 最新期号: 3471880 结果: 2+0+3=5 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471723 结果: 6+3+4=13 小单 形态:杂六
-[去重] 上次已推送: '3471723', 本次: 3471723
+[数] 最新期号: 3471880 结果: 2+0+3=5 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471723 结果: 6+3+4=13 小单 形态:杂六
-[去重] 上次已推送: '3471723', 本次: 3471723
+[数] 最新期号: 3471880 结果: 2+0+3=5 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471724 结果: 1+3+0=4 小双 形态:杂六
-[去重] 上次已推送: '3471723', 本次: 3471724
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 236, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787192759, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158153, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787192759, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471881 结果: 7+9+9=25 大单 形态:对子
+[图] result.png 生成成功（夏时令 高清版，期号3471881）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 396, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787227716, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471724 结果: 1+3+0=4 小双 形态:杂六
-[去重] 上次已推送: '3471724', 本次: 3471724
+[数] 最新期号: 3471881 结果: 7+9+9=25 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471724 结果: 1+3+0=4 小双 形态:杂六
-[去重] 上次已推送: '3471724', 本次: 3471724
+[数] 最新期号: 3471881 结果: 7+9+9=25 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471724 结果: 1+3+0=4 小双 形态:杂六
-[去重] 上次已推送: '3471724', 本次: 3471724
+[数] 最新期号: 3471881 结果: 7+9+9=25 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471724 结果: 1+3+0=4 小双 形态:杂六
-[去重] 上次已推送: '3471724', 本次: 3471724
+[数] 最新期号: 3471881 结果: 7+9+9=25 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471724 结果: 1+3+0=4 小双 形态:杂六
-[去重] 上次已推送: '3471724', 本次: 3471724
+[数] 最新期号: 3471881 结果: 7+9+9=25 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471724 结果: 1+3+0=4 小双 形态:杂六
-[去重] 上次已推送: '3471724', 本次: 3471724
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471725 结果: 9+4+3=16 大双 形态:杂六
-[去重] 上次已推送: '3471724', 本次: 3471725
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 237, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787192979, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158162, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787192980, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471882 结果: 0+7+7=14 大双 形态:对子
+[图] result.png 生成成功（夏时令 高清版，期号3471882）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 397, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787227908, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471725 结果: 9+4+3=16 大双 形态:杂六
-[去重] 上次已推送: '3471725', 本次: 3471725
+[数] 最新期号: 3471882 结果: 0+7+7=14 大双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471725 结果: 9+4+3=16 大双 形态:杂六
-[去重] 上次已推送: '3471725', 本次: 3471725
+[数] 最新期号: 3471882 结果: 0+7+7=14 大双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471725 结果: 9+4+3=16 大双 形态:杂六
-[去重] 上次已推送: '3471725', 本次: 3471725
+[数] 最新期号: 3471882 结果: 0+7+7=14 大双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471725 结果: 9+4+3=16 大双 形态:杂六
-[去重] 上次已推送: '3471725', 本次: 3471725
+[数] 最新期号: 3471882 结果: 0+7+7=14 大双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471725 结果: 9+4+3=16 大双 形态:杂六
-[去重] 上次已推送: '3471725', 本次: 3471725
+[数] 最新期号: 3471882 结果: 0+7+7=14 大双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471726 结果: 6+5+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471725', 本次: 3471726
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 238, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787193169, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158170, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787193170, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471882 结果: 0+7+7=14 大双 形态:对子
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471883 结果: 9+2+7=18 大双 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471883）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 398, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787228130, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471726 结果: 6+5+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471726', 本次: 3471726
+[数] 最新期号: 3471883 结果: 9+2+7=18 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471726 结果: 6+5+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471726', 本次: 3471726
+[数] 最新期号: 3471883 结果: 9+2+7=18 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471726 结果: 6+5+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471726', 本次: 3471726
+[数] 最新期号: 3471883 结果: 9+2+7=18 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471726 结果: 6+5+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471726', 本次: 3471726
+[数] 最新期号: 3471883 结果: 9+2+7=18 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471726 结果: 6+5+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471726', 本次: 3471726
+[数] 最新期号: 3471883 结果: 9+2+7=18 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471726 结果: 6+5+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471726', 本次: 3471726
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471727 结果: 0+5+6=11 小单 形态:杂六
-[去重] 上次已推送: '3471726', 本次: 3471727
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 239, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787193389, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158180, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787193390, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471884 结果: 8+5+8=21 大单 形态:对子
+[图] result.png 生成成功（夏时令 高清版，期号3471884）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 399, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787228321, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471727 结果: 0+5+6=11 小单 形态:杂六
-[去重] 上次已推送: '3471727', 本次: 3471727
+[数] 最新期号: 3471884 结果: 8+5+8=21 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471727 结果: 0+5+6=11 小单 形态:杂六
-[去重] 上次已推送: '3471727', 本次: 3471727
+[数] 最新期号: 3471884 结果: 8+5+8=21 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471727 结果: 0+5+6=11 小单 形态:杂六
-[去重] 上次已推送: '3471727', 本次: 3471727
+[数] 最新期号: 3471884 结果: 8+5+8=21 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471727 结果: 0+5+6=11 小单 形态:杂六
-[去重] 上次已推送: '3471727', 本次: 3471727
+[数] 最新期号: 3471884 结果: 8+5+8=21 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471727 结果: 0+5+6=11 小单 形态:杂六
-[去重] 上次已推送: '3471727', 本次: 3471727
+[数] 最新期号: 3471884 结果: 8+5+8=21 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471727 结果: 0+5+6=11 小单 形态:杂六
-[去重] 上次已推送: '3471727', 本次: 3471727
+[数] 最新期号: 3471884 结果: 8+5+8=21 大单 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471728 结果: 7+2+3=12 小双 形态:杂六
-[去重] 上次已推送: '3471727', 本次: 3471728
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 240, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787193609, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158188, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787193610, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471885 结果: 0+9+9=18 大双 形态:对子
+[图] result.png 生成成功（夏时令 高清版，期号3471885）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 400, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787228546, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471728 结果: 7+2+3=12 小双 形态:杂六
-[去重] 上次已推送: '3471728', 本次: 3471728
+[数] 最新期号: 3471885 结果: 0+9+9=18 大双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471728 结果: 7+2+3=12 小双 形态:杂六
-[去重] 上次已推送: '3471728', 本次: 3471728
+[数] 最新期号: 3471885 结果: 0+9+9=18 大双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471728 结果: 7+2+3=12 小双 形态:杂六
-[去重] 上次已推送: '3471728', 本次: 3471728
+[数] 最新期号: 3471885 结果: 0+9+9=18 大双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471728 结果: 7+2+3=12 小双 形态:杂六
-[去重] 上次已推送: '3471728', 本次: 3471728
+[数] 最新期号: 3471885 结果: 0+9+9=18 大双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471728 结果: 7+2+3=12 小双 形态:杂六
-[去重] 上次已推送: '3471728', 本次: 3471728
+[数] 最新期号: 3471885 结果: 0+9+9=18 大双 形态:对子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471729 结果: 1+9+9=19 大单 形态:对子
-[去重] 上次已推送: '3471728', 本次: 3471729
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 241, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787193799, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158194, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787193800, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471885 结果: 0+9+9=18 大双 形态:对子
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471886 结果: 3+4+5=12 小双 形态:顺子
+[图] result.png 生成成功（夏时令 高清版，期号3471886）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 401, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787228769, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471729 结果: 1+9+9=19 大单 形态:对子
-[去重] 上次已推送: '3471729', 本次: 3471729
+[数] 最新期号: 3471886 结果: 3+4+5=12 小双 形态:顺子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471729 结果: 1+9+9=19 大单 形态:对子
-[去重] 上次已推送: '3471729', 本次: 3471729
+[数] 最新期号: 3471886 结果: 3+4+5=12 小双 形态:顺子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471729 结果: 1+9+9=19 大单 形态:对子
-[去重] 上次已推送: '3471729', 本次: 3471729
+[数] 最新期号: 3471886 结果: 3+4+5=12 小双 形态:顺子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471729 结果: 1+9+9=19 大单 形态:对子
-[去重] 上次已推送: '3471729', 本次: 3471729
+[数] 最新期号: 3471886 结果: 3+4+5=12 小双 形态:顺子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471729 结果: 1+9+9=19 大单 形态:对子
-[去重] 上次已推送: '3471729', 本次: 3471729
+[数] 最新期号: 3471886 结果: 3+4+5=12 小双 形态:顺子
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471729 结果: 1+9+9=19 大单 形态:对子
-[去重] 上次已推送: '3471729', 本次: 3471729
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471730 结果: 0+3+3=6 小双 形态:对子
-[去重] 上次已推送: '3471729', 本次: 3471730
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 242, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787194020, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158204, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787194020, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471887 结果: 9+4+8=21 大单 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471887）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 402, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787228960, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471730 结果: 0+3+3=6 小双 形态:对子
-[去重] 上次已推送: '3471730', 本次: 3471730
+[数] 最新期号: 3471887 结果: 9+4+8=21 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471730 结果: 0+3+3=6 小双 形态:对子
-[去重] 上次已推送: '3471730', 本次: 3471730
+[数] 最新期号: 3471887 结果: 9+4+8=21 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471730 结果: 0+3+3=6 小双 形态:对子
-[去重] 上次已推送: '3471730', 本次: 3471730
+[数] 最新期号: 3471887 结果: 9+4+8=21 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471730 结果: 0+3+3=6 小双 形态:对子
-[去重] 上次已推送: '3471730', 本次: 3471730
+[数] 最新期号: 3471887 结果: 9+4+8=21 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471730 结果: 0+3+3=6 小双 形态:对子
-[去重] 上次已推送: '3471730', 本次: 3471730
+[数] 最新期号: 3471887 结果: 9+4+8=21 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471731 结果: 4+7+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471730', 本次: 3471731
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 243, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787194210, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158210, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787194211, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471887 结果: 9+4+8=21 大单 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471888 结果: 3+9+0=12 小双 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471888）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 403, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787229182, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471731 结果: 4+7+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471731', 本次: 3471731
+[数] 最新期号: 3471888 结果: 3+9+0=12 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471731 结果: 4+7+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471731', 本次: 3471731
+[数] 最新期号: 3471888 结果: 3+9+0=12 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471731 结果: 4+7+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471731', 本次: 3471731
+[数] 最新期号: 3471888 结果: 3+9+0=12 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471731 结果: 4+7+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471731', 本次: 3471731
+[数] 最新期号: 3471888 结果: 3+9+0=12 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471731 结果: 4+7+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471731', 本次: 3471731
+[数] 最新期号: 3471888 结果: 3+9+0=12 小双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471731 结果: 4+7+1=12 小双 形态:杂六
-[去重] 上次已推送: '3471731', 本次: 3471731
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471732 结果: 8+0+2=10 小双 形态:杂六
-[去重] 上次已推送: '3471731', 本次: 3471732
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 244, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787194432, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158220, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787194433, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471889 结果: 6+0+8=14 大双 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471889）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 404, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787229375, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471732 结果: 8+0+2=10 小双 形态:杂六
-[去重] 上次已推送: '3471732', 本次: 3471732
+[数] 最新期号: 3471889 结果: 6+0+8=14 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471732 结果: 8+0+2=10 小双 形态:杂六
-[去重] 上次已推送: '3471732', 本次: 3471732
+[数] 最新期号: 3471889 结果: 6+0+8=14 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471732 结果: 8+0+2=10 小双 形态:杂六
-[去重] 上次已推送: '3471732', 本次: 3471732
+[数] 最新期号: 3471889 结果: 6+0+8=14 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471732 结果: 8+0+2=10 小双 形态:杂六
-[去重] 上次已推送: '3471732', 本次: 3471732
+[数] 最新期号: 3471889 结果: 6+0+8=14 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471732 结果: 8+0+2=10 小双 形态:杂六
-[去重] 上次已推送: '3471732', 本次: 3471732
+[数] 最新期号: 3471889 结果: 6+0+8=14 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471732 结果: 8+0+2=10 小双 形态:杂六
-[去重] 上次已推送: '3471732', 本次: 3471732
+[数] 最新期号: 3471889 结果: 6+0+8=14 大双 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471733 结果: 0+1+9=10 小双 形态:杂六
-[去重] 上次已推送: '3471732', 本次: 3471733
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 245, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787194652, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158229, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787194653, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471890 结果: 4+8+1=13 小单 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471890）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 405, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787229598, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471733 结果: 0+1+9=10 小双 形态:杂六
-[去重] 上次已推送: '3471733', 本次: 3471733
+[数] 最新期号: 3471890 结果: 4+8+1=13 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471733 结果: 0+1+9=10 小双 形态:杂六
-[去重] 上次已推送: '3471733', 本次: 3471733
+[数] 最新期号: 3471890 结果: 4+8+1=13 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471733 结果: 0+1+9=10 小双 形态:杂六
-[去重] 上次已推送: '3471733', 本次: 3471733
+[数] 最新期号: 3471890 结果: 4+8+1=13 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471733 结果: 0+1+9=10 小双 形态:杂六
-[去重] 上次已推送: '3471733', 本次: 3471733
+[数] 最新期号: 3471890 结果: 4+8+1=13 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471733 结果: 0+1+9=10 小双 形态:杂六
-[去重] 上次已推送: '3471733', 本次: 3471733
+[数] 最新期号: 3471890 结果: 4+8+1=13 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471733 结果: 0+1+9=10 小双 形态:杂六
-[去重] 上次已推送: '3471733', 本次: 3471733
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471734 结果: 6+3+2=11 小单 形态:杂六
-[去重] 上次已推送: '3471733', 本次: 3471734
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 246, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787194873, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158237, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787194874, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471891 结果: 4+1+0=5 小单 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471891）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 406, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787229789, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471734 结果: 6+3+2=11 小单 形态:杂六
-[去重] 上次已推送: '3471734', 本次: 3471734
+[数] 最新期号: 3471891 结果: 4+1+0=5 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471734 结果: 6+3+2=11 小单 形态:杂六
-[去重] 上次已推送: '3471734', 本次: 3471734
+[数] 最新期号: 3471891 结果: 4+1+0=5 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471734 结果: 6+3+2=11 小单 形态:杂六
-[去重] 上次已推送: '3471734', 本次: 3471734
+[数] 最新期号: 3471891 结果: 4+1+0=5 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471734 结果: 6+3+2=11 小单 形态:杂六
-[去重] 上次已推送: '3471734', 本次: 3471734
+[数] 最新期号: 3471891 结果: 4+1+0=5 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471734 结果: 6+3+2=11 小单 形态:杂六
-[去重] 上次已推送: '3471734', 本次: 3471734
+[数] 最新期号: 3471891 结果: 4+1+0=5 小单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471735 结果: 5+4+1=10 小双 形态:杂六
-[去重] 上次已推送: '3471734', 本次: 3471735
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 247, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787195065, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158244, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787195065, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[数] 最新期号: 3471891 结果: 4+1+0=5 小单 形态:杂六
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3471892 结果: 2+6+9=17 大单 形态:杂六
+[图] result.png 生成成功（夏时令 高清版，期号3471892）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 407, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787230012, "photo": [{"file_id"
+[TG] 群组文字推送 成功: 200
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471735 结果: 5+4+1=10 小双 形态:杂六
-[去重] 上次已推送: '3471735', 本次: 3471735
+[数] 最新期号: 3471892 结果: 2+6+9=17 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471735 结果: 5+4+1=10 小双 形态:杂六
-[去重] 上次已推送: '3471735', 本次: 3471735
+[数] 最新期号: 3471892 结果: 2+6+9=17 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471735 结果: 5+4+1=10 小双 形态:杂六
-[去重] 上次已推送: '3471735', 本次: 3471735
+[数] 最新期号: 3471892 结果: 2+6+9=17 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471735 结果: 5+4+1=10 小双 形态:杂六
-[去重] 上次已推送: '3471735', 本次: 3471735
+[数] 最新期号: 3471892 结果: 2+6+9=17 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471735 结果: 5+4+1=10 小双 形态:杂六
-[去重] 上次已推送: '3471735', 本次: 3471735
+[数] 最新期号: 3471892 结果: 2+6+9=17 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471735 结果: 5+4+1=10 小双 形态:杂六
-[去重] 上次已推送: '3471735', 本次: 3471735
+[数] 最新期号: 3471892 结果: 2+6+9=17 大单 形态:杂六
 已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471736 结果: 5+8+7=20 大双 形态:杂六
-[去重] 上次已推送: '3471735', 本次: 3471736
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 248, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787195285, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158254, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787195285, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] 数据已实时提交并推送
-✅ 推送完成
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471736 结果: 5+8+7=20 大双 形态:杂六
-[去重] 上次已推送: '3471736', 本次: 3471736
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471736 结果: 5+8+7=20 大双 形态:杂六
-[去重] 上次已推送: '3471736', 本次: 3471736
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471736 结果: 5+8+7=20 大双 形态:杂六
-[去重] 上次已推送: '3471736', 本次: 3471736
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471736 结果: 5+8+7=20 大双 形态:杂六
-[去重] 上次已推送: '3471736', 本次: 3471736
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471736 结果: 5+8+7=20 大双 形态:杂六
-[去重] 上次已推送: '3471736', 本次: 3471736
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471737 结果: 9+1+4=14 大双 形态:杂六
-[去重] 上次已推送: '3471736', 本次: 3471737
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 249, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787195475, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158260, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787195475, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] 数据已实时提交并推送
-✅ 推送完成
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471737 结果: 9+1+4=14 大双 形态:杂六
-[去重] 上次已推送: '3471737', 本次: 3471737
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471737 结果: 9+1+4=14 大双 形态:杂六
-[去重] 上次已推送: '3471737', 本次: 3471737
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471737 结果: 9+1+4=14 大双 形态:杂六
-[去重] 上次已推送: '3471737', 本次: 3471737
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471737 结果: 9+1+4=14 大双 形态:杂六
-[去重] 上次已推送: '3471737', 本次: 3471737
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471737 结果: 9+1+4=14 大双 形态:杂六
-[去重] 上次已推送: '3471737', 本次: 3471737
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471737 结果: 9+1+4=14 大双 形态:杂六
-[去重] 上次已推送: '3471737', 本次: 3471737
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471738 结果: 1+8+5=14 大双 形态:杂六
-[去重] 上次已推送: '3471737', 本次: 3471738
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 250, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787195694, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158269, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787195695, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] 数据已实时提交并推送
-✅ 推送完成
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471738 结果: 1+8+5=14 大双 形态:杂六
-[去重] 上次已推送: '3471738', 本次: 3471738
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471738 结果: 1+8+5=14 大双 形态:杂六
-[去重] 上次已推送: '3471738', 本次: 3471738
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471738 结果: 1+8+5=14 大双 形态:杂六
-[去重] 上次已推送: '3471738', 本次: 3471738
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471738 结果: 1+8+5=14 大双 形态:杂六
-[去重] 上次已推送: '3471738', 本次: 3471738
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471738 结果: 1+8+5=14 大双 形态:杂六
-[去重] 上次已推送: '3471738', 本次: 3471738
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471738 结果: 1+8+5=14 大双 形态:杂六
-[去重] 上次已推送: '3471738', 本次: 3471738
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471739 结果: 3+2+7=12 小双 形态:杂六
-[去重] 上次已推送: '3471738', 本次: 3471739
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 251, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787195914, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158278, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787195914, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] 数据已实时提交并推送
-✅ 推送完成
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471739 结果: 3+2+7=12 小双 形态:杂六
-[去重] 上次已推送: '3471739', 本次: 3471739
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471739 结果: 3+2+7=12 小双 形态:杂六
-[去重] 上次已推送: '3471739', 本次: 3471739
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471739 结果: 3+2+7=12 小双 形态:杂六
-[去重] 上次已推送: '3471739', 本次: 3471739
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471739 结果: 3+2+7=12 小双 形态:杂六
-[去重] 上次已推送: '3471739', 本次: 3471739
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471739 结果: 3+2+7=12 小双 形态:杂六
-[去重] 上次已推送: '3471739', 本次: 3471739
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471740 结果: 9+9+1=19 大单 形态:对子
-[去重] 上次已推送: '3471739', 本次: 3471740
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 252, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787196103, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158282, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787196104, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] 数据已实时提交并推送
-✅ 推送完成
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471740 结果: 9+9+1=19 大单 形态:对子
-[去重] 上次已推送: '3471740', 本次: 3471740
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471740 结果: 9+9+1=19 大单 形态:对子
-[去重] 上次已推送: '3471740', 本次: 3471740
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471740 结果: 9+9+1=19 大单 形态:对子
-[去重] 上次已推送: '3471740', 本次: 3471740
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471740 结果: 9+9+1=19 大单 形态:对子
-[去重] 上次已推送: '3471740', 本次: 3471740
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471740 结果: 9+9+1=19 大单 形态:对子
-[去重] 上次已推送: '3471740', 本次: 3471740
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471740 结果: 9+9+1=19 大单 形态:对子
-[去重] 上次已推送: '3471740', 本次: 3471740
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471741 结果: 7+5+6=18 大双 形态:杂六
-[去重] 上次已推送: '3471740', 本次: 3471741
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 253, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787196323, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158293, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787196323, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] 数据已实时提交并推送
-✅ 推送完成
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471741 结果: 7+5+6=18 大双 形态:杂六
-[去重] 上次已推送: '3471741', 本次: 3471741
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471741 结果: 7+5+6=18 大双 形态:杂六
-[去重] 上次已推送: '3471741', 本次: 3471741
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471741 结果: 7+5+6=18 大双 形态:杂六
-[去重] 上次已推送: '3471741', 本次: 3471741
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471741 结果: 7+5+6=18 大双 形态:杂六
-[去重] 上次已推送: '3471741', 本次: 3471741
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471741 结果: 7+5+6=18 大双 形态:杂六
-[去重] 上次已推送: '3471741', 本次: 3471741
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471741 结果: 7+5+6=18 大双 形态:杂六
-[去重] 上次已推送: '3471741', 本次: 3471741
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471742 结果: 8+2+6=16 大双 形态:杂六
-[去重] 上次已推送: '3471741', 本次: 3471742
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 254, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787196542, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158303, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787196543, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] 数据已实时提交并推送
-✅ 推送完成
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471742 结果: 8+2+6=16 大双 形态:杂六
-[去重] 上次已推送: '3471742', 本次: 3471742
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471742 结果: 8+2+6=16 大双 形态:杂六
-[去重] 上次已推送: '3471742', 本次: 3471742
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471742 结果: 8+2+6=16 大双 形态:杂六
-[去重] 上次已推送: '3471742', 本次: 3471742
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471742 结果: 8+2+6=16 大双 形态:杂六
-[去重] 上次已推送: '3471742', 本次: 3471742
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471742 结果: 8+2+6=16 大双 形态:杂六
-[去重] 上次已推送: '3471742', 本次: 3471742
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471743 结果: 2+0+1=3 小单 形态:杂六
-[去重] 上次已推送: '3471742', 本次: 3471743
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 255, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787196730, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158306, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787196731, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] 数据已实时提交并推送
-✅ 推送完成
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471743 结果: 2+0+1=3 小单 形态:杂六
-[去重] 上次已推送: '3471743', 本次: 3471743
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471743 结果: 2+0+1=3 小单 形态:杂六
-[去重] 上次已推送: '3471743', 本次: 3471743
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471743 结果: 2+0+1=3 小单 形态:杂六
-[去重] 上次已推送: '3471743', 本次: 3471743
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471743 结果: 2+0+1=3 小单 形态:杂六
-[去重] 上次已推送: '3471743', 本次: 3471743
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471743 结果: 2+0+1=3 小单 形态:杂六
-[去重] 上次已推送: '3471743', 本次: 3471743
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471743 结果: 2+0+1=3 小单 形态:杂六
-[去重] 上次已推送: '3471743', 本次: 3471743
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471744 结果: 7+8+4=19 大单 形态:杂六
-[去重] 上次已推送: '3471743', 本次: 3471744
-[图] result.png 生成成功（夏时令模板）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 256, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787196949, "photo": [{"file_id"
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 158318, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787196950, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] 数据已实时提交并推送
-✅ 推送完成
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471744 结果: 7+8+4=19 大单 形态:杂六
-[去重] 上次已推送: '3471744', 本次: 3471744
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471744 结果: 7+8+4=19 大单 形态:杂六
-[去重] 上次已推送: '3471744', 本次: 3471744
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471744 结果: 7+8+4=19 大单 形态:杂六
-[去重] 上次已推送: '3471744', 本次: 3471744
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471744 结果: 7+8+4=19 大单 形态:杂六
-[去重] 上次已推送: '3471744', 本次: 3471744
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471744 结果: 7+8+4=19 大单 形态:杂六
-[去重] 上次已推送: '3471744', 本次: 3471744
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 30s 后继续...
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3471744 结果: 7+8+4=19 大单 形态:杂六
-[去重] 上次已推送: '3471744', 本次: 3471744
-已推送过该期，跳过推送（仅更新数据文件）
-[循环] 等待 13s 后继续...
-[循环] 结束：共尝试 210 次，成功推送 32 期
+[循环] 结束：共尝试 209 次，成功推送 23 期
