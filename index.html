@@ -448,7 +448,7 @@
     </div>
 
     <div class="footer">
-        <code>window.PC28_DATA</code> 对外接口 · 每3分钟自动更新
+        <code>window.PC28_DATA</code> 对外接口 · 每20秒自动更新
     </div>
 </div>
 
@@ -472,7 +472,7 @@
         // ============================================================
         // 配置
         // ============================================================
-        const REFRESH_INTERVAL = 180000;   // 3分钟
+        const REFRESH_INTERVAL = 20000;    // 20秒（配合快速推送）
         const ROUND_INTERVAL = 210;        // 3.5分钟
         const MAX_HISTORY = 50;
 
@@ -546,26 +546,21 @@
         // 获取最新数据
         // ============================================================
         async function fetchData() {
-            try {
-                let resp = await fetch('data_pc28.json');
-                if (!resp.ok) {
-                    resp = await fetch('data_yu28.json');
+            const t = Date.now();   // cache-busting：绕过 GitHub Pages 缓存，拿到最新数据
+            const candidates = ['data_pc28.json', 'data_yu28.json'];
+            for (const file of candidates) {
+                try {
+                    const resp = await fetch(`${file}?t=${t}`);
+                    if (!resp.ok) continue;
+                    const json = await resp.json();
+                    if (json && Array.isArray(json.data) && json.data.length > 0) {
+                        return json;
+                    }
+                } catch (e) {
+                    console.warn(`数据源 ${file} 解析失败，尝试下一个:`, e);
                 }
-                if (!resp.ok) {
-                    resp = await fetch('data.json');
-                }
-                if (!resp.ok) {
-                    throw new Error('无法获取数据');
-                }
-                const json = await resp.json();
-                if (!json.data || json.data.length === 0) {
-                    throw new Error('数据为空');
-                }
-                return json;
-            } catch (err) {
-                console.error('获取数据失败:', err);
-                throw err;
             }
+            throw new Error('无法获取数据');
         }
 
         // ============================================================
