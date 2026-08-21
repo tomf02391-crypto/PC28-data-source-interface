@@ -3,6 +3,20 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+    // 缓存自愈：GitHub Pages 对 index.html 缓存 10 分钟，旧版页面自动升级到带版本号的新 URL
+    (function () {
+        var V = '20260821-b1';
+        if (location.search.indexOf('v=' + V) < 0) {
+            var path = location.pathname;
+            if (!path.endsWith('/') && !/index\.html?$/i.test(path)) {
+                path = path + (path.endsWith('/') ? '' : '/');
+            }
+            if (path.endsWith('/')) path += 'index.html';
+            location.replace(path + '?v=' + V);
+        }
+    })();
+    </script>
     <title>PC28未来数据站</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -621,6 +635,9 @@
             const remaining = (nextTime - now) / 1000;
             if (remaining < 0) {
                 countdownDisplay.textContent = '00:00';
+                countdownDisplay.classList.add('warning');
+                // 归零后立即再拉一次，确保到点数据必刷新（防抖避免与轮询重复）
+                if (now - lastZeroFetch > 5000) { lastZeroFetch = now; fetchAndRender(); }
                 return;
             }
             // 归零瞬间自动拉一次新数据（防抖，避免与轮询重复）
@@ -634,6 +651,11 @@
             countdownDisplay.classList.toggle('warning', remaining < 30);
         }
         setInterval(updateCountdown, 500);
+        // 切回前台或获得焦点时立即刷新数据（iOS/安卓后台会冻结 JS）
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'visible') fetchAndRender();
+        });
+        window.addEventListener('focus', function () { fetchAndRender(); });
 
         // ============================================================
         // Canvas 生成开奖卡片图片
