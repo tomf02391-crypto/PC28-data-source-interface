@@ -21,10 +21,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-pillow-requests-numpy
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies
         run: |
-          sudo apt-get install -y fonts-noto-cjk || { sudo apt-get update -y && sudo apt-get install -y fonts-noto-cjk; }
-          pip install --quiet --no-cache-dir pillow requests numpy
+          pip install --quiet pillow requests numpy
 
       - name: Fetch & validate & push to Telegram
         env:
@@ -33,7 +40,7 @@ jobs:
           TG_GROUP_ID: ${{ secrets.TG_GROUP_ID }}
           YU28_API_KEY: ${{ secrets.YU28_API_KEY }}
         run: |
-          python3 fetch_and_push.py --minutes 1 > run.log 2>&1 || { echo "EXIT_CODE=$?" >> run.log; }
+          python3 fetch_and_push.py --minutes 3 > run.log 2>&1 || { echo "EXIT_CODE=$?" >> run.log; }
           cat run.log
           if grep -q "^EXIT_CODE=" run.log; then exit 1; fi
 
