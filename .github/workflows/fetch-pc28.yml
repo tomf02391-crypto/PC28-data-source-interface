@@ -2,12 +2,12 @@ name: Fetch PC28 Data + Push to Telegram
 
 on:
   schedule:
-    - cron: '*/1 * * * *'
+    - cron: '*/3 * * * *'
   workflow_dispatch:
 
 concurrency:
   group: fetch-pc28
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -40,7 +40,7 @@ jobs:
           TG_GROUP_ID: ${{ secrets.TG_GROUP_ID }}
           YU28_API_KEY: ${{ secrets.YU28_API_KEY }}
         run: |
-          python3 fetch_and_push.py --minutes 2 > run.log 2>&1 || { echo "EXIT_CODE=$?" >> run.log; }
+          python3 fetch_and_push.py --minutes 3 > run.log 2>&1 || { echo "EXIT_CODE=$?" >> run.log; }
           cat run.log
           if grep -q "^EXIT_CODE=" run.log; then exit 1; fi
 
