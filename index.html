@@ -188,6 +188,12 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        .countdown-card .next-period {
+            margin-top: 6px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.55);
+            letter-spacing: 1px;
+        }
 
         .balls-row {
             display: flex;
@@ -396,6 +402,7 @@
     <div class="countdown-card">
         <div class="label"><span class="icon">⏳</span>下一期倒计时</div>
         <div class="time" id="countdownDisplay">--:--</div>
+        <div class="next-period" id="nextPeriodLabel">—</div>
     </div>
 
     <div class="balls-row" id="ballsDisplay">
@@ -416,7 +423,7 @@
         <span class="eq">=</span>
         <div class="ball-item">
             <div class="num special" id="displaySpecial">-</div>
-            <span class="label" style="color:rgba(255,200,100,0.15);">特码</span>
+            <span class="label">总和</span>
         </div>
     </div>
 
@@ -492,20 +499,21 @@
         const statusLabel = document.getElementById('statusLabel');
         const toggleBtn = document.getElementById('toggleBtn');
         const countdownDisplay = document.getElementById('countdownDisplay');
+        const nextPeriodLabel = document.getElementById('nextPeriodLabel');
         const historyBody = document.getElementById('historyBody');
         const cardCanvas = document.getElementById('cardCanvas');
 
         // ============================================================
         // 工具函数
         // ============================================================
-        function analyzeTerms(b1, b2, b3, special) {
-            const oddEven = special % 2 === 0 ? '双' : '单';
-            const bigSmall = special <= 13 ? '小' : '大';
+        function analyzeTerms(b1, b2, b3, sum_val) {
+            const oddEven = sum_val % 2 === 0 ? '双' : '单';
+            const bigSmall = sum_val <= 13 ? '小' : '大';
             let combination = '';
-            if (special <= 13 && special % 2 === 0) combination = '小双';
-            else if (special <= 13 && special % 2 === 1) combination = '小单';
-            else if (special > 13 && special % 2 === 0) combination = '大双';
-            else if (special > 13 && special % 2 === 1) combination = '大单';
+            if (sum_val <= 13 && sum_val % 2 === 0) combination = '小双';
+            else if (sum_val <= 13 && sum_val % 2 === 1) combination = '小单';
+            else if (sum_val > 13 && sum_val % 2 === 0) combination = '大双';
+            else if (sum_val > 13 && sum_val % 2 === 1) combination = '大单';
 
             const sorted = [b1, b2, b3].slice().sort((a, b) => a - b);
             const isConsecutive = (sorted[2] - sorted[1] === 1 && sorted[1] - sorted[0] === 1);
@@ -599,6 +607,8 @@
         // 倒计时
         // ============================================================
         let lastOpenTime = null;
+        let currentPeriod = '';
+        let lastZeroFetch = 0;
         function updateCountdown() {
             if (!lastOpenTime) {
                 countdownDisplay.textContent = '--:--';
@@ -612,6 +622,11 @@
             if (remaining < 0) {
                 countdownDisplay.textContent = '00:00';
                 return;
+            }
+            // 归零瞬间自动拉一次新数据（防抖，避免与轮询重复）
+            if (remaining <= 1 && now - lastZeroFetch > 5000) {
+                lastZeroFetch = now;
+                fetchAndRender();
             }
             const mins = Math.floor(remaining / 60);
             const secs = Math.floor(remaining % 60);
@@ -861,7 +876,7 @@
                 const [b1, b2, b3] = balls;
                 const sum_val = b1 + b2 + b3;
                 const special = sum_val % 10;
-                const terms = analyzeTerms(b1, b2, b3, special);
+                const terms = analyzeTerms(b1, b2, b3, sum_val);
                 if (combination) terms.combination = combination;
 
                 const dataObj = {
@@ -869,12 +884,21 @@
                     terms, date, time, sourceName
                 };
                 window.PC28_DATA = dataObj;
+                currentPeriod = period;
+
+                // 下一期期号（当前期号 +1，遇 9999999 归 1）
+                let nextPeriod = '';
+                if (period && /^\d+$/.test(String(period))) {
+                    const pn = parseInt(period, 10) + 1;
+                    nextPeriod = String(pn).padStart(String(period).length, '0');
+                }
+                nextPeriodLabel.textContent = nextPeriod ? '下一期 ' + nextPeriod : '—';
 
                 // 更新界面
                 displayBall1.textContent = b1;
                 displayBall2.textContent = b2;
                 displayBall3.textContent = b3;
-                displaySpecial.textContent = special;
+                displaySpecial.textContent = sum_val;
                 combinationTag.innerHTML = '<strong>' + terms.combination + '</strong> · ' + terms.shape;
 
                 document.getElementById('termOddEven').textContent = terms.oddEven;
