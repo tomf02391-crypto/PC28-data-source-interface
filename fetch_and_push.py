@@ -20,13 +20,6 @@ try:
 except ImportError:
     requests = None
 
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
-
-try:
-    import numpy as np
-except ImportError:
-    np = None
-
 import poster_render
 
 # ================= 配置 =================
@@ -38,18 +31,6 @@ YU28_API_KEY = os.environ.get("YU28_API_KEY", "")
 DATA_FILE = "data_pc28.json"
 LAST_SENT_FILE = "last_sent.txt"
 IMG_FILE = "result.png"
-
-# 图片模板（与 fetch_and_push.py 同目录 templates/ 下）
-TPL_SUMMER = os.environ.get("TPL_SUMMER", "templates/summer_template.jpg")
-TPL_WINTER = os.environ.get("TPL_WINTER", "templates/winter_template.jpg")
-
-# 模板尺寸 1808x608，四球配置 (cx, cy, r, 顶部色, 底部色, 数字色)
-BALLS = [
-    (230, 377, 90, (0, 191, 255), (0, 85, 204), (35, 35, 45)),      # 蓝
-    (677, 377, 90, (255, 0, 255), (139, 0, 139), (45, 12, 70)),     # 紫
-    (1122, 377, 90, (0, 206, 209), (0, 102, 102), (255, 215, 0)),   # 青
-    (1572, 377, 90, (255, 215, 0), (255, 69, 0), (255, 215, 0)),    # 金
-]
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36",
@@ -187,79 +168,6 @@ def save_data(item):
 
 
 # ================= 图片 =================
-def find_font(size, bold=False, cjk=False):
-    base = os.path.dirname(os.path.abspath(__file__))
-    if cjk:
-        candidates = [
-            os.path.join(base, "fonts", "wqy-microhei.ttc"),
-            "/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc",
-            "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
-            "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
-            "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
-            os.path.expanduser("~/.fonts/wqy-microhei.ttc"),
-            "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
-            "/usr/share/fonts/truetype/arphic/uming.ttc",
-        ]
-    elif bold:
-        candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"]
-    else:
-        candidates = ["/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"]
-    for p in candidates:
-        if os.path.exists(p):
-            return ImageFont.truetype(p, size)
-    return ImageFont.load_default()
-
-
-def is_summer():
-    """时令判断：美国夏令时（3月第二个周日~11月第一个周日）→ True 夏图 / False 冬图"""
-    try:
-        from zoneinfo import ZoneInfo
-        now_ny = datetime.datetime.now(ZoneInfo("America/New_York"))
-        return now_ny.utcoffset().total_seconds() == -4 * 3600
-    except Exception:
-        m = datetime.datetime.now().month
-        return 4 <= m <= 10
-
-
-def erase_top_text(img, summer):
-    """擦除顶部旧期号文字区域（固定矩形，避开左侧国旗），用高斯模糊背景填充"""
-    w, h = img.size
-    box = (int(w * 0.092), int(h * 0.075), int(w * 0.64), int(h * 0.32))
-    blur = img.filter(ImageFilter.GaussianBlur(25))
-    region = blur.crop(box)
-    img.paste(region, box)
-    print(f"[擦除] 已擦除顶部期号区域 {box}")
-    return img
-
-
-def repaint_balls(img, balls, b1, b2, b3, s):
-    """重绘四球：渐变圆 + 白色内环 + 新数字（覆盖旧数字）"""
-    a = np.array(img).astype(int)
-    h, w, _ = a.shape
-    yy, xx = np.mgrid[0:h, 0:w]
-    vals = [str(b1), str(b2), str(b3), str(s)]
-    for idx, (cx, cy, R, c_top, c_bot, num_color) in enumerate(balls):
-        dist = np.sqrt((xx - cx) ** 2 + (yy - cy) ** 2)
-        t = np.clip(dist / R, 0, 1) ** 1.2
-        grad = np.array(c_top)[None, None, :] * (1 - t[..., None]) + np.array(c_bot)[None, None, :] * t[..., None]
-        feather = np.clip((R - dist) / 6, 0, 1)
-        for c in range(3):
-            a[:, :, c] = np.where(dist <= R, grad[:, :, c] * feather + a[:, :, c] * (1 - feather), a[:, :, c])
-        ring = (dist >= R * 0.32) & (dist <= R * 0.44)
-        for c in range(3):
-            a[:, :, c] = np.where(ring, a[:, :, c] * 0.2 + 245 * 0.8, a[:, :, c])
-    img2 = Image.fromarray(a.astype(np.uint8))
-    draw = ImageDraw.Draw(img2)
-    for idx, (cx, cy, R, c_top, c_bot, num_color) in enumerate(balls):
-        font = find_font(72, bold=True) if idx == 3 else find_font(64, bold=True)
-        if idx == 3:
-            draw.text((cx, cy), vals[idx], fill=num_color, font=font, anchor="mm",
-                      stroke_width=5, stroke_fill=(70, 15, 5))
-        else:
-            draw.text((cx, cy), vals[idx], fill=num_color, font=font, anchor="mm")
-    return img2
-
-
 def gen_image(period, date, time_str, balls, s, combo, shape):
     b1, b2, b3 = balls
     # 直接由代码绘制海报（冰雪版/夏日海滩版），随季节自动切换
