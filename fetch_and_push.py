@@ -60,6 +60,16 @@ HEADERS = {
 
 
 # ================= 数据源 =================
+def looks_valid_number(number):
+    """预校验号码格式：三个 0-9 数字以 + 分隔。坏数据直接丢弃，避免下游崩整个 run"""
+    if not number:
+        return False
+    parts = number.split("+")
+    if len(parts) != 3:
+        return False
+    return all(re.fullmatch(r"\d", p.strip()) for p in parts)
+
+
 def fetch_latest():
     """多数据源轮询：按顺序尝试，返回第一个成功的结果 (item, source_name)"""
     t = int(time.time())
@@ -77,10 +87,11 @@ def fetch_latest():
                 raw = resp.read().decode("utf-8", errors="replace")
             data = json.loads(raw)
             items = data.get("data") or []
-            if items:
+            good = [it for it in items if looks_valid_number(str(it.get("number", "")).strip())]
+            if good:
                 print(f"[源] {name} 返回 {len(items)} 条，使用该源")
-                return items[0], name
-            errors.append(f"{name}: 无 data")
+                return good[0], name
+            errors.append(f"{name}: 无有效号码数据")
         except Exception as e:
             errors.append(f"{name}: {e}")
             print(f"[源] {name} 失败: {e}")
@@ -356,12 +367,37 @@ def run_once(force=False):
     raise SystemExit("❌ 推送失败（频道与群组均未成功）")
 
 
+# ================= 循环轮询 =================
+def run_loop(minutes, poll=15):
+    """在 minutes 分钟内持续轮询，发现新期号立即推送（快速推送核心）"""
+    print(f"[loop] 启动循环轮询 {minutes} 分钟，每 {poll}s 检查一次")
+    end = time.time() + minutes * 60
+    while time.time() < end:
+        try:
+            run_once()
+        except SystemExit:
+            raise
+        except Exception as e:
+            print(f"[loop] 本轮异常（继续轮询）: {e}")
+        time.sleep(poll)
+    print("[loop] 循环结束")
+
+
 # ================= 主流程 =================
 def main():
+    import argparse
+    ap = argparse.ArgumentParser(description="PC28 抓取推送")
+    ap.add_argument("--minutes", type=float, default=0,
+                    help="循环轮询分钟数，0 表示只跑一次")
+    args = ap.parse_args()
+
     if not TG_TOKEN:
         raise SystemExit("缺少 TG_BOT_TOKEN（secrets 未配置）")
 
-    run_once()
+    if args.minutes and args.minutes > 0:
+        run_loop(args.minutes)
+    else:
+        run_once()
     return 0
 
 
