@@ -69,14 +69,14 @@ def make_font(size, weight=700):
     return f
 
 
-def make_char_layer(text, font_size, stroke, fill=(255, 255, 255, 255), target_h=None, supersample=2, weight=700):
+def make_char_layer(text, font_size, stroke, fill=(255, 255, 255, 255), target_h=None, supersample=2, weight=700, stroke_fill=(255, 255, 255, 255)):
     """生成文字RGBA图层（含描边）；超采样绘制后缩回 font_size 实际尺寸；target_h 指定时等比缩放到该高度"""
     f = make_font(font_size * supersample, weight=weight)
     pad = stroke + 8
     tmp = Image.new("RGBA", (font_size * 6 * supersample, font_size * 4 * supersample), (0, 0, 0, 0))
     d = ImageDraw.Draw(tmp)
     d.text((tmp.width // 2, tmp.height // 2), text, font=f, fill=fill, anchor="mm",
-           stroke_width=stroke * supersample, stroke_fill=(255, 255, 255, 255))
+           stroke_width=stroke * supersample, stroke_fill=stroke_fill)
     bbox = tmp.getbbox()
     if bbox is None:
         return None
@@ -185,13 +185,20 @@ def draw_ball_fixed(base, cx, cy, r, num, fs, gold=False):
         sc = min(maxd / char.width, maxd / char.height)
         char = char.resize((int(char.width * sc), int(char.height * sc)), Image.LANCZOS)
     if gold:
-        grad = vgrad_layer(char, (255, 235, 130), (235, 150, 15))
+        # v8 修复掉色：更饱和浓郁的金属金 + 窄半透明高光 + 深金描边
+        stroke_layer = make_char_layer(num, fs, max(2, int(fs * 0.055)), fill=(170, 95, 5, 255), stroke_fill=(170, 95, 5, 255))
+        grad = vgrad_layer(char, (255, 216, 90), (215, 105, 0))
         a = np.array(char.convert("L"))
-        hi_h = max(2, int(a.shape[0] * 0.26))
+        hi_h = max(2, int(a.shape[0] * 0.16))
         hi_mask = np.zeros_like(a)
         hi_mask[:hi_h, :] = a[:hi_h, :]
         hi_img = Image.fromarray(hi_mask, "L")
-        hi_layer = layer_from_mask(hi_img, (255, 248, 210))
+        hi_layer = layer_from_mask(hi_img, (255, 244, 200))
+        hi_arr = np.array(hi_layer)
+        hi_arr[:, :, 3] = (hi_arr[:, :, 3] * 0.6).astype(np.uint8)
+        hi_layer = Image.fromarray(hi_arr, "RGBA")
+        if stroke_layer is not None:
+            paste_center(base, stroke_layer, (cx, cy))
         paste_center(base, grad, (cx, cy))
         paste_center(base, hi_layer, (cx, cy))
     else:
@@ -256,4 +263,4 @@ def render_season(title_str, b1, b2, b3, b4, out_path="result.png"):
 
 
 if __name__ == "__main__":
-    render_season("3471996", "8", "6", "6", "20", "result.png")
+    render_season("3472020", "1", "2", "7", "10", "result.png")
