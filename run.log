@@ -1,11 +1,34 @@
 [字体] /home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fonts/NotoSansSC.ttf
 [loop] 启动循环轮询 3.0 分钟，每 15s 检查一次
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3473623 结果: 4+6+3=13 小单 形态:杂六
-[去重] 上次已推送: '3473621', 本次: 3473623
+[数] 最新期号: 3473625 结果: 7+2+1=10 小双 形态:杂六
+[去重] 上次已推送: '3473621', 本次: 3473625
 result.png title_h= 173 title_center= (1143, 207)
 [图] result.png 生成成功（当前季节: 夏）
-[TG] 频道图片推送 失败: status=429 {"ok": false, "error_code": 429, "description": "Too Many Requests: retry after 5", "parameters": {"retry_after": 5}}
-[TG] 群组文字推送 失败: status=429 {"ok": false, "error_code": 429, "description": "Too Many Requests: retry after 5", "parameters": {"retry_after": 5}}
-❌ 推送失败（频道与群组均未成功）
-EXIT_CODE=1
+[loop] 本轮异常（继续轮询）: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=25)
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3473625 结果: 7+2+1=10 小双 形态:杂六
+[去重] 上次已推送: '3473621', 本次: 3473625
+result.png title_h= 173 title_center= (1143, 207)
+[图] result.png 生成成功（当前季节: 夏）
+[loop] 本轮异常（继续轮询）: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=25)
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3473626 结果: 5+8+4=17 大单 形态:杂六
+[去重] 上次已推送: '3473621', 本次: 3473626
+result.png title_h= 173 title_center= (1143, 207)
+[图] result.png 生成成功（当前季节: 夏）
+[loop] 本轮异常（继续轮询）: HTTPSConnectionPool(host='api.telegram.org', port=443): Read timed out. (read timeout=25)
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3473626 结果: 5+8+4=17 大单 形态:杂六
+[去重] 上次已推送: '3473621', 本次: 3473626
+result.png title_h= 173 title_center= (1143, 207)
+[图] result.png 生成成功（当前季节: 夏）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 2883, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1787602128, "photo": [{"file_id
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 165398, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1787602128, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[git] 数据已实时提交并推送
+✅ 推送完成
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3473626 结果: 5+8+4=17 大单 形态:杂六
+[去重] 上次已推送: '3473626', 本次: 3473626
+已推送过该期，跳过推送（仅更新数据文件）
+[loop] 循环结束
