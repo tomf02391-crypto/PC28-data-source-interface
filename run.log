@@ -1,57 +1,33 @@
 [字体] /home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fonts/NotoSansSC.ttf
 [loop] 启动循环轮询 3.0 分钟，每 15s 检查一次
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3477661 结果: 8+3+8=19 大单 形态:对子
-[去重] 上次已推送: '3477660', 本次: 3477661
+[数] 最新期号: 3477664 结果: 8+7+3=18 大双 形态:杂六
+[去重] 上次已推送: '3477662', 本次: 3477664
 result.png title_h= 173 title_center= (1143, 207)
 [图] result.png 生成成功（当前季节: 夏）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 8282, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1788469369, "photo": [{"file_id
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 192232, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1788469370, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] 数据已实时提交并推送
-✅ 推送完成
+[loop] 本轮异常（继续轮询）: ('Connection aborted.', TimeoutError('The write operation timed out'))
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3477661 结果: 8+3+8=19 大单 形态:对子
-[去重] 上次已推送: '3477661', 本次: 3477661
-已推送过该期，跳过推送（仅更新数据文件）
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3477661 结果: 8+3+8=19 大单 形态:对子
-[去重] 上次已推送: '3477661', 本次: 3477661
-已推送过该期，跳过推送（仅更新数据文件）
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3477662 结果: 9+1+1=11 小单 形态:对子
-[去重] 上次已推送: '3477661', 本次: 3477662
+[数] 最新期号: 3477664 结果: 8+7+3=18 大双 形态:杂六
+[去重] 上次已推送: '3477662', 本次: 3477664
 result.png title_h= 173 title_center= (1143, 207)
 [图] result.png 生成成功（当前季节: 夏）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 8283, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1788469421, "photo": [{"file_id
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 192234, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1788469422, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] 数据已实时提交并推送
-✅ 推送完成
+[loop] 本轮异常（继续轮询）: ('Connection aborted.', TimeoutError('The write operation timed out'))
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3477662 结果: 9+1+1=11 小单 形态:对子
-[去重] 上次已推送: '3477662', 本次: 3477662
-已推送过该期，跳过推送（仅更新数据文件）
+[数] 最新期号: 3477664 结果: 8+7+3=18 大双 形态:杂六
+[去重] 上次已推送: '3477662', 本次: 3477664
+result.png title_h= 173 title_center= (1143, 207)
+[图] result.png 生成成功（当前季节: 夏）
+[loop] 本轮异常（继续轮询）: ('Connection aborted.', TimeoutError('The write operation timed out'))
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3477662 结果: 9+1+1=11 小单 形态:对子
-[去重] 上次已推送: '3477662', 本次: 3477662
-已推送过该期，跳过推送（仅更新数据文件）
+[数] 最新期号: 3477665 结果: 5+9+5=19 大单 形态:对子
+[去重] 上次已推送: '3477662', 本次: 3477665
+result.png title_h= 173 title_center= (1143, 207)
+[图] result.png 生成成功（当前季节: 夏）
+[loop] 本轮异常（继续轮询）: ('Connection aborted.', TimeoutError('The write operation timed out'))
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3477662 结果: 9+1+1=11 小单 形态:对子
-[去重] 上次已推送: '3477662', 本次: 3477662
-已推送过该期，跳过推送（仅更新数据文件）
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3477662 结果: 9+1+1=11 小单 形态:对子
-[去重] 上次已推送: '3477662', 本次: 3477662
-已推送过该期，跳过推送（仅更新数据文件）
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3477662 结果: 9+1+1=11 小单 形态:对子
-[去重] 上次已推送: '3477662', 本次: 3477662
-已推送过该期，跳过推送（仅更新数据文件）
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3477662 结果: 9+1+1=11 小单 形态:对子
-[去重] 上次已推送: '3477662', 本次: 3477662
-已推送过该期，跳过推送（仅更新数据文件）
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3477662 结果: 9+1+1=11 小单 形态:对子
-[去重] 上次已推送: '3477662', 本次: 3477662
-已推送过该期，跳过推送（仅更新数据文件）
+[数] 最新期号: 3477665 结果: 5+9+5=19 大单 形态:对子
+[去重] 上次已推送: '3477662', 本次: 3477665
+result.png title_h= 173 title_center= (1143, 207)
+[图] result.png 生成成功（当前季节: 夏）
+[loop] 本轮异常（继续轮询）: ('Connection aborted.', TimeoutError('The write operation timed out'))
 [loop] 循环结束
