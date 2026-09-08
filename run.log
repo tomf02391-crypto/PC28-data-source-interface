@@ -5,7 +5,7 @@
 [去重] 上次已推送: '3479417', 本次: 3479421
 result.png title_h= 173 title_center= (1143, 207)
 [图] result.png 生成成功（当前季节: 夏）
-[TG] 频道图片推送 失败: status=400 {"ok": false, "error_code": 400, "description": "Bad Request: too Many Requests: retry after 314"}
-[TG] 群组文字推送 失败: status=429 {"ok": false, "error_code": 429, "description": "Too Many Requests: retry after 326", "parameters": {"retry_after": 326}}
+[TG] 频道图片推送 失败: status=400 {"ok": false, "error_code": 400, "description": "Bad Request: too Many Requests: retry after 517"}
+[TG] 群组文字推送 失败: status=429 {"ok": false, "error_code": 429, "description": "Too Many Requests: retry after 398", "parameters": {"retry_after": 398}}
 ❌ 推送失败（频道与群组均未成功）
 EXIT_CODE=1
