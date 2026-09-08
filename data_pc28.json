@@ -2,12 +2,12 @@
   "countdown": "",
   "data": [
     {
-      "nbr": "3479501",
+      "nbr": "3479503",
       "date": "2026-09-08",
-      "time": "18:32:00",
-      "number": "1+3+5",
-      "num": "9",
-      "combination": "小单"
+      "time": "18:39:00",
+      "number": "9+1+2",
+      "num": "12",
+      "combination": "小双"
     }
   ],
   "message": "success"
