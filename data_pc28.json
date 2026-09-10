@@ -2,12 +2,12 @@
   "countdown": "",
   "data": [
     {
-      "nbr": "3480212",
+      "nbr": "3480213",
       "date": "2026-09-10",
-      "time": "13:06:30",
-      "number": "3+8+1",
-      "num": "12",
-      "combination": "小双"
+      "time": "13:10:00",
+      "number": "5+8+5",
+      "num": "18",
+      "combination": "大双"
     }
   ],
   "message": "success"
