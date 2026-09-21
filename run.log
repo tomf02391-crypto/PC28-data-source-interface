@@ -3,26 +3,37 @@
 [源] pc28.help 失败: The read operation timed out
 [loop] 本轮异常（继续轮询）: 所有数据源都失败: pc28.help: The read operation timed out | yu28.top: 无有效号码数据
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3484689 结果: 9+8+1=18 大双 形态:杂六
-[去重] 上次已推送: '3484686', 本次: 3484689
+[数] 最新期号: 3484692 结果: 3+5+8=16 大双 形态:杂六
+[去重] 上次已推送: '3484689', 本次: 3484692
 result.png title_h= 173 title_center= (1143, 207)
 [图] result.png 生成成功（当前季节: 夏）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 16328, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1789978809, "photo": [{"file_i
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 227082, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1789978810, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 16331, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1789979498, "photo": [{"file_i
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 227096, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1789979499, "text": "📢 最新开奖信息\n📅 最新期号: 34
 [git] 数据已实时提交并推送
 ✅ 推送完成
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3484689 结果: 9+8+1=18 大双 形态:杂六
-[去重] 上次已推送: '3484689', 本次: 3484689
-已推送过该期，跳过推送（仅更新数据文件）
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3484689 结果: 9+8+1=18 大双 形态:杂六
-[去重] 上次已推送: '3484689', 本次: 3484689
-已推送过该期，跳过推送（仅更新数据文件）
 [源] pc28.help 失败: The read operation timed out
 [loop] 本轮异常（继续轮询）: 所有数据源都失败: pc28.help: The read operation timed out | yu28.top: 无有效号码数据
-[源] pc28.help 失败: The read operation timed out
-[loop] 本轮异常（继续轮询）: 所有数据源都失败: pc28.help: The read operation timed out | yu28.top: 无有效号码数据
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3484692 结果: 3+5+8=16 大双 形态:杂六
+[去重] 上次已推送: '3484692', 本次: 3484692
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3484692 结果: 3+5+8=16 大双 形态:杂六
+[去重] 上次已推送: '3484692', 本次: 3484692
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3484692 结果: 3+5+8=16 大双 形态:杂六
+[去重] 上次已推送: '3484692', 本次: 3484692
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3484693 结果: 4+6+9=19 大单 形态:杂六
+[去重] 上次已推送: '3484692', 本次: 3484693
+result.png title_h= 173 title_center= (1143, 207)
+[图] result.png 生成成功（当前季节: 夏）
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 16332, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1789979605, "photo": [{"file_i
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 227099, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1789979606, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[git] 数据已实时提交并推送
+✅ 推送完成
 [源] pc28.help 失败: The read operation timed out
 [loop] 本轮异常（继续轮询）: 所有数据源都失败: pc28.help: The read operation timed out | yu28.top: 无有效号码数据
 [loop] 循环结束
