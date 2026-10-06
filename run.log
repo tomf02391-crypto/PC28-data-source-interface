@@ -1,50 +1,57 @@
 [字体] /home/runner/work/PC28-data-source-interface/PC28-data-source-interface/fonts/NotoSansSC.ttf
 [loop] 启动循环轮询 3.0 分钟，每 15s 检查一次
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3490575 结果: 5+9+5=19 大单 形态:对子
-[去重] 上次已推送: '3490573', 本次: 3490575
+[数] 最新期号: 3490579 结果: 3+8+7=18 大双 形态:杂六
+[去重] 上次已推送: '3490576', 本次: 3490579
 result.png title_h= 173 title_center= (1146, 205)
 [图] result.png 生成成功（当前季节: 冬）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 22127, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1791244654, "photo": [{"file_i
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 259808, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1791244655, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] 提交异常（不影响推送）: Command '['git', 'push', 'origin', 'main']' timed out after 60 seconds
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 22131, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1791245403, "photo": [{"file_i
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 259824, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1791245404, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[git] 数据已实时提交并推送
 ✅ 推送完成
 [源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3490576 结果: 0+1+5=6 小双 形态:杂六
-[去重] 上次已推送: '3490575', 本次: 3490576
+[数] 最新期号: 3490579 结果: 3+8+7=18 大双 形态:杂六
+[去重] 上次已推送: '3490579', 本次: 3490579
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3490579 结果: 3+8+7=18 大双 形态:杂六
+[去重] 上次已推送: '3490579', 本次: 3490579
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3490579 结果: 3+8+7=18 大双 形态:杂六
+[去重] 上次已推送: '3490579', 本次: 3490579
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3490579 结果: 3+8+7=18 大双 形态:杂六
+[去重] 上次已推送: '3490579', 本次: 3490579
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3490579 结果: 3+8+7=18 大双 形态:杂六
+[去重] 上次已推送: '3490579', 本次: 3490579
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3490579 结果: 3+8+7=18 大双 形态:杂六
+[去重] 上次已推送: '3490579', 本次: 3490579
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3490579 结果: 3+8+7=18 大双 形态:杂六
+[去重] 上次已推送: '3490579', 本次: 3490579
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3490579 结果: 3+8+7=18 大双 形态:杂六
+[去重] 上次已推送: '3490579', 本次: 3490579
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3490579 结果: 3+8+7=18 大双 形态:杂六
+[去重] 上次已推送: '3490579', 本次: 3490579
+已推送过该期，跳过推送（仅更新数据文件）
+[源] pc28.help 返回 1 条，使用该源
+[数] 最新期号: 3490580 结果: 9+3+4=16 大双 形态:杂六
+[去重] 上次已推送: '3490579', 本次: 3490580
 result.png title_h= 173 title_center= (1146, 205)
 [图] result.png 生成成功（当前季节: 冬）
-[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 22128, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1791244734, "photo": [{"file_i
-[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 259811, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1791244734, "text": "📢 最新开奖信息\n📅 最新期号: 34
-[git] push 失败（不影响推送）: remote: Internal Server Error        
-remote: Request ID AC50:246123:E3A5CC:1239980:6AC439BF        
-remote: Time 2026-10-05T23:58:56Z
-To https://github.com/tomf02391-crypto/PC28-data-source-interface
- ! [remote rejected]     main -> main (Internal Server Error)
-error: failed to push some refs to 'h
+[TG] 频道图片推送 成功: status=200 {"ok": true, "result": {"message_id": 22132, "sender_chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "chat": {"id": -1004316011766, "title": "加拿大PC28开奖频道-开奖查询", "username": "pc28jndkj", "type": "channel"}, "date": 1791245565, "photo": [{"file_i
+[TG] 群组文字推送 成功: status=200 {"ok": true, "result": {"message_id": 259826, "from": {"id": 8415517129, "is_bot": true, "first_name": "PC28未来数据站", "username": "pc28realtimedataBot"}, "chat": {"id": -1003480986680, "title": "PC28鸿运社🇨🇦", "username": "pc28hys", "type": "supergroup"}, "date": 1791245565, "text": "📢 最新开奖信息\n📅 最新期号: 34
+[git] 数据已实时提交并推送
 ✅ 推送完成
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3490576 结果: 0+1+5=6 小双 形态:杂六
-[去重] 上次已推送: '3490576', 本次: 3490576
-已推送过该期，跳过推送（仅更新数据文件）
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3490576 结果: 0+1+5=6 小双 形态:杂六
-[去重] 上次已推送: '3490576', 本次: 3490576
-已推送过该期，跳过推送（仅更新数据文件）
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3490576 结果: 0+1+5=6 小双 形态:杂六
-[去重] 上次已推送: '3490576', 本次: 3490576
-已推送过该期，跳过推送（仅更新数据文件）
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3490576 结果: 0+1+5=6 小双 形态:杂六
-[去重] 上次已推送: '3490576', 本次: 3490576
-已推送过该期，跳过推送（仅更新数据文件）
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3490576 结果: 0+1+5=6 小双 形态:杂六
-[去重] 上次已推送: '3490576', 本次: 3490576
-已推送过该期，跳过推送（仅更新数据文件）
-[源] pc28.help 返回 1 条，使用该源
-[数] 最新期号: 3490576 结果: 0+1+5=6 小双 形态:杂六
-[去重] 上次已推送: '3490576', 本次: 3490576
-已推送过该期，跳过推送（仅更新数据文件）
 [loop] 循环结束
